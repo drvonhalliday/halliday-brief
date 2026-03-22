@@ -1,99 +1,81 @@
- name: Update Newsletter Manifest                          
-                                                            
-  on:             
-    push:
-      paths:
-        - 'newsletters/**'
-                                                            
-  permissions:
-    contents: write                                         
-                  
-  jobs:
-    update-manifest:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
+name: Update Newsletter Manifest
 
-        - name: Build newsletters.json from HTML files
-          run: |
-            python3 << 'SCRIPT'                             
-            import os, re, json, html
-                                                            
-            newsletters_dir = 'newsletters'
-            entries = []
+on:
+  push:
+    paths:
+      - 'newsletters/**'
 
-            for filename in
-  sorted(os.listdir(newsletters_dir)):
-                if not filename.endswith('.html'):
-                    continue
-                                                            
-                filepath = os.path.join(newsletters_dir,
-  filename)                                                 
-                with open(filepath, 'r', encoding='utf-8')
-  as f:
-                    content = f.read(2000)  # title is
-  always near the top
+permissions:
+  contents: write
 
-                # Extract <title> content                   
-                title_match =
-  re.search(r'<title>(.*?)</title>', content, re.IGNORECASE)
-                if not title_match:
-                    continue
+jobs:
+  update-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-                raw_title =                                 
-  html.unescape(title_match.group(1).strip())
-                                                            
-                # Expected format: "The Halliday Brief | 
-  Vol. X, No. Y | Month DD, YYYY"
-                parts = [p.strip() for p in
-  raw_title.split('|')]
+      - name: Build newsletters.json from HTML files
+        run: |
+          python3 << 'SCRIPT'
+          import os, re, json, html
 
-                vol = parts[1] if len(parts) > 1 else       
-  filename.replace('.html', '')
-                date_str = parts[2] if len(parts) > 2 else  
-  filename.replace('.html', '')
+          newsletters_dir = 'newsletters'
+          entries = []
 
-                # Extract first <h2> as headline
-                h2_match = re.search(r'<h2>(.*?)</h2>',
-  content, re.IGNORECASE | re.DOTALL)                       
-                headline = ''
-                if h2_match:                                
-                    headline = re.sub(r'<[^>]+>', '',
-  h2_match.group(1)).strip()                                
-   
-                entries.append({                            
-                    'file': filename,
-                    'title': vol,
-                    'date': date_str,
-                    'headline': headline
-                })
+          for filename in sorted(os.listdir(newsletters_dir)):
+              if not filename.endswith('.html'):
+                  continue
 
-            # Sort by filename (date-based names sort
-  chronologically)
-            entries.sort(key=lambda e: e['file'])
-                                                            
-            with open('newsletters.json', 'w',
-  encoding='utf-8') as f:                                   
-                json.dump(entries, f, indent=2,
-  ensure_ascii=False)
-                f.write('\n')
+              filepath = os.path.join(newsletters_dir, filename)
+              with open(filepath, 'r', encoding='utf-8') as f:
+                  content = f.read(2000)  # title is always near the top
 
-            print(f"Updated newsletters.json with           
-  {len(entries)} entries:")
-            for e in entries:                               
-                print(f"  - {e['file']}: {e['title']} /
-  {e['date']}")
-            SCRIPT
+              # Extract <title> content
+              title_match = re.search(r'<title>(.*?)</title>', content, re.IGNORECASE)
+              if not title_match:
+                  continue
 
-        - name: Commit updated manifest
-          run: |
-            git config user.name "github-actions[bot]"      
-            git config user.email
-  "github-actions[bot]@users.noreply.github.com"            
-            git add newsletters.json
-            if git diff --cached --quiet; then
-              echo "No changes to commit"
-            else                                            
-              git commit -m "Update newsletter manifest"
-              git push                                      
-            fi    
+              raw_title = html.unescape(title_match.group(1).strip())
+
+              # Expected format: "The Halliday Brief | Vol. X, No. Y | Month DD, YYYY"
+              parts = [p.strip() for p in raw_title.split('|')]
+
+              vol = parts[1] if len(parts) > 1 else filename.replace('.html', '')
+              date_str = parts[2] if len(parts) > 2 else filename.replace('.html', '')
+
+              # Extract first <h2> as headline
+              h2_match = re.search(r'<h2>(.*?)</h2>', content, re.IGNORECASE | re.DOTALL)
+              headline = ''
+              if h2_match:
+                  headline = re.sub(r'<[^>]+>', '', h2_match.group(1)).strip()
+
+              entries.append({
+                  'file': filename,
+                  'title': vol,
+                  'date': date_str,
+                  'headline': headline
+              })
+
+          # Sort by filename (date-based names sort chronologically)
+          entries.sort(key=lambda e: e['file'])
+
+          with open('newsletters.json', 'w', encoding='utf-8') as f:
+              json.dump(entries, f, indent=2, ensure_ascii=False)
+              f.write('\n')
+
+          print(f"Updated newsletters.json with {len(entries)} entries:")
+          for e in entries:
+              print(f"  - {e['file']}: {e['title']} / {e['date']}")
+          SCRIPT
+
+      - name: Commit updated manifest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add newsletters.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update newsletter manifest"
+            git push
+          fi
