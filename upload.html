@@ -54,57 +54,107 @@
     margin-bottom: 32px;
   }
 
-  /* Auth section */
-  .auth-section {
+  /* PIN gate */
+  .pin-section {
     text-align: center;
     padding: 40px 0;
   }
-  .auth-section.hidden { display: none; }
+  .pin-section.hidden { display: none; }
 
-  .login-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
+  .pin-input {
     font-family: 'Space Mono', monospace;
-    font-size: 13px;
-    letter-spacing: 0.06em;
+    font-size: 18px;
+    letter-spacing: 0.3em;
+    text-align: center;
+    width: 200px;
+    padding: 12px 16px;
+    border: 2px solid #bfad90;
+    background: #f5f0e8;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .pin-input:focus { border-color: var(--wheat); }
+  .pin-input.error { border-color: var(--red); animation: shake 0.4s; }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
+  .pin-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .pin-submit {
+    display: block;
+    margin: 16px auto 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 10px 32px;
     background: var(--soil);
     color: var(--cream);
     border: none;
-    padding: 14px 32px;
     cursor: pointer;
     transition: background 0.2s;
-    text-decoration: none;
   }
-  .login-btn:hover { background: #4a3520; }
-  .login-btn svg { width: 20px; height: 20px; fill: var(--cream); }
+  .pin-submit:hover { background: #4a3520; }
 
-  .auth-hint {
+  /* PAT setup */
+  .pat-section {
+    display: none;
+    margin-bottom: 24px;
+    padding: 20px;
+    background: #f5f0e8;
+    border-left: 4px solid var(--wheat);
+  }
+  .pat-section.visible { display: block; }
+
+  .pat-label {
     font-family: 'Space Mono', monospace;
     font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
     color: var(--muted);
-    margin-top: 16px;
-    letter-spacing: 0.06em;
+    margin-bottom: 10px;
   }
 
-  /* Logged in header */
-  .user-bar {
-    display: none;
+  .pat-row {
+    display: flex;
+    gap: 8px;
     align-items: center;
-    justify-content: space-between;
-    margin-bottom: 24px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #e0d8c8;
   }
-  .user-bar.visible { display: flex; }
 
-  .user-info {
+  .pat-input {
+    flex: 1;
     font-family: 'Space Mono', monospace;
     font-size: 11px;
+    padding: 10px 12px;
+    border: 1px solid #bfad90;
+    background: var(--cream);
+    color: var(--ink);
+    outline: none;
+  }
+  .pat-input:focus { border-color: var(--wheat); }
+
+  .pat-status {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
     color: var(--green);
+    margin-top: 8px;
     letter-spacing: 0.06em;
   }
+  .pat-status.error { color: var(--red); }
 
+  /* Buttons */
   .btn {
     font-family: 'Space Mono', monospace;
     font-size: 12px;
@@ -128,6 +178,24 @@
     font-size: 10px;
   }
   .btn-small:hover { background: #f5f0e8; }
+
+  /* Top bar when authenticated */
+  .top-bar {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e0d8c8;
+  }
+  .top-bar.visible { display: flex; }
+
+  .top-bar-info {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 0.06em;
+  }
 
   /* Drop zone */
   .upload-area { display: none; }
@@ -240,22 +308,30 @@
   <div class="title">Publish a Newsletter</div>
   <div class="subtitle">The Halliday Brief</div>
 
-  <!-- Login prompt (shown when not authenticated) -->
-  <div class="auth-section" id="auth-section">
-    <a class="login-btn" id="login-btn" href="#">
-      <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-      Login with GitHub
-    </a>
-    <div class="auth-hint">Only the account owner can publish.</div>
+  <!-- PIN gate -->
+  <div class="pin-section" id="pin-section">
+    <div class="pin-label">Enter PIN to continue</div>
+    <input class="pin-input" id="pin-input" type="password" maxlength="20" inputmode="numeric" autocomplete="off" placeholder="&#8226;&#8226;&#8226;&#8226;" />
+    <button class="pin-submit" id="pin-submit" onclick="checkPin()">Enter</button>
   </div>
 
-  <!-- User bar (shown when authenticated) -->
-  <div class="user-bar" id="user-bar">
-    <div class="user-info" id="user-info"></div>
-    <button class="btn btn-small" onclick="logout()">Log out</button>
+  <!-- Top bar (shown after PIN + PAT verified) -->
+  <div class="top-bar" id="top-bar">
+    <div class="top-bar-info">Ready to publish</div>
+    <button class="btn btn-small" onclick="resetSession()">Lock</button>
   </div>
 
-  <!-- Upload area (shown when authenticated) -->
+  <!-- PAT setup (shown after PIN, if no saved PAT) -->
+  <div class="pat-section" id="pat-section">
+    <div class="pat-label">GitHub access token</div>
+    <div class="pat-row">
+      <input class="pat-input" id="pat-input" type="password" placeholder="github_pat_..." autocomplete="off" />
+      <button class="btn btn-primary" style="padding:10px 16px; font-size:11px;" onclick="savePat()">Save</button>
+    </div>
+    <div class="pat-status" id="pat-status"></div>
+  </div>
+
+  <!-- Upload area (shown when PIN + PAT both valid) -->
   <div class="upload-area" id="upload-area">
     <div class="drop-zone" id="drop-zone">
       <input type="file" accept=".html" id="file-input" />
@@ -282,75 +358,132 @@
 
 <script>
   // ════════════════════════════════════════
-  // CONFIGURATION — UPDATE THIS AFTER SETUP
+  // CONFIGURATION
   // ════════════════════════════════════════
-  var WORKER_URL = 'https://halliday-auth.doson.workers.dev';
   var REPO_OWNER = 'drvonhalliday';
   var REPO_NAME = 'halliday-brief';
 
+  // SHA-256 hash of the PIN. To change the PIN:
+  // 1. Open browser console on any page
+  // 2. Run: crypto.subtle.digest('SHA-256', new TextEncoder().encode('YOUR_NEW_PIN')).then(h => console.log(Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2,'0')).join('')))
+  // 3. Replace the hash below with the output
+  var PIN_HASH = '475368189e17ec9d12cf43f873f4ba27b0ae9ccbd0686fa21f5caad89ed57243';
+
   var pendingFile = null;
+  var pinVerified = false;
 
-  // ── Auth ──
-  function getToken() {
-    return localStorage.getItem('hb_oauth_token') || '';
+  // ── PIN ──
+  async function hashValue(value) {
+    var encoded = new TextEncoder().encode(value);
+    var buffer = await crypto.subtle.digest('SHA-256', encoded);
+    return Array.from(new Uint8Array(buffer)).map(function(b) {
+      return b.toString(16).padStart(2, '0');
+    }).join('');
   }
 
-  function checkForToken() {
-    // Check URL fragment for token from OAuth callback
-    var hash = window.location.hash;
-    if (hash.indexOf('#token=') === 0) {
-      var token = hash.substring(7);
-      localStorage.setItem('hb_oauth_token', token);
-      // Clean the URL
-      history.replaceState(null, '', window.location.pathname);
-      return token;
+  async function checkPin() {
+    var input = document.getElementById('pin-input');
+    var pin = input.value.trim();
+    if (!pin) return;
+
+    var hash = await hashValue(pin);
+    if (hash === PIN_HASH) {
+      pinVerified = true;
+      sessionStorage.setItem('hb_pin_ok', '1');
+      input.value = '';
+      showAuthenticatedUI();
+    } else {
+      input.classList.add('error');
+      input.value = '';
+      input.focus();
+      setTimeout(function() { input.classList.remove('error'); }, 500);
     }
-    return getToken();
   }
 
-  function logout() {
-    localStorage.removeItem('hb_oauth_token');
-    updateUI();
+  // Allow Enter key on PIN input
+  document.getElementById('pin-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkPin();
+  });
+
+  // ── PAT ──
+  function getPat() {
+    return localStorage.getItem('hb_pat') || '';
   }
 
-  function updateUI() {
-    var token = getToken();
-    var authSection = document.getElementById('auth-section');
-    var userBar = document.getElementById('user-bar');
+  async function savePat() {
+    var input = document.getElementById('pat-input');
+    var token = input.value.trim();
+    var statusEl = document.getElementById('pat-status');
+
+    if (!token) return;
+
+    statusEl.textContent = 'Verifying...';
+    statusEl.className = 'pat-status';
+
+    try {
+      var res = await fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME, {
+        headers: { 'Authorization': 'Bearer ' + token, 'User-Agent': 'HallidayBrief' }
+      });
+
+      if (!res.ok) throw new Error('Invalid token or no access');
+
+      var repo = await res.json();
+      if (!repo.permissions || !repo.permissions.push) {
+        throw new Error('Token does not have write access');
+      }
+
+      localStorage.setItem('hb_pat', token);
+      input.value = '';
+      statusEl.textContent = 'Token saved';
+      statusEl.className = 'pat-status';
+      showAuthenticatedUI();
+    } catch (err) {
+      statusEl.textContent = err.message;
+      statusEl.className = 'pat-status error';
+    }
+  }
+
+  // Allow Enter key on PAT input
+  document.getElementById('pat-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') savePat();
+  });
+
+  // ── UI state ──
+  function showAuthenticatedUI() {
+    var pinSection = document.getElementById('pin-section');
+    var patSection = document.getElementById('pat-section');
+    var topBar = document.getElementById('top-bar');
     var uploadArea = document.getElementById('upload-area');
 
-    if (token) {
-      // Verify token is still valid
-      fetch('https://api.github.com/user', {
-        headers: { 'Authorization': 'Bearer ' + token, 'User-Agent': 'HallidayBrief' }
-      })
-      .then(function(res) {
-        if (!res.ok) throw new Error('Token expired');
-        return res.json();
-      })
-      .then(function(user) {
-        if (user.login !== REPO_OWNER) {
-          logout();
-          showStatus('Access denied. Only the account owner can publish.', 'error');
-          return;
-        }
-        authSection.classList.add('hidden');
-        userBar.classList.add('visible');
-        uploadArea.classList.add('visible');
-        document.getElementById('user-info').innerHTML = 'Logged in as <strong>' + user.login + '</strong>';
-      })
-      .catch(function() {
-        // Token is invalid, clear it
-        localStorage.removeItem('hb_oauth_token');
-        authSection.classList.remove('hidden');
-        userBar.classList.remove('visible');
-        uploadArea.classList.remove('visible');
-      });
-    } else {
-      authSection.classList.remove('hidden');
-      userBar.classList.remove('visible');
+    if (!pinVerified) {
+      pinSection.classList.remove('hidden');
+      patSection.classList.remove('visible');
+      topBar.classList.remove('visible');
       uploadArea.classList.remove('visible');
+      return;
     }
+
+    pinSection.classList.add('hidden');
+
+    if (!getPat()) {
+      patSection.classList.add('visible');
+      topBar.classList.remove('visible');
+      uploadArea.classList.remove('visible');
+    } else {
+      patSection.classList.remove('visible');
+      topBar.classList.add('visible');
+      uploadArea.classList.add('visible');
+    }
+  }
+
+  function resetSession() {
+    pinVerified = false;
+    sessionStorage.removeItem('hb_pin_ok');
+    document.getElementById('pin-section').classList.remove('hidden');
+    document.getElementById('pat-section').classList.remove('visible');
+    document.getElementById('top-bar').classList.remove('visible');
+    document.getElementById('upload-area').classList.remove('visible');
+    hideStatus();
   }
 
   // ── File handling ──
@@ -443,7 +576,7 @@
 
   // ── Publish ──
   function publish() {
-    if (!pendingFile || !getToken()) return;
+    if (!pendingFile || !getPat()) return;
 
     var btn = document.getElementById('publish-btn');
     btn.disabled = true;
@@ -454,7 +587,7 @@
     var content = btoa(unescape(encodeURIComponent(pendingFile.content)));
 
     fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
-      headers: { 'Authorization': 'Bearer ' + getToken() }
+      headers: { 'Authorization': 'Bearer ' + getPat() }
     })
     .then(function(res) {
       if (res.ok) {
@@ -491,7 +624,7 @@
     return fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
       method: 'PUT',
       headers: {
-        'Authorization': 'Bearer ' + getToken(),
+        'Authorization': 'Bearer ' + getPat(),
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(body)
@@ -515,12 +648,12 @@
   }
 
   // ── Init ──
-  // Set login URL
-  document.getElementById('login-btn').href = WORKER_URL + '/auth/login';
-
-  // Check for OAuth callback token
-  checkForToken();
-  updateUI();
+  // Restore PIN session (survives page refresh, not tab close)
+  if (sessionStorage.getItem('hb_pin_ok') === '1') {
+    pinVerified = true;
+  }
+  showAuthenticatedUI();
+  document.getElementById('pin-input').focus();
 </script>
 
 </body>
