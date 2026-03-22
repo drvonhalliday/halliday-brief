@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Upload — The Halliday Brief</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1612;
+    --soil: #2d1f0e;
+    --wheat: #c9a84c;
+    --cream: #faf6ee;
+    --muted: #6b5e4e;
+    --green: #1f5c2e;
+    --red: #8b2020;
+  }
+
+  body {
+    background: #ddd5c0;
+    font-family: 'Source Serif 4', Georgia, serif;
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+  }
+
+  .container {
+    max-width: 600px;
+    width: 100%;
+    background: var(--cream);
+    border: 1px solid #bfad90;
+    box-shadow: 6px 8px 48px rgba(0,0,0,0.22);
+    padding: 48px;
+  }
+
+  .title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--soil);
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+
+  /* Setup section */
+  .setup {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #e0d8c8;
+  }
+  .setup.hidden { display: none; }
+
+  .setup label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 8px;
+  }
+  .setup input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid #bfad90;
+    background: #f5f0e8;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .setup input:focus { outline: 2px solid var(--wheat); border-color: var(--wheat); }
+
+  .btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 10px 24px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-primary {
+    background: var(--soil);
+    color: var(--cream);
+  }
+  .btn-primary:hover { background: #4a3520; }
+  .btn-small {
+    background: none;
+    border: 1px solid #bfad90;
+    color: var(--muted);
+    padding: 6px 14px;
+    font-size: 10px;
+  }
+  .btn-small:hover { background: #f5f0e8; }
+
+  .token-status {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    margin-bottom: 12px;
+  }
+
+  /* Drop zone */
+  .drop-zone {
+    border: 2.5px dashed #bfad90;
+    padding: 60px 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--wheat);
+    background: rgba(201,168,76,0.08);
+  }
+  .drop-zone.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .drop-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .drop-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    color: var(--wheat);
+  }
+  .drop-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--soil);
+    margin-bottom: 8px;
+  }
+  .drop-hint {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* Preview */
+  .preview {
+    display: none;
+    margin-bottom: 24px;
+    padding: 20px;
+    background: #f5f0e8;
+    border-left: 4px solid var(--wheat);
+  }
+  .preview.visible { display: block; }
+
+  .preview-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .preview-row {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .preview-row span {
+    color: var(--muted);
+  }
+
+  /* Status */
+  .status {
+    display: none;
+    padding: 16px 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+  .status.visible { display: block; }
+  .status.uploading { background: #f0dfa0; color: var(--soil); }
+  .status.success { background: #d4edda; color: var(--green); }
+  .status.error { background: #f5d5d5; color: var(--red); }
+
+  .publish-btn {
+    width: 100%;
+    padding: 16px;
+    font-size: 14px;
+    display: none;
+  }
+  .publish-btn.visible { display: block; }
+
+  .back-link {
+    display: block;
+    text-align: center;
+    margin-top: 24px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+  }
+  .back-link:hover { color: var(--soil); }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">Publish a Newsletter</div>
+  <div class="subtitle">The Halliday Brief</div>
+
+  <!-- Token setup -->
+  <div class="setup" id="setup-section">
+    <div class="token-status" id="token-status"></div>
+    <label for="token-input">GitHub Personal Access Token</label>
+    <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
+    <button class="btn btn-primary" onclick="saveToken()">Save Token</button>
+  </div>
+
+  <!-- Drop zone -->
+  <div class="drop-zone" id="drop-zone">
+    <input type="file" accept=".html" id="file-input" />
+    <div class="drop-icon">&#8681;</div>
+    <div class="drop-text">Drop newsletter HTML here</div>
+    <div class="drop-hint">or click to browse</div>
+  </div>
+
+  <!-- Preview -->
+  <div class="preview" id="preview">
+    <div class="preview-label">Ready to publish</div>
+    <div class="preview-row" id="preview-file"><span>File:</span> —</div>
+    <div class="preview-row" id="preview-title"><span>Title:</span> —</div>
+    <div class="preview-row" id="preview-date"><span>Date:</span> —</div>
+    <div class="preview-row" id="preview-headline"><span>Lead:</span> —</div>
+  </div>
+
+  <!-- Status -->
+  <div class="status" id="status"></div>
+
+  <!-- Publish button -->
+  <button class="btn btn-primary publish-btn" id="publish-btn" onclick="publish()">Publish Newsletter</button>
+
+  <a class="back-link" href="./">&#8592; Back to The Halliday Brief</a>
+</div>
+
+<script>
+  var REPO_OWNER = 'drvonhalliday';
+  var REPO_NAME = 'halliday-brief';
+  var pendingFile = null;
+  var parsedMeta = null;
+
+  // ── Token management ──
+  function getToken() {
+    return localStorage.getItem('hb_github_token') || '';
+  }
+
+  function saveToken() {
+    var token = document.getElementById('token-input').value.trim();
+    if (!token) return;
+    localStorage.setItem('hb_github_token', token);
+    updateTokenUI();
+  }
+
+  function clearToken() {
+    localStorage.removeItem('hb_github_token');
+    updateTokenUI();
+  }
+
+  function updateTokenUI() {
+    var token = getToken();
+    var section = document.getElementById('setup-section');
+    var statusEl = document.getElementById('token-status');
+    var dropZone = document.getElementById('drop-zone');
+
+    if (token) {
+      statusEl.innerHTML = 'Token saved &#10003; &nbsp;&nbsp;<button class="btn btn-small" onclick="clearToken()">Change</button>';
+      document.getElementById('token-input').style.display = 'none';
+      section.querySelector('.btn-primary').style.display = 'none';
+      dropZone.classList.remove('disabled');
+    } else {
+      statusEl.textContent = '';
+      document.getElementById('token-input').style.display = '';
+      document.getElementById('token-input').value = '';
+      section.querySelector('.btn-primary').style.display = '';
+      dropZone.classList.add('disabled');
+    }
+  }
+
+  // ── File handling ──
+  function parseNewsletter(content) {
+    var titleMatch = content.match(/<title>(.*?)<\/title>/i);
+    if (!titleMatch) return null;
+
+    var rawTitle = titleMatch[1].trim();
+    var parts = rawTitle.split('|').map(function(p) { return p.trim(); });
+
+    var vol = parts[1] || 'Unknown';
+    var dateStr = parts[2] || 'Unknown';
+
+    // Extract date for filename: try to parse "Month DD, YYYY" → "YYYY-MM-DD"
+    var filename = null;
+    var dateMatch = dateStr.match(/(\w+)\s+(\d{1,2}),?\s+(\d{4})/);
+    if (dateMatch) {
+      var months = {
+        'january':'01','february':'02','march':'03','april':'04',
+        'may':'05','june':'06','july':'07','august':'08',
+        'september':'09','october':'10','november':'11','december':'12'
+      };
+      var m = months[dateMatch[1].toLowerCase()];
+      var d = dateMatch[2].padStart(2, '0');
+      var y = dateMatch[3];
+      if (m) filename = y + '-' + m + '-' + d + '.html';
+    }
+
+    // Extract first h2 as headline
+    var h2Match = content.match(/<h2>([\s\S]*?)<\/h2>/i);
+    var headline = '';
+    if (h2Match) {
+      headline = h2Match[1].replace(/<[^>]+>/g, '').trim();
+    }
+
+    return {
+      vol: vol,
+      date: dateStr,
+      headline: headline,
+      filename: filename || ('newsletter-' + Date.now() + '.html')
+    };
+  }
+
+  function handleFile(file) {
+    if (!file || !file.name.endsWith('.html')) {
+      showStatus('Please upload an HTML file', 'error');
+      return;
+    }
+
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var content = e.target.result;
+      parsedMeta = parseNewsletter(content);
+
+      if (!parsedMeta) {
+        showStatus('Could not parse newsletter title. Make sure the HTML has a <title> tag.', 'error');
+        return;
+      }
+
+      pendingFile = { name: parsedMeta.filename, content: content };
+
+      // Show preview
+      document.getElementById('preview-file').innerHTML = '<span>File:</span> ' + parsedMeta.filename;
+      document.getElementById('preview-title').innerHTML = '<span>Title:</span> ' + parsedMeta.vol;
+      document.getElementById('preview-date').innerHTML = '<span>Date:</span> ' + parsedMeta.date;
+      document.getElementById('preview-headline').innerHTML = '<span>Lead:</span> ' + parsedMeta.headline;
+      document.getElementById('preview').classList.add('visible');
+      document.getElementById('publish-btn').classList.add('visible');
+      hideStatus();
+    };
+    reader.readAsText(file);
+  }
+
+  // ── Drag and drop ──
+  var dropZone = document.getElementById('drop-zone');
+  var fileInput = document.getElementById('file-input');
+
+  dropZone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    dropZone.classList.add('dragover');
+  });
+  dropZone.addEventListener('dragleave', function() {
+    dropZone.classList.remove('dragover');
+  });
+  dropZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length > 0) {
+      handleFile(e.dataTransfer.files[0]);
+    }
+  });
+  fileInput.addEventListener('change', function() {
+    if (fileInput.files.length > 0) {
+      handleFile(fileInput.files[0]);
+    }
+  });
+
+  // ── Publish ──
+  function publish() {
+    if (!pendingFile || !getToken()) return;
+
+    var btn = document.getElementById('publish-btn');
+    btn.disabled = true;
+    btn.textContent = 'Publishing...';
+    showStatus('Uploading to GitHub...', 'uploading');
+
+    var path = 'newsletters/' + pendingFile.name;
+    var content = btoa(unescape(encodeURIComponent(pendingFile.content)));
+
+    // Check if file already exists
+    fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
+      headers: { 'Authorization': 'Bearer ' + getToken() }
+    })
+    .then(function(res) {
+      if (res.ok) {
+        return res.json().then(function(data) {
+          // File exists — update it
+          return commitFile(path, content, data.sha);
+        });
+      } else {
+        // File doesn't exist — create it
+        return commitFile(path, content, null);
+      }
+    })
+    .then(function() {
+      showStatus('Published! The newsletter will be live in about 2 minutes.', 'success');
+      btn.textContent = 'Published';
+      pendingFile = null;
+
+      // Reset after a few seconds
+      setTimeout(function() {
+        document.getElementById('preview').classList.remove('visible');
+        btn.classList.remove('visible');
+        btn.disabled = false;
+        btn.textContent = 'Publish Newsletter';
+        fileInput.value = '';
+      }, 5000);
+    })
+    .catch(function(err) {
+      showStatus('Error: ' + err.message, 'error');
+      btn.disabled = false;
+      btn.textContent = 'Publish Newsletter';
+    });
+  }
+
+  function commitFile(path, content, sha) {
+    var body = {
+      message: 'Publish ' + pendingFile.name,
+      content: content
+    };
+    if (sha) body.sha = sha;
+
+    return fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + getToken(),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    }).then(function(res) {
+      if (!res.ok) {
+        return res.json().then(function(data) {
+          throw new Error(data.message || 'Upload failed');
+        });
+      }
+    });
+  }
+
+  // ── Status ──
+  function showStatus(msg, type) {
+    var el = document.getElementById('status');
+    el.textContent = msg;
+    el.className = 'status visible ' + type;
+  }
+  function hideStatus() {
+    document.getElementById('status').className = 'status';
+  }
+
+  // ── Init ──
+  updateTokenUI();
+</script>
+
+</body>
+</html>
