@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Halliday Brief — Von Halliday Consulting</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1612;
+    --soil: #2d1f0e;
+    --wheat: #c9a84c;
+    --wheat-light: #f0dfa0;
+    --cream: #faf6ee;
+    --off-white: #f5f0e8;
+    --muted: #6b5e4e;
+  }
+
+  body {
+    background: #ddd5c0;
+    font-family: 'Source Serif 4', Georgia, serif;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 40px 16px;
+  }
+
+  .site-wrapper {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  /* ── NAV BAR ── */
+  .nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .nav-arrows {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--soil);
+    color: var(--cream);
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .nav-btn:hover { background: #4a3520; }
+  .nav-btn:disabled {
+    background: #b0a690;
+    cursor: default;
+    color: #ddd5c0;
+  }
+
+  .nav-info {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .archive-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: none;
+    border: 1.5px solid var(--soil);
+    color: var(--soil);
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .archive-btn:hover {
+    background: var(--soil);
+    color: var(--cream);
+  }
+
+  /* ── NEWSLETTER FRAME ── */
+  .newsletter-frame {
+    width: 100%;
+    border: 1px solid #bfad90;
+    box-shadow: 6px 8px 48px rgba(0,0,0,0.22), 0 0 0 7px #faf6ee, 0 0 0 8px #bfad90;
+    background: var(--cream);
+    min-height: 600px;
+  }
+
+  /* ── ARCHIVE PANEL ── */
+  .archive-panel {
+    display: none;
+    background: var(--cream);
+    border: 1px solid #bfad90;
+    box-shadow: 6px 8px 48px rgba(0,0,0,0.22), 0 0 0 7px #faf6ee, 0 0 0 8px #bfad90;
+    padding: 48px 56px;
+    margin-bottom: 24px;
+  }
+  .archive-panel.open { display: block; }
+
+  .archive-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--soil);
+    margin-bottom: 8px;
+  }
+  .archive-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+
+  .archive-list {
+    list-style: none;
+  }
+  .archive-item {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    padding: 16px 0;
+    border-bottom: 1px solid #e0d8c8;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .archive-item:hover { background: var(--off-white); }
+  .archive-item.active {
+    border-left: 4px solid var(--wheat);
+    padding-left: 16px;
+  }
+
+  .archive-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    flex-shrink: 0;
+    width: 130px;
+  }
+  .archive-issue-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--soil);
+    line-height: 1.3;
+  }
+  .archive-vol {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    margin-top: 4px;
+  }
+
+  /* ── FOOTER ── */
+  .site-footer {
+    text-align: center;
+    padding: 32px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: #7a6545;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 20px 8px; }
+    .nav-bar { flex-direction: column; align-items: stretch; }
+    .nav-arrows { justify-content: center; }
+    .nav-info { order: -1; }
+    .archive-panel { padding: 28px 20px; }
+    .archive-item { flex-direction: column; gap: 4px; }
+    .archive-date { width: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="site-wrapper">
+
+  <!-- NAV -->
+  <div class="nav-bar">
+    <div class="nav-arrows">
+      <button class="nav-btn" id="prev-btn" onclick="navigate(-1)">&#8592; Older</button>
+      <button class="nav-btn" id="next-btn" onclick="navigate(1)">Newer &#8594;</button>
+    </div>
+    <div class="nav-info" id="nav-info">Loading...</div>
+    <button class="archive-btn" id="archive-toggle" onclick="toggleArchive()">Archive</button>
+  </div>
+
+  <!-- ARCHIVE PANEL -->
+  <div class="archive-panel" id="archive-panel">
+    <div class="archive-title">Archive</div>
+    <div class="archive-sub">All issues of The Halliday Brief</div>
+    <ul class="archive-list" id="archive-list"></ul>
+  </div>
+
+  <!-- NEWSLETTER -->
+  <iframe class="newsletter-frame" id="newsletter-frame" frameborder="0" scrolling="no"></iframe>
+
+</div>
+
+<div class="site-footer">
+  &copy; 2026 Von Halliday Consulting &middot; North Dakota &middot; Published Weekly
+</div>
+
+<script>
+  let issues = [];
+  let currentIndex = 0;
+
+  // Auto-resize iframe to fit content
+  function resizeFrame() {
+    const frame = document.getElementById('newsletter-frame');
+    try {
+      const body = frame.contentDocument.body;
+      const html = frame.contentDocument.documentElement;
+      const height = Math.max(
+        body.scrollHeight, body.offsetHeight,
+        html.scrollHeight, html.offsetHeight
+      );
+      frame.style.height = height + 'px';
+    } catch (e) {
+      frame.style.height = '2000px';
+    }
+  }
+
+  function loadIssue(index) {
+    currentIndex = index;
+    const issue = issues[index];
+    const frame = document.getElementById('newsletter-frame');
+
+    frame.onload = function() {
+      resizeFrame();
+      // Re-check after images/fonts load
+      setTimeout(resizeFrame, 500);
+      setTimeout(resizeFrame, 1500);
+    };
+    frame.src = 'newsletters/' + issue.file;
+
+    // Update nav
+    document.getElementById('nav-info').textContent =
+      issue.title + ' — ' + issue.date;
+
+    document.getElementById('prev-btn').disabled = (index >= issues.length - 1);
+    document.getElementById('next-btn').disabled = (index <= 0);
+
+    // Update archive active state
+    document.querySelectorAll('.archive-item').forEach(function(item, i) {
+      item.classList.toggle('active', i === index);
+    });
+  }
+
+  function navigate(direction) {
+    // direction: -1 = older, +1 = newer
+    // issues[0] is newest, issues[last] is oldest
+    var newIndex = currentIndex - direction;
+    if (newIndex >= 0 && newIndex < issues.length) {
+      loadIssue(newIndex);
+    }
+  }
+
+  function toggleArchive() {
+    var panel = document.getElementById('archive-panel');
+    panel.classList.toggle('open');
+    document.getElementById('archive-toggle').textContent =
+      panel.classList.contains('open') ? 'Close' : 'Archive';
+  }
+
+  function buildArchive() {
+    var list = document.getElementById('archive-list');
+    list.innerHTML = '';
+    issues.forEach(function(issue, i) {
+      var li = document.createElement('li');
+      li.className = 'archive-item' + (i === currentIndex ? ' active' : '');
+      li.innerHTML =
+        '<div class="archive-date">' + issue.date + '</div>' +
+        '<div><div class="archive-issue-title">' + issue.headline + '</div>' +
+        '<div class="archive-vol">' + issue.title + '</div></div>';
+      li.onclick = function() {
+        loadIssue(i);
+        toggleArchive();
+      };
+      list.appendChild(li);
+    });
+  }
+
+  // Load manifest and show latest
+  fetch('newsletters.json')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      // Sort newest first
+      issues = data.sort(function(a, b) {
+        return b.file.localeCompare(a.file);
+      });
+      buildArchive();
+      loadIssue(0);
+    })
+    .catch(function() {
+      document.getElementById('nav-info').textContent = 'Error loading newsletters';
+    });
+
+  // Handle window resize
+  window.addEventListener('resize', resizeFrame);
+</script>
+
+</body>
+</html>
