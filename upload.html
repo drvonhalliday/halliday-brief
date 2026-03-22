@@ -54,34 +54,56 @@
     margin-bottom: 32px;
   }
 
-  /* Setup section */
-  .setup {
-    margin-bottom: 32px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid #e0d8c8;
+  /* Auth section */
+  .auth-section {
+    text-align: center;
+    padding: 40px 0;
   }
-  .setup.hidden { display: none; }
+  .auth-section.hidden { display: none; }
 
-  .setup label {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    display: block;
-    margin-bottom: 8px;
-  }
-  .setup input {
-    width: 100%;
-    padding: 12px 16px;
-    border: 1.5px solid #bfad90;
-    background: #f5f0e8;
+  .login-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     font-family: 'Space Mono', monospace;
     font-size: 13px;
-    color: var(--ink);
-    margin-bottom: 12px;
+    letter-spacing: 0.06em;
+    background: var(--soil);
+    color: var(--cream);
+    border: none;
+    padding: 14px 32px;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
   }
-  .setup input:focus { outline: 2px solid var(--wheat); border-color: var(--wheat); }
+  .login-btn:hover { background: #4a3520; }
+  .login-btn svg { width: 20px; height: 20px; fill: var(--cream); }
+
+  .auth-hint {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 16px;
+    letter-spacing: 0.06em;
+  }
+
+  /* Logged in header */
+  .user-bar {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e0d8c8;
+  }
+  .user-bar.visible { display: flex; }
+
+  .user-info {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 0.06em;
+  }
 
   .btn {
     font-family: 'Space Mono', monospace;
@@ -107,14 +129,10 @@
   }
   .btn-small:hover { background: #f5f0e8; }
 
-  .token-status {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--green);
-    margin-bottom: 12px;
-  }
-
   /* Drop zone */
+  .upload-area { display: none; }
+  .upload-area.visible { display: block; }
+
   .drop-zone {
     border: 2.5px dashed #bfad90;
     padding: 60px 32px;
@@ -127,10 +145,6 @@
   .drop-zone:hover, .drop-zone.dragover {
     border-color: var(--wheat);
     background: rgba(201,168,76,0.08);
-  }
-  .drop-zone.disabled {
-    opacity: 0.4;
-    pointer-events: none;
   }
 
   .drop-zone input[type="file"] {
@@ -184,9 +198,7 @@
     color: var(--ink);
     margin-bottom: 6px;
   }
-  .preview-row span {
-    color: var(--muted);
-  }
+  .preview-row span { color: var(--muted); }
 
   /* Status */
   .status {
@@ -228,80 +240,116 @@
   <div class="title">Publish a Newsletter</div>
   <div class="subtitle">The Halliday Brief</div>
 
-  <!-- Token setup -->
-  <div class="setup" id="setup-section">
-    <div class="token-status" id="token-status"></div>
-    <label for="token-input">GitHub Personal Access Token</label>
-    <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
-    <button class="btn btn-primary" onclick="saveToken()">Save Token</button>
+  <!-- Login prompt (shown when not authenticated) -->
+  <div class="auth-section" id="auth-section">
+    <a class="login-btn" id="login-btn" href="#">
+      <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      Login with GitHub
+    </a>
+    <div class="auth-hint">Only the account owner can publish.</div>
   </div>
 
-  <!-- Drop zone -->
-  <div class="drop-zone" id="drop-zone">
-    <input type="file" accept=".html" id="file-input" />
-    <div class="drop-icon">&#8681;</div>
-    <div class="drop-text">Drop newsletter HTML here</div>
-    <div class="drop-hint">or click to browse</div>
+  <!-- User bar (shown when authenticated) -->
+  <div class="user-bar" id="user-bar">
+    <div class="user-info" id="user-info"></div>
+    <button class="btn btn-small" onclick="logout()">Log out</button>
   </div>
 
-  <!-- Preview -->
-  <div class="preview" id="preview">
-    <div class="preview-label">Ready to publish</div>
-    <div class="preview-row" id="preview-file"><span>File:</span> —</div>
-    <div class="preview-row" id="preview-title"><span>Title:</span> —</div>
-    <div class="preview-row" id="preview-date"><span>Date:</span> —</div>
-    <div class="preview-row" id="preview-headline"><span>Lead:</span> —</div>
+  <!-- Upload area (shown when authenticated) -->
+  <div class="upload-area" id="upload-area">
+    <div class="drop-zone" id="drop-zone">
+      <input type="file" accept=".html" id="file-input" />
+      <div class="drop-icon">&#8681;</div>
+      <div class="drop-text">Drop newsletter HTML here</div>
+      <div class="drop-hint">or click to browse</div>
+    </div>
+
+    <div class="preview" id="preview">
+      <div class="preview-label">Ready to publish</div>
+      <div class="preview-row" id="preview-file"><span>File:</span> —</div>
+      <div class="preview-row" id="preview-title"><span>Title:</span> —</div>
+      <div class="preview-row" id="preview-date"><span>Date:</span> —</div>
+      <div class="preview-row" id="preview-headline"><span>Lead:</span> —</div>
+    </div>
+
+    <div class="status" id="status"></div>
+
+    <button class="btn btn-primary publish-btn" id="publish-btn" onclick="publish()">Publish Newsletter</button>
   </div>
-
-  <!-- Status -->
-  <div class="status" id="status"></div>
-
-  <!-- Publish button -->
-  <button class="btn btn-primary publish-btn" id="publish-btn" onclick="publish()">Publish Newsletter</button>
 
   <a class="back-link" href="./">&#8592; Back to The Halliday Brief</a>
 </div>
 
 <script>
+  // ════════════════════════════════════════
+  // CONFIGURATION — UPDATE THIS AFTER SETUP
+  // ════════════════════════════════════════
+  var WORKER_URL = 'https://halliday-auth.doson.workers.dev';
   var REPO_OWNER = 'drvonhalliday';
   var REPO_NAME = 'halliday-brief';
+
   var pendingFile = null;
-  var parsedMeta = null;
 
-  // ── Token management ──
+  // ── Auth ──
   function getToken() {
-    return localStorage.getItem('hb_github_token') || '';
+    return localStorage.getItem('hb_oauth_token') || '';
   }
 
-  function saveToken() {
-    var token = document.getElementById('token-input').value.trim();
-    if (!token) return;
-    localStorage.setItem('hb_github_token', token);
-    updateTokenUI();
+  function checkForToken() {
+    // Check URL fragment for token from OAuth callback
+    var hash = window.location.hash;
+    if (hash.indexOf('#token=') === 0) {
+      var token = hash.substring(7);
+      localStorage.setItem('hb_oauth_token', token);
+      // Clean the URL
+      history.replaceState(null, '', window.location.pathname);
+      return token;
+    }
+    return getToken();
   }
 
-  function clearToken() {
-    localStorage.removeItem('hb_github_token');
-    updateTokenUI();
+  function logout() {
+    localStorage.removeItem('hb_oauth_token');
+    updateUI();
   }
 
-  function updateTokenUI() {
+  function updateUI() {
     var token = getToken();
-    var section = document.getElementById('setup-section');
-    var statusEl = document.getElementById('token-status');
-    var dropZone = document.getElementById('drop-zone');
+    var authSection = document.getElementById('auth-section');
+    var userBar = document.getElementById('user-bar');
+    var uploadArea = document.getElementById('upload-area');
 
     if (token) {
-      statusEl.innerHTML = 'Token saved &#10003; &nbsp;&nbsp;<button class="btn btn-small" onclick="clearToken()">Change</button>';
-      document.getElementById('token-input').style.display = 'none';
-      section.querySelector('.btn-primary').style.display = 'none';
-      dropZone.classList.remove('disabled');
+      // Verify token is still valid
+      fetch('https://api.github.com/user', {
+        headers: { 'Authorization': 'Bearer ' + token, 'User-Agent': 'HallidayBrief' }
+      })
+      .then(function(res) {
+        if (!res.ok) throw new Error('Token expired');
+        return res.json();
+      })
+      .then(function(user) {
+        if (user.login !== REPO_OWNER) {
+          logout();
+          showStatus('Access denied. Only the account owner can publish.', 'error');
+          return;
+        }
+        authSection.classList.add('hidden');
+        userBar.classList.add('visible');
+        uploadArea.classList.add('visible');
+        document.getElementById('user-info').innerHTML = 'Logged in as <strong>' + user.login + '</strong>';
+      })
+      .catch(function() {
+        // Token is invalid, clear it
+        localStorage.removeItem('hb_oauth_token');
+        authSection.classList.remove('hidden');
+        userBar.classList.remove('visible');
+        uploadArea.classList.remove('visible');
+      });
     } else {
-      statusEl.textContent = '';
-      document.getElementById('token-input').style.display = '';
-      document.getElementById('token-input').value = '';
-      section.querySelector('.btn-primary').style.display = '';
-      dropZone.classList.add('disabled');
+      authSection.classList.remove('hidden');
+      userBar.classList.remove('visible');
+      uploadArea.classList.remove('visible');
     }
   }
 
@@ -316,7 +364,6 @@
     var vol = parts[1] || 'Unknown';
     var dateStr = parts[2] || 'Unknown';
 
-    // Extract date for filename: try to parse "Month DD, YYYY" → "YYYY-MM-DD"
     var filename = null;
     var dateMatch = dateStr.match(/(\w+)\s+(\d{1,2}),?\s+(\d{4})/);
     if (dateMatch) {
@@ -331,7 +378,6 @@
       if (m) filename = y + '-' + m + '-' + d + '.html';
     }
 
-    // Extract first h2 as headline
     var h2Match = content.match(/<h2>([\s\S]*?)<\/h2>/i);
     var headline = '';
     if (h2Match) {
@@ -355,20 +401,19 @@
     var reader = new FileReader();
     reader.onload = function(e) {
       var content = e.target.result;
-      parsedMeta = parseNewsletter(content);
+      var meta = parseNewsletter(content);
 
-      if (!parsedMeta) {
-        showStatus('Could not parse newsletter title. Make sure the HTML has a <title> tag.', 'error');
+      if (!meta) {
+        showStatus('Could not parse newsletter. Make sure the HTML has a <title> tag with the standard format.', 'error');
         return;
       }
 
-      pendingFile = { name: parsedMeta.filename, content: content };
+      pendingFile = { name: meta.filename, content: content };
 
-      // Show preview
-      document.getElementById('preview-file').innerHTML = '<span>File:</span> ' + parsedMeta.filename;
-      document.getElementById('preview-title').innerHTML = '<span>Title:</span> ' + parsedMeta.vol;
-      document.getElementById('preview-date').innerHTML = '<span>Date:</span> ' + parsedMeta.date;
-      document.getElementById('preview-headline').innerHTML = '<span>Lead:</span> ' + parsedMeta.headline;
+      document.getElementById('preview-file').innerHTML = '<span>File:</span> ' + meta.filename;
+      document.getElementById('preview-title').innerHTML = '<span>Title:</span> ' + meta.vol;
+      document.getElementById('preview-date').innerHTML = '<span>Date:</span> ' + meta.date;
+      document.getElementById('preview-headline').innerHTML = '<span>Lead:</span> ' + meta.headline;
       document.getElementById('preview').classList.add('visible');
       document.getElementById('publish-btn').classList.add('visible');
       hideStatus();
@@ -390,14 +435,10 @@
   dropZone.addEventListener('drop', function(e) {
     e.preventDefault();
     dropZone.classList.remove('dragover');
-    if (e.dataTransfer.files.length > 0) {
-      handleFile(e.dataTransfer.files[0]);
-    }
+    if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
   });
   fileInput.addEventListener('change', function() {
-    if (fileInput.files.length > 0) {
-      handleFile(fileInput.files[0]);
-    }
+    if (fileInput.files.length > 0) handleFile(fileInput.files[0]);
   });
 
   // ── Publish ──
@@ -412,18 +453,15 @@
     var path = 'newsletters/' + pendingFile.name;
     var content = btoa(unescape(encodeURIComponent(pendingFile.content)));
 
-    // Check if file already exists
     fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
       headers: { 'Authorization': 'Bearer ' + getToken() }
     })
     .then(function(res) {
       if (res.ok) {
         return res.json().then(function(data) {
-          // File exists — update it
           return commitFile(path, content, data.sha);
         });
       } else {
-        // File doesn't exist — create it
         return commitFile(path, content, null);
       }
     })
@@ -431,8 +469,6 @@
       showStatus('Published! The newsletter will be live in about 2 minutes.', 'success');
       btn.textContent = 'Published';
       pendingFile = null;
-
-      // Reset after a few seconds
       setTimeout(function() {
         document.getElementById('preview').classList.remove('visible');
         btn.classList.remove('visible');
@@ -449,10 +485,7 @@
   }
 
   function commitFile(path, content, sha) {
-    var body = {
-      message: 'Publish ' + pendingFile.name,
-      content: content
-    };
+    var body = { message: 'Publish ' + pendingFile.name, content: content };
     if (sha) body.sha = sha;
 
     return fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
@@ -482,7 +515,12 @@
   }
 
   // ── Init ──
-  updateTokenUI();
+  // Set login URL
+  document.getElementById('login-btn').href = WORKER_URL + '/auth/login';
+
+  // Check for OAuth callback token
+  checkForToken();
+  updateUI();
 </script>
 
 </body>
