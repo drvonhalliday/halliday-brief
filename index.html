@@ -331,9 +331,14 @@
 
     frame.onload = function() {
       resizeFrame();
-      // Re-check after images/fonts load
       setTimeout(resizeFrame, 500);
       setTimeout(resizeFrame, 1500);
+      // Open all links in new tab
+      try {
+        var base = frame.contentDocument.createElement('base');
+        base.target = '_blank';
+        frame.contentDocument.head.appendChild(base);
+      } catch(e) {}
     };
     frame.src = 'newsletters/' + issue.file;
 
