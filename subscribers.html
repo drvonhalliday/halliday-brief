@@ -440,25 +440,32 @@
     statsRow.innerHTML = '';
 
     try {
+      // Fetch each subscriber type separately
+      var types = ['regular', 'unactivated', 'unsubscribed'];
+      var byType = { regular: [], unactivated: [], unsubscribed: [] };
       var all = [];
-      var url = 'https://api.buttondown.com/v1/subscribers?limit=100';
 
-      while (url) {
-        var res = await fetch(url, {
-          headers: { 'Authorization': 'Token ' + getKey() }
-        });
-        if (!res.ok) throw new Error('Failed to load');
-        var data = await res.json();
-        var results = data.results || data;
-        if (Array.isArray(results)) {
-          all = all.concat(results);
+      for (var t = 0; t < types.length; t++) {
+        var url = 'https://api.buttondown.com/v1/subscribers?type=' + types[t] + '&limit=100';
+        while (url) {
+          var res = await fetch(url, {
+            headers: { 'Authorization': 'Token ' + getKey() }
+          });
+          if (!res.ok) break;
+          var data = await res.json();
+          var results = data.results || data;
+          if (Array.isArray(results)) {
+            results.forEach(function(s) { s._type = types[t]; });
+            byType[types[t]] = byType[types[t]].concat(results);
+            all = all.concat(results);
+          }
+          url = data.next || null;
         }
-        url = data.next || null;
       }
 
-      var regular = all.filter(function(s) { return s.subscriber_type === 'regular'; });
-      var unconfirmed = all.filter(function(s) { return s.subscriber_type === 'unactivated'; });
-      var unsubscribed = all.filter(function(s) { return s.subscriber_type === 'unsubscribed'; });
+      var regular = byType.regular;
+      var unconfirmed = byType.unactivated;
+      var unsubscribed = byType.unsubscribed;
 
       topInfo.textContent = regular.length + ' active subscriber' + (regular.length !== 1 ? 's' : '');
 
@@ -482,7 +489,7 @@
         var li = document.createElement('li');
         li.className = 'sub-item';
 
-        var type = sub.subscriber_type || 'regular';
+        var type = sub._type || sub.subscriber_type || 'regular';
         var badgeClass = 'regular';
         var badgeText = 'Active';
         if (type === 'unactivated') { badgeClass = 'unconfirmed'; badgeText = 'Unconfirmed'; }
