@@ -1,0 +1,354 @@
+name: Test Newsletter Manifest
+
+on:
+  push:
+    paths:
+      - 'test-newsletters/**'
+
+permissions:
+  contents: write
+
+jobs:
+  test-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Build test-newsletters.json from HTML files
+        run: |
+          python3 << 'SCRIPT'
+          import os, re, json, html
+
+          newsletters_dir = 'test-newsletters'
+          if not os.path.isdir(newsletters_dir):
+              print('No test-newsletters directory')
+              with open('test-newsletters.json', 'w') as f:
+                  json.dump([], f)
+              exit(0)
+
+          entries = []
+          for filename in sorted(os.listdir(newsletters_dir)):
+              if not filename.endswith('.html'):
+                  continue
+
+              filepath = os.path.join(newsletters_dir, filename)
+              with open(filepath, 'r', encoding='utf-8') as f:
+                  content = f.read(2000)
+
+              title_match = re.search(r'<title>(.*?)</title>', content, re.IGNORECASE)
+              if not title_match:
+                  continue
+
+              raw_title = html.unescape(title_match.group(1).strip())
+              parts = [p.strip() for p in raw_title.split('|')]
+
+              vol = parts[1] if len(parts) > 1 else filename.replace('.html', '')
+              date_str = parts[2] if len(parts) > 2 else filename.replace('.html', '')
+
+              h2_match = re.search(r'<h2>(.*?)</h2>', content, re.IGNORECASE | re.DOTALL)
+              headline = ''
+              if h2_match:
+                  headline = re.sub(r'<[^>]+>', '', h2_match.group(1)).strip()
+
+              entries.append({
+                  'file': filename,
+                  'title': vol,
+                  'date': date_str,
+                  'headline': headline
+              })
+
+          entries.sort(key=lambda e: e['file'])
+
+          with open('test-newsletters.json', 'w', encoding='utf-8') as f:
+              json.dump(entries, f, indent=2, ensure_ascii=False)
+              f.write('\n')
+
+          print('Updated test-newsletters.json with ' + str(len(entries)) + ' entries')
+          for e in entries:
+              print('  - ' + e['file'] + ': ' + e['title'] + ' / ' + e['date'])
+          SCRIPT
+
+      - name: Detect new test newsletter
+        id: detect
+        run: |
+          ADDED=$(git diff --name-only --diff-filter=A HEAD~1 HEAD -- 'test-newsletters/*.html' 2>/dev/null || echo "")
+          if [ -n "$ADDED" ]; then
+            echo "file=$ADDED" >> $GITHUB_OUTPUT
+            echo "New test newsletter detected: $ADDED"
+          else
+            echo "file=" >> $GITHUB_OUTPUT
+            echo "No new test newsletter (deletion or update)"
+          fi
+
+      - name: Commit updated test manifest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add test-newsletters.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update test newsletter manifest"
+            git push
+          fi
+
+      - name: Install email tools
+        if: steps.detect.outputs.file != ''
+        run: pip install css-inline beautifulsoup4
+
+      - name: Create draft email in Buttondown
+        if: steps.detect.outputs.file != ''
+        env:
+          BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
+          NEWSLETTER_FILE: ${{ steps.detect.outputs.file }}
+        run: |
+          python3 << 'SCRIPT'
+          import os, re, json, html
+          import urllib.request
+          import css_inline
+          from bs4 import BeautifulSoup
+
+          filepath = os.environ.get('NEWSLETTER_FILE', '')
+          if not filepath:
+              files = sorted(f for f in os.listdir('test-newsletters') if f.endswith('.html'))
+              if not files:
+                  print('No test newsletters found')
+                  exit(0)
+              filepath = 'test-newsletters/' + files[-1]
+
+          with open(filepath, 'r', encoding='utf-8') as f:
+              content = f.read()
+
+          title_match = re.search(r'<title>(.*?)</title>', content[:2000], re.IGNORECASE)
+          if not title_match:
+              print('No title found, skipping')
+              exit(0)
+
+          raw_title = html.unescape(title_match.group(1).strip())
+          parts = [p.strip() for p in raw_title.split('|')]
+          subject = '[TEST] The Halliday Brief'
+          if len(parts) >= 3:
+              subject = '[TEST] ' + parts[0] + ' \u2014 ' + parts[2]
+
+          # Resolve CSS variables
+          css_vars = {
+              'var(--ink)': '#1a1612',
+              'var(--soil)': '#2d1f0e',
+              'var(--wheat)': '#c9a84c',
+              'var(--wheat-light)': '#f0dfa0',
+              'var(--cream)': '#faf6ee',
+              'var(--off-white)': '#f5f0e8',
+              'var(--muted)': '#6b5e4e',
+              'var(--red)': '#8b2020',
+              'var(--blue)': '#1a3a5c',
+              'var(--green)': '#1f5c2e',
+          }
+          email_html = content
+          for var, val in css_vars.items():
+              email_html = email_html.replace(var, val)
+
+          # Inline CSS
+          email_html = css_inline.inline(email_html)
+
+          # Convert grid/flex layouts to tables for email compatibility
+          soup = BeautifulSoup(email_html, 'html.parser')
+
+          for row in soup.find_all('div', class_='numbers-row'):
+              cells = row.find_all('div', class_='number-cell')
+              if not cells:
+                  continue
+              table = soup.new_tag('table', attrs={
+                  'width': '100%',
+                  'cellpadding': '0',
+                  'cellspacing': '0',
+                  'border': '0',
+                  'style': 'border: 1px solid #c8b890; margin: 28px 0;'
+              })
+              tr = soup.new_tag('tr')
+              for cell in cells:
+                  td = soup.new_tag('td', attrs={
+                      'width': '33%',
+                      'align': 'center',
+                      'valign': 'top',
+                      'style': 'background: #f5f0e8; padding: 24px 18px; text-align: center; border-right: 1px solid #c8b890;'
+                  })
+                  td.append(cell)
+                  tr.append(td)
+              table.append(tr)
+              row.replace_with(table)
+
+          for grid in soup.find_all('div', class_='footer-grid'):
+              cols = grid.find_all('div', class_='footer-col')
+              if not cols:
+                  continue
+              table = soup.new_tag('table', attrs={
+                  'width': '100%',
+                  'cellpadding': '0',
+                  'cellspacing': '0',
+                  'border': '0',
+                  'style': 'margin-bottom: 28px;'
+              })
+              tr = soup.new_tag('tr')
+              for col in cols:
+                  td = soup.new_tag('td', attrs={
+                      'width': '50%',
+                      'valign': 'top',
+                      'style': 'padding: 0 20px 0 0;'
+                  })
+                  td.append(col)
+                  tr.append(td)
+              table.append(tr)
+              grid.replace_with(table)
+
+          for meta in soup.find_all('div', class_='masthead-meta'):
+              spans = meta.find_all('span')
+              if not spans:
+                  continue
+              table = soup.new_tag('table', attrs={
+                  'width': '100%',
+                  'cellpadding': '0',
+                  'cellspacing': '0',
+                  'border': '0',
+              })
+              tr = soup.new_tag('tr')
+              for span in spans:
+                  td = soup.new_tag('td', attrs={
+                      'align': 'center',
+                      'style': span.get('style', '') + '; padding: 0 16px;'
+                  })
+                  td.string = span.get_text()
+                  tr.append(td)
+              table.append(tr)
+              meta.replace_with(table)
+
+          for ul in soup.find_all('ul', class_='this-week-items'):
+              for li in ul.find_all('li'):
+                  existing = li.get('style', '')
+                  li['style'] = existing + '; display: block; margin-bottom: 11px;'
+
+          for fb in soup.find_all('div', class_='footer-bottom'):
+              children = list(fb.children)
+              real_children = [c for c in children if getattr(c, 'name', None)]
+              if len(real_children) >= 2:
+                  table = soup.new_tag('table', attrs={
+                      'width': '100%',
+                      'cellpadding': '0',
+                      'cellspacing': '0',
+                      'border': '0',
+                      'style': 'border-top: 1px solid #4a3520; padding-top: 22px;'
+                  })
+                  tr = soup.new_tag('tr')
+                  td1 = soup.new_tag('td', attrs={'align': 'left', 'valign': 'middle'})
+                  td1.append(real_children[0].extract())
+                  td2 = soup.new_tag('td', attrs={'align': 'right', 'valign': 'middle'})
+                  td2.append(real_children[1].extract())
+                  tr.append(td1)
+                  tr.append(td2)
+                  table.append(tr)
+                  fb.replace_with(table)
+
+          for sh in soup.find_all('div', class_='section-header'):
+              children = [c for c in sh.children if getattr(c, 'name', None)]
+              if len(children) >= 2:
+                  table = soup.new_tag('table', attrs={
+                      'width': '100%',
+                      'cellpadding': '0',
+                      'cellspacing': '0',
+                      'border': '0',
+                      'style': 'margin-bottom: 30px; margin-top: 52px;'
+                  })
+                  tr = soup.new_tag('tr')
+                  td1 = soup.new_tag('td', attrs={'valign': 'middle', 'style': 'padding-right: 16px;'})
+                  td1.append(children[0].extract())
+                  td2 = soup.new_tag('td', attrs={'valign': 'middle', 'width': '100%'})
+                  td2.append(children[1].extract())
+                  tr.append(td1)
+                  tr.append(td2)
+                  table.append(tr)
+                  sh.replace_with(table)
+
+          for wl in soup.find_all('ul', class_='watch-list'):
+              for li in wl.find_all('li'):
+                  children = [c for c in li.children if getattr(c, 'name', None)]
+                  if len(children) >= 2:
+                      table = soup.new_tag('table', attrs={
+                          'width': '100%',
+                          'cellpadding': '0',
+                          'cellspacing': '0',
+                          'border': '0',
+                          'style': 'border-bottom: 1px dashed #c8b890; padding: 18px 0;'
+                      })
+                      tr = soup.new_tag('tr')
+                      td1 = soup.new_tag('td', attrs={
+                          'valign': 'top',
+                          'width': '50',
+                          'style': 'padding-right: 18px;'
+                      })
+                      td1.append(children[0].extract())
+                      td2 = soup.new_tag('td', attrs={'valign': 'top'})
+                      td2.append(children[1].extract())
+                      tr.append(td1)
+                      tr.append(td2)
+                      table.append(tr)
+                      li.replace_with(table)
+
+          for orn in soup.find_all('div', class_='ornament'):
+              children = [c for c in orn.children if getattr(c, 'name', None)]
+              if len(children) >= 3:
+                  table = soup.new_tag('table', attrs={
+                      'width': '100%',
+                      'cellpadding': '0',
+                      'cellspacing': '0',
+                      'border': '0',
+                      'style': 'margin: 44px 0;'
+                  })
+                  tr = soup.new_tag('tr')
+                  td1 = soup.new_tag('td', attrs={'style': 'height: 1px; background: #d0c4a8;'})
+                  td1.string = '\u00a0'
+                  td2 = soup.new_tag('td', attrs={
+                      'align': 'center',
+                      'style': 'padding: 0 16px; font-family: Playfair Display, serif; font-size: 22px; color: #c9a84c;'
+                  })
+                  td2.string = children[1].get_text()
+                  td3 = soup.new_tag('td', attrs={'style': 'height: 1px; background: #d0c4a8;'})
+                  td3.string = '\u00a0'
+                  tr.append(td1)
+                  tr.append(td2)
+                  tr.append(td3)
+                  table.append(tr)
+                  orn.replace_with(table)
+
+          email_html = str(soup)
+
+          body_html = '<!-- buttondown-editor-mode: fancy -->\n' + email_html
+
+          # Create as DRAFT — does not send to subscribers
+          payload = json.dumps({
+              'subject': subject,
+              'body': body_html,
+              'status': 'draft'
+          }).encode('utf-8')
+
+          api_key = os.environ['BUTTONDOWN_API_KEY']
+          req = urllib.request.Request(
+              'https://api.buttondown.com/v1/emails',
+              data=payload,
+              headers={
+                  'Authorization': 'Token ' + api_key,
+                  'Content-Type': 'application/json',
+              },
+              method='POST'
+          )
+
+          try:
+              resp = urllib.request.urlopen(req)
+              print('Draft created successfully: ' + str(resp.status))
+              print('Check Buttondown dashboard > Emails > Drafts to preview')
+          except urllib.error.HTTPError as e:
+              body = e.read().decode('utf-8')
+              print('Buttondown API error ' + str(e.code) + ': ' + body)
+              if e.code >= 500:
+                  exit(1)
+          SCRIPT
