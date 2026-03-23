@@ -323,6 +323,10 @@ jobs:
                   ls['display'] = 'block'
                   ls['margin-bottom'] = '11px'
                   li['style'] = to_style_str(ls)
+                  for span in li.find_all('span'):
+                      ss = parse_style(span.get('style', ''))
+                      ss['display'] = 'inline'
+                      span['style'] = to_style_str(ss)
 
           for sh in soup.find_all('div', class_='section-header'):
               style = parse_style(sh.get('style', ''))
