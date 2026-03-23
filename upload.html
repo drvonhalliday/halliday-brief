@@ -1066,10 +1066,6 @@
     hiddenFrame.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:820px;height:1px;';
     document.body.appendChild(hiddenFrame);
 
-    hiddenFrame.contentDocument.open();
-    hiddenFrame.contentDocument.write(html);
-    hiddenFrame.contentDocument.close();
-
     hiddenFrame.onload = function() {
       var doc = hiddenFrame.contentDocument;
 
@@ -1183,6 +1179,10 @@
       showPreviewFrame('email');
       document.getElementById('email-preview-section').classList.add('visible');
     };
+
+    hiddenFrame.contentDocument.open();
+    hiddenFrame.contentDocument.write(html);
+    hiddenFrame.contentDocument.close();
   }
 
   function showPreviewFrame(mode) {
