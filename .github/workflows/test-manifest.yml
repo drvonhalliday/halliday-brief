@@ -195,7 +195,7 @@ jobs:
                   td = soup.new_tag('td', attrs={
                       'width': '50%',
                       'valign': 'top',
-                      'style': 'padding: 0 20px 0 0;'
+                      'style': 'padding: 0 20px 0 0; color: #c4b48a; font-size: 14px; line-height: 1.82;'
                   })
                   td.append(col)
                   tr.append(td)
@@ -206,6 +206,7 @@ jobs:
               spans = meta.find_all('span')
               if not spans:
                   continue
+              meta_style = "font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.16em; color: #a08c68; text-transform: uppercase;"
               table = soup.new_tag('table', attrs={
                   'width': '100%',
                   'cellpadding': '0',
@@ -216,7 +217,7 @@ jobs:
               for span in spans:
                   td = soup.new_tag('td', attrs={
                       'align': 'center',
-                      'style': span.get('style', '') + '; padding: 0 16px;'
+                      'style': meta_style + ' padding: 0 16px;'
                   })
                   td.string = span.get_text()
                   tr.append(td)
@@ -240,9 +241,9 @@ jobs:
                       'style': 'border-top: 1px solid #4a3520; padding-top: 22px;'
                   })
                   tr = soup.new_tag('tr')
-                  td1 = soup.new_tag('td', attrs={'align': 'left', 'valign': 'middle'})
+                  td1 = soup.new_tag('td', attrs={'align': 'left', 'valign': 'middle', 'style': 'color: #faf6ee;'})
                   td1.append(real_children[0].extract())
-                  td2 = soup.new_tag('td', attrs={'align': 'right', 'valign': 'middle'})
+                  td2 = soup.new_tag('td', attrs={'align': 'right', 'valign': 'middle', 'style': 'color: #7a6545;'})
                   td2.append(real_children[1].extract())
                   tr.append(td1)
                   tr.append(td2)
