@@ -169,6 +169,83 @@
     margin-top: 4px;
   }
 
+  /* ── SUBSCRIBE ── */
+  .subscribe-bar {
+    background: var(--soil);
+    border: 1px solid #bfad90;
+    box-shadow: 6px 8px 48px rgba(0,0,0,0.22), 0 0 0 7px #faf6ee, 0 0 0 8px #bfad90;
+    padding: 32px 48px;
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .subscribe-text {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .subscribe-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 4px;
+  }
+
+  .subscribe-hint {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #a08c68;
+  }
+
+  .subscribe-form {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .subscribe-input {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    padding: 10px 14px;
+    border: 1px solid #5a4a32;
+    background: #3d2e18;
+    color: var(--cream);
+    outline: none;
+    width: 220px;
+    transition: border-color 0.2s;
+  }
+  .subscribe-input::placeholder { color: #7a6545; }
+  .subscribe-input:focus { border-color: var(--wheat); }
+
+  .subscribe-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--wheat);
+    color: var(--soil);
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .subscribe-btn:hover { background: #d4b45a; }
+
+  .subscribe-success {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--wheat);
+    letter-spacing: 0.06em;
+    display: none;
+  }
+
   /* ── FOOTER ── */
   .site-footer {
     text-align: center;
@@ -188,6 +265,9 @@
     .archive-panel { padding: 28px 20px; }
     .archive-item { flex-direction: column; gap: 4px; }
     .archive-date { width: auto; }
+    .subscribe-bar { flex-direction: column; text-align: center; padding: 28px 20px; }
+    .subscribe-form { width: 100%; }
+    .subscribe-input { flex: 1; width: auto; }
   }
 </style>
 </head>
@@ -214,6 +294,19 @@
 
   <!-- NEWSLETTER -->
   <iframe class="newsletter-frame" id="newsletter-frame" frameborder="0" scrolling="no"></iframe>
+
+  <!-- SUBSCRIBE -->
+  <div class="subscribe-bar">
+    <div class="subscribe-text">
+      <div class="subscribe-title">Get it in your inbox</div>
+      <div class="subscribe-hint">New issues delivered weekly</div>
+    </div>
+    <form class="subscribe-form" id="subscribe-form" action="https://buttondown.com/api/emails/embed-subscribe/drvonhalliday" method="post" target="_blank">
+      <input class="subscribe-input" type="email" name="email" placeholder="your@email.com" required />
+      <button class="subscribe-btn" type="submit">Subscribe</button>
+    </form>
+    <div class="subscribe-success" id="subscribe-success">Check your email to confirm.</div>
+  </div>
 
 </div>
 
