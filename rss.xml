@@ -5,7 +5,7 @@
     <link>https://brief.vonhalliday.com</link>
     <description>Strategic insights from Von Halliday Consulting</description>
     <language>en-us</language>
-    <lastBuildDate>Mon, 23 Mar 2026 14:39:21 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 23 Mar 2026 18:08:15 +0000</lastBuildDate>
     <atom:link href="https://brief.vonhalliday.com/rss.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>The Halliday Brief — Vol. 1, No. 1 — March 21, 2026</title>
@@ -747,7 +747,7 @@
 
       <!-- STAT TRIO -->
       <div class="numbers-row">
-        <div class="number-cell"><span class="num">$199M</span><span class="num-label">ND Year One award</span></div>
+        <div class="number-cell"><span class="num">$198.9M</span><span class="num-label">ND Year One award</span></div>
         <div class="number-cell"><span class="num">$10M</span><span class="num-label">Round 1 available now</span></div>
         <div class="number-cell"><span class="num">37</span><span class="num-label">Eligible CAH grantees</span></div>
       </div>
@@ -921,14 +921,14 @@
     <article class="story">
       <div class="story-kicker">Medicaid · Work Requirements</div>
       <h2>Medicaid's Quiet Clock: Work Requirements Are Coming, Guidance Still Pending</h2>
-      <p class="deck">Federal law requires states to implement Medicaid work requirements by end of 2026 — but ND providers are still waiting on the specifics needed to plan ahead.</p>
+      <p class="deck">Federal law establishes Medicaid work requirements that states will be required to implement once CMS issues final guidance — but ND providers are still waiting on the specifics needed to plan ahead.</p>
 
       <div class="pullquote">
         <p>"You are always scared of things you don't know."</p>
         <cite>— North Dakota Hospital Association, on Medicaid changes</cite>
       </div>
 
-      <p>The new Medicaid provisions — work requirements, semiannual eligibility check-ins, and coverage exemptions — were embedded in last summer's federal budget reconciliation package. In North Dakota, roughly 23,000 Medicaid expansion enrollees will be subject to the new rules, out of more than 108,000 total recipients statewide.</p>
+      <p>The new Medicaid provisions — work requirements, semiannual eligibility check-ins, and coverage exemptions — were embedded in last summer's federal budget reconciliation package. In North Dakota, roughly 23,000 Medicaid expansion enrollees will be subject to the new rules, out of more than 105,000 total recipients statewide.</p>
 
       <!-- MEDICAID EXPOSURE BAR CHART -->
       <div class="chart-container">
@@ -1060,7 +1060,7 @@
         <div class="watch-num">4</div>
         <div class="watch-text">
           <strong>Measles Outbreak &amp; Rural Public Health Capacity</strong>
-          ND HHS is tracking 23 confirmed measles cases statewide in 2026 — including new cases in Traill and Pembina counties. The outbreak is testing rural public health infrastructure and may amplify calls for RHTP-funded preventive care investments.
+          ND HHS is tracking at least 24 confirmed measles cases statewide in 2026 (as of mid-March) — including new cases in Traill and Pembina counties. The outbreak is testing rural public health infrastructure and may amplify calls for RHTP-funded preventive care investments.
         </div>
       </li>
       <li>
@@ -1092,7 +1092,7 @@
         <p>
           March 30 — RHTP Stakeholder Conference Call<br/>
           April 30 — RHTP Workforce Grant Deadline<br/>
-          Sept. 30 — Federal Spend Commitment Deadline<br/>
+          Oct. 31 — Federal Spend Obligation Deadline<br/>
           June 2026 — Dakota Conference on Rural Health
         </p>
       </div>
