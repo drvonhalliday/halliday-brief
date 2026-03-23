@@ -33,26 +33,21 @@ jobs:
               with open(filepath, 'r', encoding='utf-8') as f:
                   full_content = f.read()
 
-              # Extract <title> content (from first 2000 chars)
               title_match = re.search(r'<title>(.*?)</title>', full_content[:2000], re.IGNORECASE)
               if not title_match:
                   continue
 
               raw_title = html.unescape(title_match.group(1).strip())
-
-              # Expected format: "The Halliday Brief | Vol. X, No. Y | Month DD, YYYY"
               parts = [p.strip() for p in raw_title.split('|')]
 
               vol = parts[1] if len(parts) > 1 else filename.replace('.html', '')
               date_str = parts[2] if len(parts) > 2 else filename.replace('.html', '')
 
-              # Extract first <h2> as headline
               h2_match = re.search(r'<h2>(.*?)</h2>', full_content[:4000], re.IGNORECASE | re.DOTALL)
               headline = ''
               if h2_match:
                   headline = re.sub(r'<[^>]+>', '', h2_match.group(1)).strip()
 
-              # Parse date for RSS
               pub_date = None
               date_match = re.match(r'(\d{4})-(\d{2})-(\d{2})', filename)
               if date_match:
@@ -73,10 +68,8 @@ jobs:
                   'pub_date': pub_date
               })
 
-          # Sort by filename (date-based names sort chronologically)
           entries.sort(key=lambda e: e['file'])
 
-          # Write newsletters.json (without full_content or pub_date)
           json_entries = [
               {'file': e['file'], 'title': e['title'], 'date': e['date'], 'headline': e['headline']}
               for e in entries
@@ -85,47 +78,50 @@ jobs:
               json.dump(json_entries, f, indent=2, ensure_ascii=False)
               f.write('\n')
 
-          # Write rss.xml
           def xml_escape(text):
               return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
 
           now = format_datetime(datetime.now(timezone.utc))
           items = []
           for e in reversed(entries):
-              link = f"{SITE_URL}/newsletters/{e['file']}"
-              title = xml_escape(f"The Halliday Brief — {e['title']} — {e['date']}")
+              link = SITE_URL + '/newsletters/' + e['file']
+              title = xml_escape('The Halliday Brief \u2014 ' + e['title'] + ' \u2014 ' + e['date'])
               desc = xml_escape(e['headline']) if e['headline'] else title
               pub = format_datetime(e['pub_date']) if e['pub_date'] else now
               content_cdata = e['full_content']
-              items.append(f"""    <item>
-      <title>{title}</title>
-      <link>{link}</link>
-      <guid isPermaLink="true">{link}</guid>
-      <pubDate>{pub}</pubDate>
-      <description>{desc}</description>
-      <content:encoded><![CDATA[{content_cdata}]]></content:encoded>
-    </item>""")
+              item = '    <item>\n'
+              item += '      <title>' + title + '</title>\n'
+              item += '      <link>' + link + '</link>\n'
+              item += '      <guid isPermaLink="true">' + link + '</guid>\n'
+              item += '      <pubDate>' + pub + '</pubDate>\n'
+              item += '      <description>' + desc + '</description>\n'
+              item += '      <content:encoded><![CDATA[' + content_cdata + ']]></content:encoded>\n'
+              item += '    </item>'
+              items.append(item)
 
-          rss = f"""<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>The Halliday Brief</title>
-    <link>{SITE_URL}</link>
-    <description>Strategic insights from Von Halliday Consulting</description>
-    <language>en-us</language>
-    <lastBuildDate>{now}</lastBuildDate>
-    <atom:link href="{SITE_URL}/rss.xml" rel="self" type="application/rss+xml"/>
-{chr(10).join(items)}
-  </channel>
-</rss>
-"""
+          rss_parts = []
+          rss_parts.append('<?xml version="1.0" encoding="UTF-8"?>')
+          rss_parts.append('<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">')
+          rss_parts.append('  <channel>')
+          rss_parts.append('    <title>The Halliday Brief</title>')
+          rss_parts.append('    <link>' + SITE_URL + '</link>')
+          rss_parts.append('    <description>Strategic insights from Von Halliday Consulting</description>')
+          rss_parts.append('    <language>en-us</language>')
+          rss_parts.append('    <lastBuildDate>' + now + '</lastBuildDate>')
+          rss_parts.append('    <atom:link href="' + SITE_URL + '/rss.xml" rel="self" type="application/rss+xml"/>')
+          for item in items:
+              rss_parts.append(item)
+          rss_parts.append('  </channel>')
+          rss_parts.append('</rss>')
+          rss_parts.append('')
+
           with open('rss.xml', 'w', encoding='utf-8') as f:
-              f.write(rss)
+              f.write('\n'.join(rss_parts))
 
-          print(f"Updated newsletters.json with {len(entries)} entries")
-          print(f"Updated rss.xml with {len(entries)} items")
+          print('Updated newsletters.json with ' + str(len(entries)) + ' entries')
+          print('Updated rss.xml with ' + str(len(entries)) + ' items')
           for e in entries:
-              print(f"  - {e['file']}: {e['title']} / {e['date']}")
+              print('  - ' + e['file'] + ': ' + e['title'] + ' / ' + e['date'])
           SCRIPT
 
       - name: Commit updated manifest and feed
