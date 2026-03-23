@@ -152,174 +152,160 @@ jobs:
           # Inline CSS
           email_html = css_inline.inline(email_html)
 
-          # Convert grid/flex layouts to tables for email compatibility
           soup = BeautifulSoup(email_html, 'html.parser')
 
+          # ── Step 1: Propagate inherited CSS to all elements ──
+          # This makes every element carry its own color/font explicitly,
+          # so DOM restructuring never loses inherited styles.
+          INHERITED = ['color', 'font-family', 'font-size', 'font-weight',
+                       'font-style', 'letter-spacing', 'text-transform',
+                       'line-height', 'text-align']
+          TEXT_TAGS = {'p', 'span', 'div', 'td', 'th', 'li', 'a', 'strong', 'em',
+                       'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'cite', 'small', 'label',
+                       'header', 'footer', 'main', 'article', 'section', 'ul', 'ol',
+                       'button', 'figcaption', 'blockquote'}
+
+          def parse_style(s):
+              if not s:
+                  return {}
+              d = {}
+              for part in s.split(';'):
+                  part = part.strip()
+                  if ':' in part:
+                      k, v = part.split(':', 1)
+                      d[k.strip().lower()] = v.strip()
+              return d
+
+          def to_style_str(d):
+              return '; '.join(k + ': ' + v for k, v in d.items() if v)
+
+          def propagate(el, inherited):
+              if not hasattr(el, 'attrs'):
+                  return
+              own = parse_style(el.get('style', ''))
+              effective = dict(inherited)
+              for prop in INHERITED:
+                  if prop in own:
+                      effective[prop] = own[prop]
+              if el.name in TEXT_TAGS:
+                  changed = False
+                  for prop in INHERITED:
+                      if prop in effective and prop not in own:
+                          own[prop] = effective[prop]
+                          changed = True
+                  if changed:
+                      el['style'] = to_style_str(own)
+              for child in el.children:
+                  propagate(child, effective)
+
+          root = soup.find('body') or soup
+          propagate(root, {})
+
+          # ── Step 2: Flatten grid/flex layouts for email ──
+          # Replace display:grid and display:flex with block stacking.
+          # Email clients don't support grid or flexbox.
+          for el in soup.find_all(True):
+              style = parse_style(el.get('style', ''))
+              display = style.get('display', '')
+              if 'grid' in display or 'flex' in display:
+                  style['display'] = 'block'
+                  style.pop('grid-template-columns', None)
+                  style.pop('flex-direction', None)
+                  style.pop('flex-wrap', None)
+                  style.pop('align-items', None)
+                  style.pop('justify-content', None)
+                  style.pop('gap', None)
+                  el['style'] = to_style_str(style)
+
+          # ── Step 3: Fix specific layout patterns ──
+          # Numbers row: ensure cells stack with breathing room
           for row in soup.find_all('div', class_='numbers-row'):
-              cells = row.find_all('div', class_='number-cell')
-              if not cells:
-                  continue
-              table = soup.new_tag('table', attrs={
-                  'width': '100%',
-                  'cellpadding': '0',
-                  'cellspacing': '0',
-                  'border': '0',
-                  'style': 'border: 1px solid #c8b890; margin: 28px 0;'
-              })
-              tr = soup.new_tag('tr')
-              for cell in cells:
-                  td = soup.new_tag('td', attrs={
-                      'width': '33%',
-                      'align': 'center',
-                      'valign': 'top',
-                      'style': 'background: #f5f0e8; padding: 24px 18px; text-align: center; border-right: 1px solid #c8b890;'
-                  })
-                  td.append(cell)
-                  tr.append(td)
-              table.append(tr)
-              row.replace_with(table)
+              style = parse_style(row.get('style', ''))
+              style['display'] = 'block'
+              style.pop('grid-template-columns', None)
+              style.pop('gap', None)
+              style['border'] = '1px solid #c8b890'
+              style['margin'] = '28px 0'
+              row['style'] = to_style_str(style)
+              for cell in row.find_all('div', class_='number-cell'):
+                  cs = parse_style(cell.get('style', ''))
+                  cs['display'] = 'block'
+                  cs['padding'] = '20px 24px'
+                  cs['text-align'] = 'center'
+                  cs['border-bottom'] = '1px solid #c8b890'
+                  cell['style'] = to_style_str(cs)
 
+          # Footer grid: stack columns vertically
           for grid in soup.find_all('div', class_='footer-grid'):
-              cols = grid.find_all('div', class_='footer-col')
-              if not cols:
-                  continue
-              table = soup.new_tag('table', attrs={
-                  'width': '100%',
-                  'cellpadding': '0',
-                  'cellspacing': '0',
-                  'border': '0',
-                  'style': 'margin-bottom: 28px;'
-              })
-              tr = soup.new_tag('tr')
-              for col in cols:
-                  td = soup.new_tag('td', attrs={
-                      'width': '50%',
-                      'valign': 'top',
-                      'style': 'padding: 0 20px 0 0; color: #c4b48a; font-size: 14px; line-height: 1.82;'
-                  })
-                  td.append(col)
-                  tr.append(td)
-              table.append(tr)
-              grid.replace_with(table)
+              style = parse_style(grid.get('style', ''))
+              style['display'] = 'block'
+              style.pop('grid-template-columns', None)
+              style.pop('gap', None)
+              grid['style'] = to_style_str(style)
+              for col in grid.find_all('div', class_='footer-col'):
+                  cs = parse_style(col.get('style', ''))
+                  cs['display'] = 'block'
+                  cs['margin-bottom'] = '24px'
+                  col['style'] = to_style_str(cs)
 
+          # Footer bottom: stack brand and fine print
+          for fb in soup.find_all('div', class_='footer-bottom'):
+              style = parse_style(fb.get('style', ''))
+              style['display'] = 'block'
+              style.pop('justify-content', None)
+              style.pop('align-items', None)
+              fb['style'] = to_style_str(style)
+
+          # Masthead meta: stack spans with spacing
           for meta in soup.find_all('div', class_='masthead-meta'):
-              spans = meta.find_all('span')
-              if not spans:
-                  continue
-              meta_style = "font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.16em; color: #a08c68; text-transform: uppercase;"
-              table = soup.new_tag('table', attrs={
-                  'width': '100%',
-                  'cellpadding': '0',
-                  'cellspacing': '0',
-                  'border': '0',
-              })
-              tr = soup.new_tag('tr')
-              for span in spans:
-                  td = soup.new_tag('td', attrs={
-                      'align': 'center',
-                      'style': meta_style + ' padding: 0 16px;'
-                  })
-                  td.string = span.get_text()
-                  tr.append(td)
-              table.append(tr)
-              meta.replace_with(table)
+              style = parse_style(meta.get('style', ''))
+              style['display'] = 'block'
+              style['text-align'] = 'center'
+              style.pop('gap', None)
+              meta['style'] = to_style_str(style)
+              for span in meta.find_all('span'):
+                  ss = parse_style(span.get('style', ''))
+                  ss['display'] = 'inline-block'
+                  ss['padding'] = '0 12px'
+                  span['style'] = to_style_str(ss)
 
+          # This-week items: ensure block display
           for ul in soup.find_all('ul', class_='this-week-items'):
               for li in ul.find_all('li'):
-                  existing = li.get('style', '')
-                  li['style'] = existing + '; display: block; margin-bottom: 11px;'
+                  ls = parse_style(li.get('style', ''))
+                  ls['display'] = 'block'
+                  ls['margin-bottom'] = '11px'
+                  li['style'] = to_style_str(ls)
 
-          for fb in soup.find_all('div', class_='footer-bottom'):
-              children = list(fb.children)
-              real_children = [c for c in children if getattr(c, 'name', None)]
-              if len(real_children) >= 2:
-                  table = soup.new_tag('table', attrs={
-                      'width': '100%',
-                      'cellpadding': '0',
-                      'cellspacing': '0',
-                      'border': '0',
-                      'style': 'border-top: 1px solid #4a3520; padding-top: 22px;'
-                  })
-                  tr = soup.new_tag('tr')
-                  td1 = soup.new_tag('td', attrs={'align': 'left', 'valign': 'middle', 'style': 'color: #faf6ee;'})
-                  td1.append(real_children[0].extract())
-                  td2 = soup.new_tag('td', attrs={'align': 'right', 'valign': 'middle', 'style': 'color: #7a6545;'})
-                  td2.append(real_children[1].extract())
-                  tr.append(td1)
-                  tr.append(td2)
-                  table.append(tr)
-                  fb.replace_with(table)
-
+          # Section headers: stack tag and rule
           for sh in soup.find_all('div', class_='section-header'):
-              children = [c for c in sh.children if getattr(c, 'name', None)]
-              if len(children) >= 2:
-                  table = soup.new_tag('table', attrs={
-                      'width': '100%',
-                      'cellpadding': '0',
-                      'cellspacing': '0',
-                      'border': '0',
-                      'style': 'margin-bottom: 30px; margin-top: 52px;'
-                  })
-                  tr = soup.new_tag('tr')
-                  td1 = soup.new_tag('td', attrs={'valign': 'middle', 'style': 'padding-right: 16px;'})
-                  td1.append(children[0].extract())
-                  td2 = soup.new_tag('td', attrs={'valign': 'middle', 'width': '100%'})
-                  td2.append(children[1].extract())
-                  tr.append(td1)
-                  tr.append(td2)
-                  table.append(tr)
-                  sh.replace_with(table)
+              style = parse_style(sh.get('style', ''))
+              style['display'] = 'block'
+              style.pop('gap', None)
+              sh['style'] = to_style_str(style)
 
+          # Watch list items: ensure block stacking
           for wl in soup.find_all('ul', class_='watch-list'):
               for li in wl.find_all('li'):
-                  children = [c for c in li.children if getattr(c, 'name', None)]
-                  if len(children) >= 2:
-                      table = soup.new_tag('table', attrs={
-                          'width': '100%',
-                          'cellpadding': '0',
-                          'cellspacing': '0',
-                          'border': '0',
-                          'style': 'border-bottom: 1px dashed #c8b890; padding: 18px 0;'
-                      })
-                      tr = soup.new_tag('tr')
-                      td1 = soup.new_tag('td', attrs={
-                          'valign': 'top',
-                          'width': '50',
-                          'style': 'padding-right: 18px;'
-                      })
-                      td1.append(children[0].extract())
-                      td2 = soup.new_tag('td', attrs={'valign': 'top'})
-                      td2.append(children[1].extract())
-                      tr.append(td1)
-                      tr.append(td2)
-                      table.append(tr)
-                      li.replace_with(table)
+                  ls = parse_style(li.get('style', ''))
+                  ls['display'] = 'block'
+                  li['style'] = to_style_str(ls)
 
+          # Ornament dividers: simplify to centered text
           for orn in soup.find_all('div', class_='ornament'):
-              children = [c for c in orn.children if getattr(c, 'name', None)]
-              if len(children) >= 3:
-                  table = soup.new_tag('table', attrs={
-                      'width': '100%',
-                      'cellpadding': '0',
-                      'cellspacing': '0',
-                      'border': '0',
-                      'style': 'margin: 44px 0;'
-                  })
-                  tr = soup.new_tag('tr')
-                  td1 = soup.new_tag('td', attrs={'style': 'height: 1px; background: #d0c4a8;'})
-                  td1.string = '\u00a0'
-                  td2 = soup.new_tag('td', attrs={
-                      'align': 'center',
-                      'style': 'padding: 0 16px; font-family: Playfair Display, serif; font-size: 22px; color: #c9a84c;'
-                  })
-                  td2.string = children[1].get_text()
-                  td3 = soup.new_tag('td', attrs={'style': 'height: 1px; background: #d0c4a8;'})
-                  td3.string = '\u00a0'
-                  tr.append(td1)
-                  tr.append(td2)
-                  tr.append(td3)
-                  table.append(tr)
-                  orn.replace_with(table)
+              style = parse_style(orn.get('style', ''))
+              style['display'] = 'block'
+              style['text-align'] = 'center'
+              style.pop('gap', None)
+              orn['style'] = to_style_str(style)
+              for line in orn.find_all('div', class_='ornament-line'):
+                  line['style'] = 'display: inline-block; width: 30%; height: 1px; background: #d0c4a8; vertical-align: middle;'
+              for sym in orn.find_all('div', class_='ornament-symbol'):
+                  ss = parse_style(sym.get('style', ''))
+                  ss['display'] = 'inline-block'
+                  ss['vertical-align'] = 'middle'
+                  ss['padding'] = '0 12px'
+                  sym['style'] = to_style_str(ss)
 
           email_html = str(soup)
 
