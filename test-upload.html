@@ -892,12 +892,25 @@
   var allNewsletters = [];
   var managePage = 0;
   var PAGE_SIZE = 5;
+  var DELETED_KEY = 'hb_test_deleted';
+
+  function getPendingDeletes() {
+    try { return JSON.parse(sessionStorage.getItem(DELETED_KEY) || '[]'); } catch(e) { return []; }
+  }
+
+  function addPendingDelete(filename) {
+    var deleted = getPendingDeletes();
+    if (deleted.indexOf(filename) === -1) deleted.push(filename);
+    sessionStorage.setItem(DELETED_KEY, JSON.stringify(deleted));
+  }
 
   function loadNewsletters() {
     fetch('test-newsletters.json?t=' + Date.now())
       .then(function(res) { return res.json(); })
       .then(function(newsletters) {
-        allNewsletters = newsletters.slice().reverse();
+        var deleted = getPendingDeletes();
+        var filtered = newsletters.filter(function(n) { return deleted.indexOf(n.file) === -1; });
+        allNewsletters = filtered.slice().reverse();
         managePage = 0;
         renderPage();
       })
@@ -979,9 +992,16 @@
 
   async function executeDelete(filename) {
     var confirm = document.getElementById('manage-confirm');
-    var text = document.getElementById('manage-confirm-text');
-    text.textContent = 'Deleting...';
 
+    // Optimistically remove from UI immediately
+    addPendingDelete(filename);
+    allNewsletters = allNewsletters.filter(function(n) { return n.file !== filename; });
+    confirm.classList.remove('visible');
+    deleteTarget = null;
+    renderPage();
+    showStatus('Deleted ' + filename + '. Site will update in about 2 minutes.', 'success');
+
+    // Delete from GitHub in the background
     try {
       var path = 'test-newsletters/' + filename;
       var res = await fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
@@ -1007,11 +1027,6 @@
         var errData = await delRes.json();
         throw new Error(errData.message || 'Delete failed');
       }
-
-      confirm.classList.remove('visible');
-      deleteTarget = null;
-      showStatus('Deleted ' + filename + '. Site will update in about 2 minutes.', 'success');
-      loadNewsletters();
     } catch (err) {
       text.textContent = 'Error: ' + err.message;
       setTimeout(function() {
