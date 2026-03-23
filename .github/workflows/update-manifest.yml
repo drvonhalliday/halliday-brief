@@ -205,8 +205,7 @@ jobs:
               email_html = email_html.replace(var, val)
 
           # Inline all CSS
-          inliner = css_inline.CSSInliner(remove_style_tags=True)
-          email_html = inliner.inline(email_html)
+          email_html = css_inline.inline(email_html)
 
           body_html = '<!-- buttondown-editor-mode: fancy -->\n' + email_html
 
