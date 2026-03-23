@@ -66,15 +66,6 @@
     color: #ddd5c0;
   }
 
-  .nav-info {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    text-align: center;
-  }
-
   .archive-btn {
     font-family: 'Space Mono', monospace;
     font-size: 12px;
@@ -261,7 +252,6 @@
     body { padding: 20px 8px; }
     .nav-bar { flex-direction: column; align-items: stretch; }
     .nav-arrows { justify-content: center; }
-    .nav-info { order: -1; }
     .archive-panel { padding: 28px 20px; }
     .archive-item { flex-direction: column; gap: 4px; }
     .archive-date { width: auto; }
@@ -288,13 +278,15 @@
     <div class="subscribe-success" id="subscribe-success">Check your email to confirm.</div>
   </div>
 
+  <!-- NEWSLETTER -->
+  <iframe class="newsletter-frame" id="newsletter-frame" frameborder="0" scrolling="no"></iframe>
+
   <!-- NAV -->
   <div class="nav-bar">
     <div class="nav-arrows">
       <button class="nav-btn" id="prev-btn" onclick="navigate(-1)">&#8592; Older</button>
       <button class="nav-btn" id="next-btn" onclick="navigate(1)">Newer &#8594;</button>
     </div>
-    <div class="nav-info" id="nav-info">Loading...</div>
     <button class="archive-btn" id="archive-toggle" onclick="toggleArchive()">Archive</button>
   </div>
 
@@ -304,10 +296,6 @@
     <div class="archive-sub">All issues of The Halliday Brief</div>
     <ul class="archive-list" id="archive-list"></ul>
   </div>
-
-  <!-- NEWSLETTER -->
-  <iframe class="newsletter-frame" id="newsletter-frame" frameborder="0" scrolling="no"></iframe>
-
 
 </div>
 
@@ -347,10 +335,6 @@
       setTimeout(resizeFrame, 1500);
     };
     frame.src = 'newsletters/' + issue.file;
-
-    // Update nav
-    document.getElementById('nav-info').textContent =
-      issue.title + ' — ' + issue.date;
 
     document.getElementById('prev-btn').disabled = (index >= issues.length - 1);
     document.getElementById('next-btn').disabled = (index <= 0);
@@ -407,7 +391,7 @@
       loadIssue(0);
     })
     .catch(function() {
-      document.getElementById('nav-info').textContent = 'Error loading newsletters';
+      console.error('Error loading newsletters');
     });
 
   // Handle window resize
