@@ -150,9 +150,9 @@ jobs:
             git push
           fi
 
-      - name: Install CSS inliner
+      - name: Install email tools
         if: steps.detect.outputs.file != ''
-        run: pip install css-inline
+        run: pip install css-inline beautifulsoup4
 
       - name: Send email via Buttondown
         if: steps.detect.outputs.file != ''
@@ -164,6 +164,7 @@ jobs:
           import os, re, json, html
           import urllib.request
           import css_inline
+          from bs4 import BeautifulSoup
 
           filepath = os.environ.get('NEWSLETTER_FILE', '')
           if not filepath:
@@ -187,7 +188,7 @@ jobs:
           if len(parts) >= 3:
               subject = parts[0] + ' \u2014 ' + parts[2]
 
-          # Resolve CSS variables before inlining
+          # Resolve CSS variables
           css_vars = {
               'var(--ink)': '#1a1612',
               'var(--soil)': '#2d1f0e',
@@ -204,8 +205,186 @@ jobs:
           for var, val in css_vars.items():
               email_html = email_html.replace(var, val)
 
-          # Inline all CSS
+          # Inline CSS first
           email_html = css_inline.inline(email_html)
+
+          # Convert grid/flex layouts to tables for email compatibility
+          soup = BeautifulSoup(email_html, 'html.parser')
+
+          # Convert .numbers-row (3-col grid) to table
+          for row in soup.find_all('div', class_='numbers-row'):
+              cells = row.find_all('div', class_='number-cell')
+              if not cells:
+                  continue
+              table = soup.new_tag('table', attrs={
+                  'width': '100%',
+                  'cellpadding': '0',
+                  'cellspacing': '0',
+                  'border': '0',
+                  'style': 'border: 1px solid #c8b890; margin: 28px 0;'
+              })
+              tr = soup.new_tag('tr')
+              for cell in cells:
+                  td = soup.new_tag('td', attrs={
+                      'width': '33%',
+                      'align': 'center',
+                      'valign': 'top',
+                      'style': 'background: #f5f0e8; padding: 24px 18px; text-align: center; border-right: 1px solid #c8b890;'
+                  })
+                  td.append(cell)
+                  tr.append(td)
+              table.append(tr)
+              row.replace_with(table)
+
+          # Convert .footer-grid (2-col) to table
+          for grid in soup.find_all('div', class_='footer-grid'):
+              cols = grid.find_all('div', class_='footer-col')
+              if not cols:
+                  continue
+              table = soup.new_tag('table', attrs={
+                  'width': '100%',
+                  'cellpadding': '0',
+                  'cellspacing': '0',
+                  'border': '0',
+                  'style': 'margin-bottom: 28px;'
+              })
+              tr = soup.new_tag('tr')
+              for col in cols:
+                  td = soup.new_tag('td', attrs={
+                      'width': '50%',
+                      'valign': 'top',
+                      'style': 'padding: 0 20px 0 0;'
+                  })
+                  td.append(col)
+                  tr.append(td)
+              table.append(tr)
+              grid.replace_with(table)
+
+          # Convert .masthead-meta flex to table
+          for meta in soup.find_all('div', class_='masthead-meta'):
+              spans = meta.find_all('span')
+              if not spans:
+                  continue
+              table = soup.new_tag('table', attrs={
+                  'width': '100%',
+                  'cellpadding': '0',
+                  'cellspacing': '0',
+                  'border': '0',
+              })
+              tr = soup.new_tag('tr')
+              for span in spans:
+                  td = soup.new_tag('td', attrs={
+                      'align': 'center',
+                      'style': span.get('style', '') + '; padding: 0 16px;'
+                  })
+                  td.string = span.get_text()
+                  tr.append(td)
+              table.append(tr)
+              meta.replace_with(table)
+
+          # Convert .this-week-items flex list to stacked divs
+          for ul in soup.find_all('ul', class_='this-week-items'):
+              for li in ul.find_all('li'):
+                  existing = li.get('style', '')
+                  li['style'] = existing + '; display: block; margin-bottom: 11px;'
+
+          # Convert .footer-bottom flex to table
+          for fb in soup.find_all('div', class_='footer-bottom'):
+              children = list(fb.children)
+              real_children = [c for c in children if getattr(c, 'name', None)]
+              if len(real_children) >= 2:
+                  table = soup.new_tag('table', attrs={
+                      'width': '100%',
+                      'cellpadding': '0',
+                      'cellspacing': '0',
+                      'border': '0',
+                      'style': 'border-top: 1px solid #4a3520; padding-top: 22px;'
+                  })
+                  tr = soup.new_tag('tr')
+                  td1 = soup.new_tag('td', attrs={'align': 'left', 'valign': 'middle'})
+                  td1.append(real_children[0].extract())
+                  td2 = soup.new_tag('td', attrs={'align': 'right', 'valign': 'middle'})
+                  td2.append(real_children[1].extract())
+                  tr.append(td1)
+                  tr.append(td2)
+                  table.append(tr)
+                  fb.replace_with(table)
+
+          # Convert .section-header flex to table
+          for sh in soup.find_all('div', class_='section-header'):
+              children = [c for c in sh.children if getattr(c, 'name', None)]
+              if len(children) >= 2:
+                  table = soup.new_tag('table', attrs={
+                      'width': '100%',
+                      'cellpadding': '0',
+                      'cellspacing': '0',
+                      'border': '0',
+                      'style': 'margin-bottom: 30px; margin-top: 52px;'
+                  })
+                  tr = soup.new_tag('tr')
+                  td1 = soup.new_tag('td', attrs={'valign': 'middle', 'style': 'padding-right: 16px;'})
+                  td1.append(children[0].extract())
+                  td2 = soup.new_tag('td', attrs={'valign': 'middle', 'width': '100%'})
+                  td2.append(children[1].extract())
+                  tr.append(td1)
+                  tr.append(td2)
+                  table.append(tr)
+                  sh.replace_with(table)
+
+          # Convert .watch-list li flex to table rows
+          for wl in soup.find_all('ul', class_='watch-list'):
+              for li in wl.find_all('li'):
+                  children = [c for c in li.children if getattr(c, 'name', None)]
+                  if len(children) >= 2:
+                      table = soup.new_tag('table', attrs={
+                          'width': '100%',
+                          'cellpadding': '0',
+                          'cellspacing': '0',
+                          'border': '0',
+                          'style': 'border-bottom: 1px dashed #c8b890; padding: 18px 0;'
+                      })
+                      tr = soup.new_tag('tr')
+                      td1 = soup.new_tag('td', attrs={
+                          'valign': 'top',
+                          'width': '50',
+                          'style': 'padding-right: 18px;'
+                      })
+                      td1.append(children[0].extract())
+                      td2 = soup.new_tag('td', attrs={'valign': 'top'})
+                      td2.append(children[1].extract())
+                      tr.append(td1)
+                      tr.append(td2)
+                      table.append(tr)
+                      li.replace_with(table)
+
+          # Convert .ornament flex to table
+          for orn in soup.find_all('div', class_='ornament'):
+              children = [c for c in orn.children if getattr(c, 'name', None)]
+              if len(children) >= 3:
+                  table = soup.new_tag('table', attrs={
+                      'width': '100%',
+                      'cellpadding': '0',
+                      'cellspacing': '0',
+                      'border': '0',
+                      'style': 'margin: 44px 0;'
+                  })
+                  tr = soup.new_tag('tr')
+                  td1 = soup.new_tag('td', attrs={'style': 'height: 1px; background: #d0c4a8;'})
+                  td1.string = '\u00a0'
+                  td2 = soup.new_tag('td', attrs={
+                      'align': 'center',
+                      'style': 'padding: 0 16px; font-family: Playfair Display, serif; font-size: 22px; color: #c9a84c;'
+                  })
+                  td2.string = children[1].get_text()
+                  td3 = soup.new_tag('td', attrs={'style': 'height: 1px; background: #d0c4a8;'})
+                  td3.string = '\u00a0'
+                  tr.append(td1)
+                  tr.append(td2)
+                  tr.append(td3)
+                  table.append(tr)
+                  orn.replace_with(table)
+
+          email_html = str(soup)
 
           body_html = '<!-- buttondown-editor-mode: fancy -->\n' + email_html
 
