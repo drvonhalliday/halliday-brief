@@ -152,6 +152,7 @@ jobs:
         if: steps.detect.outputs.file != ''
         env:
           BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
+          NEWSLETTER_FILE: ${{ steps.detect.outputs.file }}
         run: |
           python3 << 'SCRIPT'
           import os, re, json, html
@@ -207,5 +208,3 @@ jobs:
               if e.code >= 500:
                   exit(1)
           SCRIPT
-        env:
-          NEWSLETTER_FILE: ${{ steps.detect.outputs.file }}
