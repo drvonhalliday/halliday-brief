@@ -289,6 +289,65 @@
   }
   .publish-btn.visible { display: block; }
 
+  /* Email preview */
+  .email-preview-section {
+    display: none;
+    margin-top: 24px;
+    margin-bottom: 24px;
+  }
+  .email-preview-section.visible { display: block; }
+
+  .email-preview-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 0;
+  }
+
+  .email-preview-tab {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    border: 1px solid #bfad90;
+    border-bottom: none;
+    background: #f5f0e8;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .email-preview-tab.active {
+    background: var(--cream);
+    color: var(--soil);
+    border-bottom: 1px solid var(--cream);
+    margin-bottom: -1px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .email-preview-frame {
+    width: 100%;
+    border: 1px solid #bfad90;
+    background: #ffffff;
+    min-height: 400px;
+  }
+
+  .preview-email-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 12px;
+    background: none;
+    border: 1.5px solid var(--soil);
+    color: var(--soil);
+    margin-bottom: 8px;
+    display: none;
+  }
+  .preview-email-btn.visible { display: block; }
+  .preview-email-btn:hover {
+    background: var(--soil);
+    color: var(--cream);
+  }
+
   /* Published list */
   .manage-section {
     display: none;
@@ -507,6 +566,16 @@
 
     <div class="status" id="status"></div>
 
+    <button class="btn preview-email-btn" id="preview-email-btn" onclick="previewEmail()">Preview Email Version</button>
+
+    <div class="email-preview-section" id="email-preview-section">
+      <div class="email-preview-tabs">
+        <button class="email-preview-tab active" id="tab-email" onclick="switchPreviewTab('email')">Email</button>
+        <button class="email-preview-tab" id="tab-web" onclick="switchPreviewTab('web')">Web</button>
+      </div>
+      <iframe class="email-preview-frame" id="email-preview-frame" frameborder="0" scrolling="no"></iframe>
+    </div>
+
     <button class="btn btn-primary publish-btn" id="publish-btn" onclick="publish()">Publish Newsletter</button>
 
     <div class="manage-section" id="manage-section">
@@ -659,6 +728,8 @@
     document.getElementById('top-bar').classList.remove('visible');
     document.getElementById('upload-area').classList.remove('visible');
     document.getElementById('manage-section').classList.remove('visible');
+    document.getElementById('email-preview-section').classList.remove('visible');
+    document.getElementById('preview-email-btn').classList.remove('visible');
     hideStatus();
   }
 
@@ -725,6 +796,8 @@
       document.getElementById('preview-headline').innerHTML = '<span>Lead:</span> ' + meta.headline;
       document.getElementById('preview').classList.add('visible');
       document.getElementById('publish-btn').classList.add('visible');
+      document.getElementById('preview-email-btn').classList.add('visible');
+      document.getElementById('email-preview-section').classList.remove('visible');
       hideStatus();
     };
     reader.readAsText(file);
@@ -960,6 +1033,189 @@
         confirm.classList.remove('visible');
       }, 3000);
     }
+  }
+
+  // ── Email preview ──
+  var emailPreviewHtml = '';
+  var webPreviewHtml = '';
+
+  var CSS_VARS = {
+    'var(--ink)': '#1a1612',
+    'var(--soil)': '#2d1f0e',
+    'var(--wheat)': '#c9a84c',
+    'var(--wheat-light)': '#f0dfa0',
+    'var(--cream)': '#faf6ee',
+    'var(--off-white)': '#f5f0e8',
+    'var(--muted)': '#6b5e4e',
+    'var(--red)': '#8b2020',
+    'var(--blue)': '#1a3a5c',
+    'var(--green)': '#1f5c2e'
+  };
+
+  function previewEmail() {
+    if (!pendingFile) return;
+
+    webPreviewHtml = pendingFile.content;
+
+    var html = pendingFile.content;
+    for (var v in CSS_VARS) {
+      html = html.split(v).join(CSS_VARS[v]);
+    }
+
+    var hiddenFrame = document.createElement('iframe');
+    hiddenFrame.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:820px;height:1px;';
+    document.body.appendChild(hiddenFrame);
+
+    hiddenFrame.contentDocument.open();
+    hiddenFrame.contentDocument.write(html);
+    hiddenFrame.contentDocument.close();
+
+    hiddenFrame.onload = function() {
+      var doc = hiddenFrame.contentDocument;
+
+      var allEls = doc.querySelectorAll('*');
+      for (var i = 0; i < allEls.length; i++) {
+        var el = allEls[i];
+        var tag = el.tagName.toLowerCase();
+        if (tag === 'html' || tag === 'head' || tag === 'meta' ||
+            tag === 'title' || tag === 'link' || tag === 'script') continue;
+
+        var computed = hiddenFrame.contentWindow.getComputedStyle(el);
+        var props = [
+          'color', 'background-color', 'background',
+          'font-family', 'font-size', 'font-weight', 'font-style',
+          'letter-spacing', 'text-transform', 'line-height', 'text-align',
+          'text-decoration', 'padding', 'margin', 'border',
+          'border-top', 'border-bottom', 'border-left', 'border-right',
+          'display', 'position', 'opacity', 'white-space',
+          'border-radius', 'box-shadow', 'overflow'
+        ];
+        var inlineStyle = '';
+        for (var j = 0; j < props.length; j++) {
+          var val = computed.getPropertyValue(props[j]);
+          if (val && val !== '' && val !== 'none' && val !== 'normal' && val !== 'auto') {
+            inlineStyle += props[j] + ':' + val + ';';
+          }
+        }
+        el.setAttribute('style', inlineStyle);
+      }
+
+      var styles = doc.querySelectorAll('style');
+      for (var s = 0; s < styles.length; s++) { styles[s].remove(); }
+
+      var links = doc.querySelectorAll('link[rel="stylesheet"]');
+      for (var l = 0; l < links.length; l++) { links[l].remove(); }
+
+      // Flatten grid/flex to block
+      var allAfter = doc.querySelectorAll('*');
+      for (var k = 0; k < allAfter.length; k++) {
+        var style = allAfter[k].style;
+        var disp = style.display;
+        if (disp && (disp.indexOf('grid') !== -1 || disp.indexOf('flex') !== -1)) {
+          style.display = 'block';
+          style.removeProperty('grid-template-columns');
+          style.removeProperty('gap');
+          style.removeProperty('align-items');
+          style.removeProperty('justify-content');
+          style.removeProperty('flex-wrap');
+          style.removeProperty('flex-direction');
+        }
+      }
+
+      // Fix number cells
+      var numberCells = doc.querySelectorAll('.number-cell');
+      for (var n = 0; n < numberCells.length; n++) {
+        numberCells[n].style.display = 'block';
+        numberCells[n].style.padding = '20px 24px';
+        numberCells[n].style.textAlign = 'center';
+        numberCells[n].style.borderBottom = '1px solid #c8b890';
+      }
+
+      // Fix footer grid columns
+      var footerCols = doc.querySelectorAll('.footer-col');
+      for (var fc = 0; fc < footerCols.length; fc++) {
+        footerCols[fc].style.display = 'block';
+        footerCols[fc].style.marginBottom = '24px';
+      }
+
+      // Fix watch list items
+      var watchItems = doc.querySelectorAll('.watch-list li');
+      for (var wi = 0; wi < watchItems.length; wi++) {
+        watchItems[wi].style.display = 'block';
+      }
+
+      // Fix this-week bullet/text spans
+      var twSpans = doc.querySelectorAll('.this-week-items li span');
+      for (var tw = 0; tw < twSpans.length; tw++) {
+        twSpans[tw].style.display = 'inline';
+      }
+
+      // Fix masthead-meta spans
+      var metaSpans = doc.querySelectorAll('.masthead-meta span');
+      for (var m = 0; m < metaSpans.length; m++) {
+        metaSpans[m].style.display = 'inline-block';
+        metaSpans[m].style.padding = '0 12px';
+      }
+
+      // Fix ornament dividers
+      var ornLines = doc.querySelectorAll('.ornament-line');
+      for (var o = 0; o < ornLines.length; o++) {
+        ornLines[o].style.display = 'inline-block';
+        ornLines[o].style.width = '30%';
+        ornLines[o].style.height = '1px';
+        ornLines[o].style.verticalAlign = 'middle';
+      }
+      var ornSyms = doc.querySelectorAll('.ornament-symbol');
+      for (var p = 0; p < ornSyms.length; p++) {
+        ornSyms[p].style.display = 'inline-block';
+        ornSyms[p].style.verticalAlign = 'middle';
+        ornSyms[p].style.padding = '0 12px';
+      }
+      var ornaments = doc.querySelectorAll('.ornament');
+      for (var q = 0; q < ornaments.length; q++) {
+        ornaments[q].style.textAlign = 'center';
+      }
+
+      emailPreviewHtml = '<!DOCTYPE html><html><body>' + doc.body.innerHTML + '</body></html>';
+
+      document.body.removeChild(hiddenFrame);
+
+      showPreviewFrame('email');
+      document.getElementById('email-preview-section').classList.add('visible');
+    };
+  }
+
+  function showPreviewFrame(mode) {
+    var frame = document.getElementById('email-preview-frame');
+    var html = mode === 'email' ? emailPreviewHtml : webPreviewHtml;
+
+    var fitStyle = '<style>body{margin:0;padding:0;overflow-x:hidden;} .page-wrapper{max-width:100%;box-shadow:none;border:none;}</style>';
+    var injected = html.replace('</head>', fitStyle + '</head>');
+
+    frame.contentDocument.open();
+    frame.contentDocument.write(injected);
+    frame.contentDocument.close();
+
+    var resizeHeight = function() {
+      try {
+        var body = frame.contentDocument.body;
+        var docEl = frame.contentDocument.documentElement;
+        var h = Math.max(body.scrollHeight, body.offsetHeight, docEl.scrollHeight, docEl.offsetHeight);
+        frame.style.height = h + 'px';
+      } catch(e) {
+        frame.style.height = '2000px';
+      }
+    };
+
+    frame.onload = resizeHeight;
+    setTimeout(resizeHeight, 500);
+    setTimeout(resizeHeight, 1500);
+  }
+
+  function switchPreviewTab(mode) {
+    document.getElementById('tab-email').classList.toggle('active', mode === 'email');
+    document.getElementById('tab-web').classList.toggle('active', mode === 'web');
+    showPreviewFrame(mode);
   }
 
   // ── Status ──
