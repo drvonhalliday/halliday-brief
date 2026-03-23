@@ -175,7 +175,7 @@
     border: 1px solid #bfad90;
     box-shadow: 6px 8px 48px rgba(0,0,0,0.22), 0 0 0 7px #faf6ee, 0 0 0 8px #bfad90;
     padding: 32px 48px;
-    margin-top: 24px;
+    margin-bottom: 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -275,6 +275,19 @@
 
 <div class="site-wrapper">
 
+  <!-- SUBSCRIBE -->
+  <div class="subscribe-bar">
+    <div class="subscribe-text">
+      <div class="subscribe-title">Get it in your inbox</div>
+      <div class="subscribe-hint">New issues delivered weekly</div>
+    </div>
+    <form class="subscribe-form" id="subscribe-form" action="https://buttondown.com/api/emails/embed-subscribe/drvonhalliday" method="post" target="_blank">
+      <input class="subscribe-input" type="email" name="email" placeholder="your@email.com" required />
+      <button class="subscribe-btn" type="submit">Subscribe</button>
+    </form>
+    <div class="subscribe-success" id="subscribe-success">Check your email to confirm.</div>
+  </div>
+
   <!-- NAV -->
   <div class="nav-bar">
     <div class="nav-arrows">
@@ -295,18 +308,6 @@
   <!-- NEWSLETTER -->
   <iframe class="newsletter-frame" id="newsletter-frame" frameborder="0" scrolling="no"></iframe>
 
-  <!-- SUBSCRIBE -->
-  <div class="subscribe-bar">
-    <div class="subscribe-text">
-      <div class="subscribe-title">Get it in your inbox</div>
-      <div class="subscribe-hint">New issues delivered weekly</div>
-    </div>
-    <form class="subscribe-form" id="subscribe-form" action="https://buttondown.com/api/emails/embed-subscribe/drvonhalliday" method="post" target="_blank">
-      <input class="subscribe-input" type="email" name="email" placeholder="your@email.com" required />
-      <button class="subscribe-btn" type="submit">Subscribe</button>
-    </form>
-    <div class="subscribe-success" id="subscribe-success">Check your email to confirm.</div>
-  </div>
 
 </div>
 
