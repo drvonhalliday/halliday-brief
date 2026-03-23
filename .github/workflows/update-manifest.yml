@@ -196,7 +196,8 @@ jobs:
               data=payload,
               headers={
                   'Authorization': 'Token ' + api_key,
-                  'Content-Type': 'application/json'
+                  'Content-Type': 'application/json',
+                  'X-Buttondown-Live-Dangerously': 'true'
               },
               method='POST'
           )
