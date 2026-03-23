@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Subscribers — The Halliday Brief</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1612;
+    --soil: #2d1f0e;
+    --wheat: #c9a84c;
+    --cream: #faf6ee;
+    --muted: #6b5e4e;
+    --green: #1f5c2e;
+    --red: #8b2020;
+  }
+
+  body {
+    background: #ddd5c0;
+    font-family: 'Source Serif 4', Georgia, serif;
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+  }
+
+  .container {
+    max-width: 600px;
+    width: 100%;
+    background: var(--cream);
+    border: 1px solid #bfad90;
+    box-shadow: 6px 8px 48px rgba(0,0,0,0.22);
+    padding: 48px;
+  }
+
+  .title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--soil);
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+
+  .pin-section {
+    text-align: center;
+    padding: 40px 0;
+  }
+  .pin-section.hidden { display: none; }
+
+  .pin-input {
+    font-family: 'Space Mono', monospace;
+    font-size: 18px;
+    letter-spacing: 0.3em;
+    text-align: center;
+    width: 200px;
+    padding: 12px 16px;
+    border: 2px solid #bfad90;
+    background: #f5f0e8;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .pin-input:focus { border-color: var(--wheat); }
+  .pin-input.error { border-color: var(--red); animation: shake 0.4s; }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
+  .pin-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .pin-submit {
+    display: block;
+    margin: 16px auto 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 10px 32px;
+    background: var(--soil);
+    color: var(--cream);
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .pin-submit:hover { background: #4a3520; }
+
+  .key-section {
+    display: none;
+    margin-bottom: 24px;
+    padding: 20px;
+    background: #f5f0e8;
+    border-left: 4px solid var(--wheat);
+  }
+  .key-section.visible { display: block; }
+
+  .key-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .key-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .key-input {
+    flex: 1;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    padding: 10px 12px;
+    border: 1px solid #bfad90;
+    background: var(--cream);
+    color: var(--ink);
+    outline: none;
+  }
+  .key-input:focus { border-color: var(--wheat); }
+
+  .key-status {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--green);
+    margin-top: 8px;
+    letter-spacing: 0.06em;
+  }
+  .key-status.error { color: var(--red); }
+
+  .btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 10px 24px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-primary {
+    background: var(--soil);
+    color: var(--cream);
+  }
+  .btn-primary:hover { background: #4a3520; }
+  .btn-small {
+    background: none;
+    border: 1px solid #bfad90;
+    color: var(--muted);
+    padding: 6px 14px;
+    font-size: 10px;
+  }
+  .btn-small:hover { background: #f5f0e8; }
+
+  .top-bar {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e0d8c8;
+  }
+  .top-bar.visible { display: flex; }
+
+  .top-bar-info {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 0.06em;
+  }
+
+  .subscribers-area { display: none; }
+  .subscribers-area.visible { display: block; }
+
+  .stats-row {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .stat-box {
+    flex: 1;
+    background: #f5f0e8;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--soil);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .sub-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sub-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: #f5f0e8;
+    margin-bottom: 4px;
+  }
+
+  .sub-email {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--ink);
+  }
+
+  .sub-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .sub-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+  }
+  .sub-badge.regular { background: #d4edda; color: var(--green); }
+  .sub-badge.unconfirmed { background: #f0dfa0; color: var(--soil); }
+  .sub-badge.unsubscribed { background: #f5d5d5; color: var(--red); }
+
+  .sub-empty {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .loading {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    padding: 40px;
+    letter-spacing: 0.06em;
+  }
+
+  .back-link {
+    display: block;
+    text-align: center;
+    margin-top: 24px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+  }
+  .back-link:hover { color: var(--soil); }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">Subscribers</div>
+  <div class="subtitle">The Halliday Brief</div>
+
+  <div class="pin-section" id="pin-section">
+    <div class="pin-label">Enter PIN to continue</div>
+    <input class="pin-input" id="pin-input" type="password" maxlength="20" inputmode="numeric" autocomplete="off" placeholder="&#8226;&#8226;&#8226;&#8226;" />
+    <button class="pin-submit" onclick="checkPin()">Enter</button>
+  </div>
+
+  <div class="top-bar" id="top-bar">
+    <div class="top-bar-info" id="top-bar-info"></div>
+    <button class="btn btn-small" onclick="resetSession()">Lock</button>
+  </div>
+
+  <div class="key-section" id="key-section">
+    <div class="key-label">Buttondown API key</div>
+    <div class="key-row">
+      <input class="key-input" id="key-input" type="password" placeholder="your-api-key..." autocomplete="off" />
+      <button class="btn btn-primary" style="padding:10px 16px; font-size:11px;" onclick="saveKey()">Save</button>
+    </div>
+    <div class="key-status" id="key-status"></div>
+  </div>
+
+  <div class="subscribers-area" id="subscribers-area">
+    <div class="stats-row" id="stats-row"></div>
+    <ul class="sub-list" id="sub-list"></ul>
+  </div>
+
+  <a class="back-link" href="./upload.html">&#8592; Back to Upload</a>
+</div>
+
+<script>
+  var PIN_HASH = '475368189e17ec9d12cf43f873f4ba27b0ae9ccbd0686fa21f5caad89ed57243';
+  var pinVerified = false;
+
+  async function hashValue(value) {
+    var encoded = new TextEncoder().encode(value);
+    var buffer = await crypto.subtle.digest('SHA-256', encoded);
+    return Array.from(new Uint8Array(buffer)).map(function(b) {
+      return b.toString(16).padStart(2, '0');
+    }).join('');
+  }
+
+  async function checkPin() {
+    var input = document.getElementById('pin-input');
+    var pin = input.value.trim();
+    if (!pin) return;
+    var hash = await hashValue(pin);
+    if (hash === PIN_HASH) {
+      pinVerified = true;
+      sessionStorage.setItem('hb_pin_ok', '1');
+      input.value = '';
+      showUI();
+    } else {
+      input.classList.add('error');
+      input.value = '';
+      input.focus();
+      setTimeout(function() { input.classList.remove('error'); }, 500);
+    }
+  }
+
+  document.getElementById('pin-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkPin();
+  });
+
+  function getKey() {
+    return localStorage.getItem('hb_bd_key') || '';
+  }
+
+  async function saveKey() {
+    var input = document.getElementById('key-input');
+    var key = input.value.trim();
+    var statusEl = document.getElementById('key-status');
+    if (!key) return;
+
+    statusEl.textContent = 'Verifying...';
+    statusEl.className = 'key-status';
+
+    try {
+      var res = await fetch('https://api.buttondown.com/v1/subscribers?limit=1', {
+        headers: { 'Authorization': 'Token ' + key }
+      });
+      if (!res.ok) throw new Error('Invalid key');
+      localStorage.setItem('hb_bd_key', key);
+      input.value = '';
+      statusEl.textContent = 'Key saved';
+      showUI();
+    } catch(err) {
+      statusEl.textContent = err.message;
+      statusEl.className = 'key-status error';
+    }
+  }
+
+  document.getElementById('key-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') saveKey();
+  });
+
+  function showUI() {
+    var pinSection = document.getElementById('pin-section');
+    var keySection = document.getElementById('key-section');
+    var topBar = document.getElementById('top-bar');
+    var area = document.getElementById('subscribers-area');
+
+    if (!pinVerified) {
+      pinSection.classList.remove('hidden');
+      keySection.classList.remove('visible');
+      topBar.classList.remove('visible');
+      area.classList.remove('visible');
+      return;
+    }
+
+    pinSection.classList.add('hidden');
+
+    if (!getKey()) {
+      keySection.classList.add('visible');
+      topBar.classList.remove('visible');
+      area.classList.remove('visible');
+    } else {
+      keySection.classList.remove('visible');
+      topBar.classList.add('visible');
+      area.classList.add('visible');
+      loadSubscribers();
+    }
+  }
+
+  function resetSession() {
+    pinVerified = false;
+    sessionStorage.removeItem('hb_pin_ok');
+    document.getElementById('pin-section').classList.remove('hidden');
+    document.getElementById('key-section').classList.remove('visible');
+    document.getElementById('top-bar').classList.remove('visible');
+    document.getElementById('subscribers-area').classList.remove('visible');
+  }
+
+  async function loadSubscribers() {
+    var list = document.getElementById('sub-list');
+    var statsRow = document.getElementById('stats-row');
+    var topInfo = document.getElementById('top-bar-info');
+
+    list.innerHTML = '<li class="loading">Loading subscribers...</li>';
+    statsRow.innerHTML = '';
+
+    try {
+      var all = [];
+      var url = 'https://api.buttondown.com/v1/subscribers?limit=100';
+
+      while (url) {
+        var res = await fetch(url, {
+          headers: { 'Authorization': 'Token ' + getKey() }
+        });
+        if (!res.ok) throw new Error('Failed to load');
+        var data = await res.json();
+        var results = data.results || data;
+        if (Array.isArray(results)) {
+          all = all.concat(results);
+        }
+        url = data.next || null;
+      }
+
+      var regular = all.filter(function(s) { return s.subscriber_type === 'regular'; });
+      var unconfirmed = all.filter(function(s) { return s.subscriber_type === 'unactivated'; });
+      var unsubscribed = all.filter(function(s) { return s.subscriber_type === 'unsubscribed'; });
+
+      topInfo.textContent = regular.length + ' active subscriber' + (regular.length !== 1 ? 's' : '');
+
+      statsRow.innerHTML =
+        '<div class="stat-box"><div class="stat-num">' + regular.length + '</div><div class="stat-label">Active</div></div>' +
+        '<div class="stat-box"><div class="stat-num">' + unconfirmed.length + '</div><div class="stat-label">Unconfirmed</div></div>' +
+        '<div class="stat-box"><div class="stat-num">' + unsubscribed.length + '</div><div class="stat-label">Unsubscribed</div></div>';
+
+      list.innerHTML = '';
+
+      if (all.length === 0) {
+        list.innerHTML = '<li class="sub-empty">No subscribers yet.</li>';
+        return;
+      }
+
+      all.sort(function(a, b) {
+        return new Date(b.creation_date) - new Date(a.creation_date);
+      });
+
+      all.forEach(function(sub) {
+        var li = document.createElement('li');
+        li.className = 'sub-item';
+
+        var type = sub.subscriber_type || 'regular';
+        var badgeClass = 'regular';
+        var badgeText = 'Active';
+        if (type === 'unactivated') { badgeClass = 'unconfirmed'; badgeText = 'Unconfirmed'; }
+        if (type === 'unsubscribed') { badgeClass = 'unsubscribed'; badgeText = 'Unsubscribed'; }
+
+        var date = '';
+        if (sub.creation_date) {
+          var d = new Date(sub.creation_date);
+          date = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        li.innerHTML =
+          '<div>' +
+            '<div class="sub-email">' + (sub.email_address || sub.email || '—') + '</div>' +
+            '<div class="sub-date">' + date + '</div>' +
+          '</div>' +
+          '<span class="sub-badge ' + badgeClass + '">' + badgeText + '</span>';
+        list.appendChild(li);
+      });
+
+    } catch(err) {
+      list.innerHTML = '<li class="sub-empty">Error: ' + err.message + '</li>';
+    }
+  }
+
+  if (sessionStorage.getItem('hb_pin_ok') === '1') {
+    pinVerified = true;
+  }
+  showUI();
+  document.getElementById('pin-input').focus();
+</script>
+
+</body>
+</html>
