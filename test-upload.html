@@ -1144,7 +1144,13 @@
         numberCells[n].style.borderBottom = '1px solid #c8b890';
       }
 
-      // Step 4: Fix masthead-meta spans
+      // Step 4: Fix this-week bullet/text spans to stay inline
+      var twSpans = doc.querySelectorAll('.this-week-items li span');
+      for (var tw = 0; tw < twSpans.length; tw++) {
+        twSpans[tw].style.display = 'inline';
+      }
+
+      // Step 5: Fix masthead-meta spans
       var metaSpans = doc.querySelectorAll('.masthead-meta span');
       for (var m = 0; m < metaSpans.length; m++) {
         metaSpans[m].style.display = 'inline-block';
