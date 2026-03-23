@@ -150,6 +150,10 @@ jobs:
             git push
           fi
 
+      - name: Install CSS inliner
+        if: steps.detect.outputs.file != ''
+        run: pip install css-inline
+
       - name: Send email via Buttondown
         if: steps.detect.outputs.file != ''
         env:
@@ -159,6 +163,7 @@ jobs:
           python3 << 'SCRIPT'
           import os, re, json, html
           import urllib.request
+          import css_inline
 
           filepath = os.environ.get('NEWSLETTER_FILE', '')
           if not filepath:
@@ -182,7 +187,28 @@ jobs:
           if len(parts) >= 3:
               subject = parts[0] + ' \u2014 ' + parts[2]
 
-          body_html = '<!-- buttondown-editor-mode: fancy -->\n' + content
+          # Resolve CSS variables before inlining
+          css_vars = {
+              'var(--ink)': '#1a1612',
+              'var(--soil)': '#2d1f0e',
+              'var(--wheat)': '#c9a84c',
+              'var(--wheat-light)': '#f0dfa0',
+              'var(--cream)': '#faf6ee',
+              'var(--off-white)': '#f5f0e8',
+              'var(--muted)': '#6b5e4e',
+              'var(--red)': '#8b2020',
+              'var(--blue)': '#1a3a5c',
+              'var(--green)': '#1f5c2e',
+          }
+          email_html = content
+          for var, val in css_vars.items():
+              email_html = email_html.replace(var, val)
+
+          # Inline all CSS
+          inliner = css_inline.CSSInliner(remove_style_tags=True)
+          email_html = inliner.inline(email_html)
+
+          body_html = '<!-- buttondown-editor-mode: fancy -->\n' + email_html
 
           payload = json.dumps({
               'subject': subject,
