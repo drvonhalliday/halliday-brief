@@ -5,7 +5,7 @@
     <link>https://brief.vonhalliday.com</link>
     <description>Strategic insights from Von Halliday Consulting</description>
     <language>en-us</language>
-    <lastBuildDate>Mon, 23 Mar 2026 04:00:23 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 23 Mar 2026 14:34:02 +0000</lastBuildDate>
     <atom:link href="https://brief.vonhalliday.com/rss.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>The Halliday Brief — Vol. 1, No. 1 — March 21, 2026</title>
@@ -634,7 +634,7 @@
     font-size: 9px;
     letter-spacing: 0.24em;
     text-transform: uppercase;
-    color: #2d5a34;
+    color: #c9a227;
     margin-bottom: 14px;
   }
   .footer-col p, .footer-col a {
@@ -659,7 +659,7 @@
     font-weight: 900;
     color: var(--cream);
   }
-  .footer-brand em { color: #2d5a34; font-style: italic; }
+  .footer-brand em { color: #c9a227; font-style: italic; }
   .footer-fine {
     font-family: 'Space Mono', monospace;
     font-size: 9px;
@@ -814,7 +814,7 @@
           <text x="144" y="206" font-family="serif" font-size="11" fill="#1a3a1f" text-anchor="end">Technology,</text>
           <text x="144" y="219" font-family="serif" font-size="11" fill="#1a3a1f" text-anchor="end">Data &amp; Providers</text>
           <rect x="151" y="195" width="136" height="36" fill="#4a2e10" rx="2" opacity="0.85"/>
-          <text x="295" y="217" font-family="monospace" font-size="10" fill="#faf8f2" font-weight="bold">$33.9M</text>
+          <text x="295" y="217" font-family="monospace" font-size="10" fill="#2a1505" font-weight="bold">$33.9M</text>
         </svg>
         <p style="font-family:monospace; font-size:10px; color:#7a4e28; margin-top:8px;">Source: ND HHS Deputy Commissioner Emily O'Brien, Rugby Stakeholder Meeting, March 17, 2026. Reported by Charles Crane, Minot Daily News. The $10M Round 1 workforce retention window (highlighted) is open now with an April 30 deadline.</p>
       </div>
