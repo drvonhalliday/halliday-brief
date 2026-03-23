@@ -289,6 +289,133 @@
   }
   .publish-btn.visible { display: block; }
 
+  /* Published list */
+  .manage-section {
+    display: none;
+    margin-top: 32px;
+    padding-top: 32px;
+    border-top: 1px solid #e0d8c8;
+  }
+  .manage-section.visible { display: block; }
+
+  .manage-header {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .manage-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .manage-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: #f5f0e8;
+    margin-bottom: 8px;
+  }
+
+  .manage-item-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .manage-item-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  .manage-item-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .manage-delete {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--red);
+    background: none;
+    border: 1px solid var(--red);
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: 12px;
+    flex-shrink: 0;
+  }
+  .manage-delete:hover {
+    background: var(--red);
+    color: var(--cream);
+  }
+  .manage-delete:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  .manage-empty {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    padding: 20px;
+  }
+
+  .manage-confirm {
+    display: none;
+    padding: 16px 20px;
+    background: #f5d5d5;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .manage-confirm.visible { display: block; }
+
+  .manage-confirm-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--red);
+    margin-bottom: 12px;
+  }
+
+  .manage-confirm-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .manage-confirm-yes {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    background: var(--red);
+    color: var(--cream);
+    border: none;
+    padding: 6px 20px;
+    cursor: pointer;
+  }
+  .manage-confirm-yes:hover { background: #6b1515; }
+
+  .manage-confirm-no {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    background: none;
+    border: 1px solid #bfad90;
+    color: var(--muted);
+    padding: 6px 20px;
+    cursor: pointer;
+  }
+  .manage-confirm-no:hover { background: #f5f0e8; }
+
   .back-link {
     display: block;
     text-align: center;
@@ -351,6 +478,18 @@
     <div class="status" id="status"></div>
 
     <button class="btn btn-primary publish-btn" id="publish-btn" onclick="publish()">Publish Newsletter</button>
+
+    <div class="manage-section" id="manage-section">
+      <div class="manage-header">Published Newsletters</div>
+      <div class="manage-confirm" id="manage-confirm">
+        <div class="manage-confirm-text" id="manage-confirm-text"></div>
+        <div class="manage-confirm-buttons">
+          <button class="manage-confirm-yes" id="manage-confirm-yes">Yes, delete</button>
+          <button class="manage-confirm-no" onclick="cancelDelete()">Cancel</button>
+        </div>
+      </div>
+      <ul class="manage-list" id="manage-list"></ul>
+    </div>
   </div>
 
   <a class="back-link" href="./">&#8592; Back to The Halliday Brief</a>
@@ -473,6 +612,7 @@
       patSection.classList.remove('visible');
       topBar.classList.add('visible');
       uploadArea.classList.add('visible');
+      loadNewsletters();
     }
   }
 
@@ -483,6 +623,7 @@
     document.getElementById('pat-section').classList.remove('visible');
     document.getElementById('top-bar').classList.remove('visible');
     document.getElementById('upload-area').classList.remove('visible');
+    document.getElementById('manage-section').classList.remove('visible');
     hideStatus();
   }
 
@@ -602,6 +743,7 @@
       showStatus('Published! The newsletter will be live in about 2 minutes.', 'success');
       btn.textContent = 'Published';
       pendingFile = null;
+      loadNewsletters();
       setTimeout(function() {
         document.getElementById('preview').classList.remove('visible');
         btn.classList.remove('visible');
@@ -635,6 +777,107 @@
         });
       }
     });
+  }
+
+  // ── Manage newsletters ──
+  var deleteTarget = null;
+
+  function loadNewsletters() {
+    var manageSection = document.getElementById('manage-section');
+    var list = document.getElementById('manage-list');
+
+    fetch('newsletters.json?t=' + Date.now())
+      .then(function(res) { return res.json(); })
+      .then(function(newsletters) {
+        manageSection.classList.add('visible');
+        list.innerHTML = '';
+
+        if (newsletters.length === 0) {
+          list.innerHTML = '<li class="manage-empty">No newsletters published yet.</li>';
+          return;
+        }
+
+        newsletters.slice().reverse().forEach(function(entry) {
+          var li = document.createElement('li');
+          li.className = 'manage-item';
+          li.innerHTML =
+            '<div class="manage-item-info">' +
+              '<div class="manage-item-title">' + entry.title + '</div>' +
+              '<div class="manage-item-date">' + entry.date + '</div>' +
+            '</div>' +
+            '<button class="manage-delete" data-file="' + entry.file + '">Delete</button>';
+          list.appendChild(li);
+        });
+
+        list.querySelectorAll('.manage-delete').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            promptDelete(btn.getAttribute('data-file'));
+          });
+        });
+      })
+      .catch(function() {
+        manageSection.classList.remove('visible');
+      });
+  }
+
+  function promptDelete(filename) {
+    deleteTarget = filename;
+    var confirm = document.getElementById('manage-confirm');
+    var text = document.getElementById('manage-confirm-text');
+    text.textContent = 'Delete ' + filename + '? This cannot be undone.';
+    confirm.classList.add('visible');
+
+    document.getElementById('manage-confirm-yes').onclick = function() {
+      executeDelete(filename);
+    };
+  }
+
+  function cancelDelete() {
+    deleteTarget = null;
+    document.getElementById('manage-confirm').classList.remove('visible');
+  }
+
+  async function executeDelete(filename) {
+    var confirm = document.getElementById('manage-confirm');
+    var text = document.getElementById('manage-confirm-text');
+    text.textContent = 'Deleting...';
+
+    try {
+      var path = 'newsletters/' + filename;
+      var res = await fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
+        headers: { 'Authorization': 'Bearer ' + getPat() }
+      });
+
+      if (!res.ok) throw new Error('Could not find file');
+      var data = await res.json();
+
+      var delRes = await fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': 'Bearer ' + getPat(),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: 'Delete ' + filename,
+          sha: data.sha
+        })
+      });
+
+      if (!delRes.ok) {
+        var errData = await delRes.json();
+        throw new Error(errData.message || 'Delete failed');
+      }
+
+      confirm.classList.remove('visible');
+      deleteTarget = null;
+      showStatus('Deleted ' + filename + '. Site will update in about 2 minutes.', 'success');
+      loadNewsletters();
+    } catch (err) {
+      text.textContent = 'Error: ' + err.message;
+      setTimeout(function() {
+        confirm.classList.remove('visible');
+      }, 3000);
+    }
   }
 
   // ── Status ──
