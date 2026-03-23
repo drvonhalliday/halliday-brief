@@ -5,8 +5,28 @@
     <link>https://brief.vonhalliday.com</link>
     <description>Strategic insights from Von Halliday Consulting</description>
     <language>en-us</language>
-    <lastBuildDate>Mon, 23 Mar 2026 00:25:42 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 23 Mar 2026 00:32:58 +0000</lastBuildDate>
     <atom:link href="https://brief.vonhalliday.com/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>The Halliday Brief — Vol. 1, No. 2 — March 22, 2026</title>
+      <link>https://brief.vonhalliday.com/newsletters/2026-03-22.html</link>
+      <guid isPermaLink="true">https://brief.vonhalliday.com/newsletters/2026-03-22.html</guid>
+      <pubDate>Sun, 22 Mar 2026 12:00:00 +0000</pubDate>
+      <description>Test Upload — Delete This After Verifying</description>
+      <content:encoded><![CDATA[<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Halliday Brief | Vol. 1, No. 2 | March 22, 2026</title>
+</head>
+<body>
+<h2>Test Upload — Delete This After Verifying</h2>
+<p>This is a test newsletter to verify the upload flow works. Delete the resulting file from the repo after confirming.</p>
+</body>
+</html>
+]]></content:encoded>
+    </item>
     <item>
       <title>The Halliday Brief — Vol. 1, No. 1 — March 21, 2026</title>
       <link>https://brief.vonhalliday.com/newsletters/2026-03-21.html</link>
