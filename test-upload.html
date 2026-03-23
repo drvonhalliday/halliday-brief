@@ -1144,7 +1144,20 @@
         numberCells[n].style.borderBottom = '1px solid #c8b890';
       }
 
-      // Step 4: Fix this-week bullet/text spans to stay inline
+      // Step 4: Fix footer grid — stack columns with spacing
+      var footerCols = doc.querySelectorAll('.footer-col');
+      for (var fc = 0; fc < footerCols.length; fc++) {
+        footerCols[fc].style.display = 'block';
+        footerCols[fc].style.marginBottom = '24px';
+      }
+
+      // Step 4b: Fix watch list items — ensure children stay inline
+      var watchItems = doc.querySelectorAll('.watch-list li');
+      for (var wi = 0; wi < watchItems.length; wi++) {
+        watchItems[wi].style.display = 'block';
+      }
+
+      // Step 5: Fix this-week bullet/text spans to stay inline
       var twSpans = doc.querySelectorAll('.this-week-items li span');
       for (var tw = 0; tw < twSpans.length; tw++) {
         twSpans[tw].style.display = 'inline';
