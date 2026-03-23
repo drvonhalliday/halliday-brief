@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Test Upload — The Halliday Brief</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1612;
+    --soil: #2d1f0e;
+    --wheat: #c9a84c;
+    --cream: #faf6ee;
+    --muted: #6b5e4e;
+    --green: #1f5c2e;
+    --red: #8b2020;
+  }
+
+  body {
+    background: #ddd5c0;
+    font-family: 'Source Serif 4', Georgia, serif;
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+  }
+
+  .container {
+    max-width: 600px;
+    width: 100%;
+    background: var(--cream);
+    border: 1px solid #bfad90;
+    box-shadow: 6px 8px 48px rgba(0,0,0,0.22);
+    padding: 48px;
+  }
+
+  .title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--soil);
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+
+  /* PIN gate */
+  .pin-section {
+    text-align: center;
+    padding: 40px 0;
+  }
+  .pin-section.hidden { display: none; }
+
+  .pin-input {
+    font-family: 'Space Mono', monospace;
+    font-size: 18px;
+    letter-spacing: 0.3em;
+    text-align: center;
+    width: 200px;
+    padding: 12px 16px;
+    border: 2px solid #bfad90;
+    background: #f5f0e8;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .pin-input:focus { border-color: var(--wheat); }
+  .pin-input.error { border-color: var(--red); animation: shake 0.4s; }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
+  .pin-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .pin-submit {
+    display: block;
+    margin: 16px auto 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 10px 32px;
+    background: var(--soil);
+    color: var(--cream);
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .pin-submit:hover { background: #4a3520; }
+
+  /* PAT setup */
+  .pat-section {
+    display: none;
+    margin-bottom: 24px;
+    padding: 20px;
+    background: #f5f0e8;
+    border-left: 4px solid var(--wheat);
+  }
+  .pat-section.visible { display: block; }
+
+  .pat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .pat-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .pat-input {
+    flex: 1;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    padding: 10px 12px;
+    border: 1px solid #bfad90;
+    background: var(--cream);
+    color: var(--ink);
+    outline: none;
+  }
+  .pat-input:focus { border-color: var(--wheat); }
+
+  .pat-status {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--green);
+    margin-top: 8px;
+    letter-spacing: 0.06em;
+  }
+  .pat-status.error { color: var(--red); }
+
+  /* Buttons */
+  .btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 10px 24px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-primary {
+    background: var(--soil);
+    color: var(--cream);
+  }
+  .btn-primary:hover { background: #4a3520; }
+  .btn-small {
+    background: none;
+    border: 1px solid #bfad90;
+    color: var(--muted);
+    padding: 6px 14px;
+    font-size: 10px;
+  }
+  .btn-small:hover { background: #f5f0e8; }
+
+  /* Top bar when authenticated */
+  .top-bar {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e0d8c8;
+  }
+  .top-bar.visible { display: flex; }
+
+  .top-bar-info {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 0.06em;
+  }
+
+  /* Drop zone */
+  .upload-area { display: none; }
+  .upload-area.visible { display: block; }
+
+  .drop-zone {
+    border: 2.5px dashed #bfad90;
+    padding: 60px 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--wheat);
+    background: rgba(201,168,76,0.08);
+  }
+
+  .drop-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .drop-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    color: var(--wheat);
+  }
+  .drop-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--soil);
+    margin-bottom: 8px;
+  }
+  .drop-hint {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* Preview */
+  .preview {
+    display: none;
+    margin-bottom: 24px;
+    padding: 20px;
+    background: #f5f0e8;
+    border-left: 4px solid var(--wheat);
+  }
+  .preview.visible { display: block; }
+
+  .preview-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .preview-row {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .preview-row span { color: var(--muted); }
+
+  /* Status */
+  .status {
+    display: none;
+    padding: 16px 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+  .status.visible { display: block; }
+  .status.uploading { background: #f0dfa0; color: var(--soil); }
+  .status.success { background: #d4edda; color: var(--green); }
+  .status.error { background: #f5d5d5; color: var(--red); }
+
+  .publish-btn {
+    width: 100%;
+    padding: 16px;
+    font-size: 14px;
+    display: none;
+  }
+  .publish-btn.visible { display: block; }
+
+  /* Published list */
+  .manage-section {
+    display: none;
+    margin-top: 32px;
+    padding-top: 32px;
+    border-top: 1px solid #e0d8c8;
+  }
+  .manage-section.visible { display: block; }
+
+  .manage-header {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .manage-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .manage-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: #f5f0e8;
+    margin-bottom: 8px;
+  }
+
+  .manage-item-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .manage-item-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  .manage-item-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .manage-delete {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--red);
+    background: none;
+    border: 1px solid var(--red);
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: 12px;
+    flex-shrink: 0;
+  }
+  .manage-delete:hover {
+    background: var(--red);
+    color: var(--cream);
+  }
+  .manage-delete:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  .manage-empty {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    padding: 20px;
+  }
+
+  .manage-confirm {
+    display: none;
+    padding: 16px 20px;
+    background: #f5d5d5;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .manage-confirm.visible { display: block; }
+
+  .manage-confirm-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--red);
+    margin-bottom: 12px;
+  }
+
+  .manage-confirm-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .manage-confirm-yes {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    background: var(--red);
+    color: var(--cream);
+    border: none;
+    padding: 6px 20px;
+    cursor: pointer;
+  }
+  .manage-confirm-yes:hover { background: #6b1515; }
+
+  .manage-confirm-no {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    background: none;
+    border: 1px solid #bfad90;
+    color: var(--muted);
+    padding: 6px 20px;
+    cursor: pointer;
+  }
+  .manage-confirm-no:hover { background: #f5f0e8; }
+
+  .manage-pager {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 12px;
+  }
+
+  .manage-pager-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: none;
+    border: 1px solid #bfad90;
+    color: var(--muted);
+    padding: 6px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .manage-pager-btn:hover { background: #f5f0e8; color: var(--soil); }
+  .manage-pager-btn:disabled { opacity: 0.3; cursor: default; background: none; }
+
+  .manage-pager-info {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+
+  .back-link {
+    display: block;
+    text-align: center;
+    margin-top: 24px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+  }
+  .back-link:hover { color: var(--soil); }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title" style="color:#8b2020;">Test Upload</div>
+  <div class="subtitle">The Halliday Brief — Test Environment</div>
+
+  <!-- PIN gate -->
+  <div class="pin-section" id="pin-section">
+    <div class="pin-label">Enter PIN to continue</div>
+    <input class="pin-input" id="pin-input" type="password" maxlength="20" inputmode="numeric" autocomplete="off" placeholder="&#8226;&#8226;&#8226;&#8226;" />
+    <button class="pin-submit" id="pin-submit" onclick="checkPin()">Enter</button>
+  </div>
+
+  <!-- Top bar (shown after PIN + PAT verified) -->
+  <div class="top-bar" id="top-bar">
+    <div class="top-bar-info" style="color:#8b2020;">Test Mode — will not send emails</div>
+    <button class="btn btn-small" onclick="resetSession()">Lock</button>
+  </div>
+
+  <!-- PAT setup (shown after PIN, if no saved PAT) -->
+  <div class="pat-section" id="pat-section">
+    <div class="pat-label">GitHub access token</div>
+    <div class="pat-row">
+      <input class="pat-input" id="pat-input" type="password" placeholder="github_pat_..." autocomplete="off" />
+      <button class="btn btn-primary" style="padding:10px 16px; font-size:11px;" onclick="savePat()">Save</button>
+    </div>
+    <div class="pat-status" id="pat-status"></div>
+  </div>
+
+  <!-- Upload area (shown when PIN + PAT both valid) -->
+  <div class="upload-area" id="upload-area">
+    <div class="drop-zone" id="drop-zone">
+      <input type="file" accept=".html" id="file-input" />
+      <div class="drop-icon">&#8681;</div>
+      <div class="drop-text">Drop newsletter HTML here</div>
+      <div class="drop-hint">or click to browse</div>
+    </div>
+
+    <div class="preview" id="preview">
+      <div class="preview-label">Ready to publish</div>
+      <div class="preview-row" id="preview-file"><span>File:</span> —</div>
+      <div class="preview-row" id="preview-title"><span>Title:</span> —</div>
+      <div class="preview-row" id="preview-date"><span>Date:</span> —</div>
+      <div class="preview-row" id="preview-headline"><span>Lead:</span> —</div>
+    </div>
+
+    <div class="status" id="status"></div>
+
+    <button class="btn btn-primary publish-btn" id="publish-btn" onclick="publish()">Publish Newsletter</button>
+
+    <div class="manage-section" id="manage-section">
+      <div class="manage-header">Published Newsletters</div>
+      <div class="manage-confirm" id="manage-confirm">
+        <div class="manage-confirm-text" id="manage-confirm-text"></div>
+        <div class="manage-confirm-buttons">
+          <button class="manage-confirm-yes" id="manage-confirm-yes">Yes, delete</button>
+          <button class="manage-confirm-no" onclick="cancelDelete()">Cancel</button>
+        </div>
+      </div>
+      <ul class="manage-list" id="manage-list"></ul>
+      <div class="manage-pager" id="manage-pager" style="display:none;">
+        <button class="manage-pager-btn" id="pager-prev" onclick="changePage(-1)">&larr; Newer</button>
+        <span class="manage-pager-info" id="pager-info"></span>
+        <button class="manage-pager-btn" id="pager-next" onclick="changePage(1)">Older &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <a class="back-link" href="./test-index.html">&#8592; Back to Test Viewer</a>
+</div>
+
+<script>
+  // ════════════════════════════════════════
+  // CONFIGURATION
+  // ════════════════════════════════════════
+  var REPO_OWNER = 'drvonhalliday';
+  var REPO_NAME = 'halliday-brief';
+
+  // SHA-256 hash of the PIN. To change the PIN:
+  // 1. Open browser console on any page
+  // 2. Run: crypto.subtle.digest('SHA-256', new TextEncoder().encode('YOUR_NEW_PIN')).then(h => console.log(Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2,'0')).join('')))
+  // 3. Replace the hash below with the output
+  var PIN_HASH = '475368189e17ec9d12cf43f873f4ba27b0ae9ccbd0686fa21f5caad89ed57243';
+
+  var pendingFile = null;
+  var pinVerified = false;
+
+  // ── PIN ──
+  async function hashValue(value) {
+    var encoded = new TextEncoder().encode(value);
+    var buffer = await crypto.subtle.digest('SHA-256', encoded);
+    return Array.from(new Uint8Array(buffer)).map(function(b) {
+      return b.toString(16).padStart(2, '0');
+    }).join('');
+  }
+
+  async function checkPin() {
+    var input = document.getElementById('pin-input');
+    var pin = input.value.trim();
+    if (!pin) return;
+
+    var hash = await hashValue(pin);
+    if (hash === PIN_HASH) {
+      pinVerified = true;
+      sessionStorage.setItem('hb_pin_ok', '1');
+      input.value = '';
+      showAuthenticatedUI();
+    } else {
+      input.classList.add('error');
+      input.value = '';
+      input.focus();
+      setTimeout(function() { input.classList.remove('error'); }, 500);
+    }
+  }
+
+  // Allow Enter key on PIN input
+  document.getElementById('pin-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkPin();
+  });
+
+  // ── PAT ──
+  function getPat() {
+    return localStorage.getItem('hb_pat') || '';
+  }
+
+  async function savePat() {
+    var input = document.getElementById('pat-input');
+    var token = input.value.trim();
+    var statusEl = document.getElementById('pat-status');
+
+    if (!token) return;
+
+    statusEl.textContent = 'Verifying...';
+    statusEl.className = 'pat-status';
+
+    try {
+      var res = await fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME, {
+        headers: { 'Authorization': 'Bearer ' + token, 'User-Agent': 'HallidayBrief' }
+      });
+
+      if (!res.ok) throw new Error('Invalid token or no access');
+
+      var repo = await res.json();
+      if (!repo.permissions || !repo.permissions.push) {
+        throw new Error('Token does not have write access');
+      }
+
+      localStorage.setItem('hb_pat', token);
+      input.value = '';
+      statusEl.textContent = 'Token saved';
+      statusEl.className = 'pat-status';
+      showAuthenticatedUI();
+    } catch (err) {
+      statusEl.textContent = err.message;
+      statusEl.className = 'pat-status error';
+    }
+  }
+
+  // Allow Enter key on PAT input
+  document.getElementById('pat-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') savePat();
+  });
+
+  // ── UI state ──
+  function showAuthenticatedUI() {
+    var pinSection = document.getElementById('pin-section');
+    var patSection = document.getElementById('pat-section');
+    var topBar = document.getElementById('top-bar');
+    var uploadArea = document.getElementById('upload-area');
+
+    if (!pinVerified) {
+      pinSection.classList.remove('hidden');
+      patSection.classList.remove('visible');
+      topBar.classList.remove('visible');
+      uploadArea.classList.remove('visible');
+      return;
+    }
+
+    pinSection.classList.add('hidden');
+
+    if (!getPat()) {
+      patSection.classList.add('visible');
+      topBar.classList.remove('visible');
+      uploadArea.classList.remove('visible');
+    } else {
+      patSection.classList.remove('visible');
+      topBar.classList.add('visible');
+      uploadArea.classList.add('visible');
+      loadNewsletters();
+    }
+  }
+
+  function resetSession() {
+    pinVerified = false;
+    sessionStorage.removeItem('hb_pin_ok');
+    document.getElementById('pin-section').classList.remove('hidden');
+    document.getElementById('pat-section').classList.remove('visible');
+    document.getElementById('top-bar').classList.remove('visible');
+    document.getElementById('upload-area').classList.remove('visible');
+    document.getElementById('manage-section').classList.remove('visible');
+    hideStatus();
+  }
+
+  // ── File handling ──
+  function parseNewsletter(content) {
+    var titleMatch = content.match(/<title>(.*?)<\/title>/i);
+    if (!titleMatch) return null;
+
+    var rawTitle = titleMatch[1].trim();
+    var parts = rawTitle.split('|').map(function(p) { return p.trim(); });
+
+    var vol = parts[1] || 'Unknown';
+    var dateStr = parts[2] || 'Unknown';
+
+    var filename = null;
+    var dateMatch = dateStr.match(/(\w+)\s+(\d{1,2}),?\s+(\d{4})/);
+    if (dateMatch) {
+      var months = {
+        'january':'01','february':'02','march':'03','april':'04',
+        'may':'05','june':'06','july':'07','august':'08',
+        'september':'09','october':'10','november':'11','december':'12'
+      };
+      var m = months[dateMatch[1].toLowerCase()];
+      var d = dateMatch[2].padStart(2, '0');
+      var y = dateMatch[3];
+      if (m) filename = y + '-' + m + '-' + d + '.html';
+    }
+
+    var h2Match = content.match(/<h2>([\s\S]*?)<\/h2>/i);
+    var headline = '';
+    if (h2Match) {
+      headline = h2Match[1].replace(/<[^>]+>/g, '').trim();
+    }
+
+    return {
+      vol: vol,
+      date: dateStr,
+      headline: headline,
+      filename: filename || ('newsletter-' + Date.now() + '.html')
+    };
+  }
+
+  function handleFile(file) {
+    if (!file || !file.name.endsWith('.html')) {
+      showStatus('Please upload an HTML file', 'error');
+      return;
+    }
+
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var content = e.target.result;
+      var meta = parseNewsletter(content);
+
+      if (!meta) {
+        showStatus('Could not parse newsletter. Make sure the HTML has a <title> tag with the standard format.', 'error');
+        return;
+      }
+
+      pendingFile = { name: meta.filename, content: content };
+
+      document.getElementById('preview-file').innerHTML = '<span>File:</span> ' + meta.filename;
+      document.getElementById('preview-title').innerHTML = '<span>Title:</span> ' + meta.vol;
+      document.getElementById('preview-date').innerHTML = '<span>Date:</span> ' + meta.date;
+      document.getElementById('preview-headline').innerHTML = '<span>Lead:</span> ' + meta.headline;
+      document.getElementById('preview').classList.add('visible');
+      document.getElementById('publish-btn').classList.add('visible');
+      hideStatus();
+    };
+    reader.readAsText(file);
+  }
+
+  // ── Drag and drop ──
+  var dropZone = document.getElementById('drop-zone');
+  var fileInput = document.getElementById('file-input');
+
+  dropZone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    dropZone.classList.add('dragover');
+  });
+  dropZone.addEventListener('dragleave', function() {
+    dropZone.classList.remove('dragover');
+  });
+  dropZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', function() {
+    if (fileInput.files.length > 0) handleFile(fileInput.files[0]);
+  });
+
+  // ── Publish ──
+  function publish() {
+    if (!pendingFile || !getPat()) return;
+
+    var btn = document.getElementById('publish-btn');
+    btn.disabled = true;
+    btn.textContent = 'Publishing...';
+    showStatus('Uploading to GitHub...', 'uploading');
+
+    var path = 'test-newsletters/' + pendingFile.name;
+    var content = btoa(unescape(encodeURIComponent(pendingFile.content)));
+
+    fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
+      headers: { 'Authorization': 'Bearer ' + getPat() }
+    })
+    .then(function(res) {
+      if (res.ok) {
+        return res.json().then(function(data) {
+          return commitFile(path, content, data.sha);
+        });
+      } else {
+        return commitFile(path, content, null);
+      }
+    })
+    .then(function() {
+      showStatus('Published! The newsletter will be live in about 2 minutes.', 'success');
+      btn.textContent = 'Published';
+      pendingFile = null;
+      loadNewsletters();
+      setTimeout(function() {
+        document.getElementById('preview').classList.remove('visible');
+        btn.classList.remove('visible');
+        btn.disabled = false;
+        btn.textContent = 'Publish Newsletter';
+        fileInput.value = '';
+      }, 5000);
+    })
+    .catch(function(err) {
+      showStatus('Error: ' + err.message, 'error');
+      btn.disabled = false;
+      btn.textContent = 'Publish Newsletter';
+    });
+  }
+
+  function commitFile(path, content, sha) {
+    var body = { message: 'Publish ' + pendingFile.name, content: content };
+    if (sha) body.sha = sha;
+
+    return fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + getPat(),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    }).then(function(res) {
+      if (!res.ok) {
+        return res.json().then(function(data) {
+          throw new Error(data.message || 'Upload failed');
+        });
+      }
+    });
+  }
+
+  // ── Manage newsletters ──
+  var deleteTarget = null;
+  var allNewsletters = [];
+  var managePage = 0;
+  var PAGE_SIZE = 5;
+
+  function loadNewsletters() {
+    fetch('test-newsletters.json?t=' + Date.now())
+      .then(function(res) { return res.json(); })
+      .then(function(newsletters) {
+        allNewsletters = newsletters.slice().reverse();
+        managePage = 0;
+        renderPage();
+      })
+      .catch(function() {
+        document.getElementById('manage-section').classList.remove('visible');
+      });
+  }
+
+  function renderPage() {
+    var manageSection = document.getElementById('manage-section');
+    var list = document.getElementById('manage-list');
+    var pager = document.getElementById('manage-pager');
+
+    manageSection.classList.add('visible');
+    list.innerHTML = '';
+
+    if (allNewsletters.length === 0) {
+      list.innerHTML = '<li class="manage-empty">No newsletters published yet.</li>';
+      pager.style.display = 'none';
+      return;
+    }
+
+    var totalPages = Math.ceil(allNewsletters.length / PAGE_SIZE);
+    var start = managePage * PAGE_SIZE;
+    var pageItems = allNewsletters.slice(start, start + PAGE_SIZE);
+
+    pageItems.forEach(function(entry) {
+      var li = document.createElement('li');
+      li.className = 'manage-item';
+      li.innerHTML =
+        '<div class="manage-item-info">' +
+          '<div class="manage-item-title">' + entry.title + '</div>' +
+          '<div class="manage-item-date">' + entry.date + '</div>' +
+        '</div>' +
+        '<button class="manage-delete" data-file="' + entry.file + '">Delete</button>';
+      list.appendChild(li);
+    });
+
+    list.querySelectorAll('.manage-delete').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        promptDelete(btn.getAttribute('data-file'));
+      });
+    });
+
+    if (totalPages > 1) {
+      pager.style.display = 'flex';
+      document.getElementById('pager-prev').disabled = (managePage === 0);
+      document.getElementById('pager-next').disabled = (managePage >= totalPages - 1);
+      document.getElementById('pager-info').textContent = (managePage + 1) + ' / ' + totalPages;
+    } else {
+      pager.style.display = 'none';
+    }
+  }
+
+  function changePage(dir) {
+    var totalPages = Math.ceil(allNewsletters.length / PAGE_SIZE);
+    managePage += dir;
+    if (managePage < 0) managePage = 0;
+    if (managePage >= totalPages) managePage = totalPages - 1;
+    renderPage();
+  }
+
+  function promptDelete(filename) {
+    deleteTarget = filename;
+    var confirm = document.getElementById('manage-confirm');
+    var text = document.getElementById('manage-confirm-text');
+    text.textContent = 'Delete ' + filename + '? This cannot be undone.';
+    confirm.classList.add('visible');
+
+    document.getElementById('manage-confirm-yes').onclick = function() {
+      executeDelete(filename);
+    };
+  }
+
+  function cancelDelete() {
+    deleteTarget = null;
+    document.getElementById('manage-confirm').classList.remove('visible');
+  }
+
+  async function executeDelete(filename) {
+    var confirm = document.getElementById('manage-confirm');
+    var text = document.getElementById('manage-confirm-text');
+    text.textContent = 'Deleting...';
+
+    try {
+      var path = 'test-newsletters/' + filename;
+      var res = await fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
+        headers: { 'Authorization': 'Bearer ' + getPat() }
+      });
+
+      if (!res.ok) throw new Error('Could not find file');
+      var data = await res.json();
+
+      var delRes = await fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': 'Bearer ' + getPat(),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: 'Delete ' + filename,
+          sha: data.sha
+        })
+      });
+
+      if (!delRes.ok) {
+        var errData = await delRes.json();
+        throw new Error(errData.message || 'Delete failed');
+      }
+
+      confirm.classList.remove('visible');
+      deleteTarget = null;
+      showStatus('Deleted ' + filename + '. Site will update in about 2 minutes.', 'success');
+      loadNewsletters();
+    } catch (err) {
+      text.textContent = 'Error: ' + err.message;
+      setTimeout(function() {
+        confirm.classList.remove('visible');
+      }, 3000);
+    }
+  }
+
+  // ── Status ──
+  function showStatus(msg, type) {
+    var el = document.getElementById('status');
+    el.textContent = msg;
+    el.className = 'status visible ' + type;
+  }
+  function hideStatus() {
+    document.getElementById('status').className = 'status';
+  }
+
+  // ── Init ──
+  // Restore PIN session (survives page refresh, not tab close)
+  if (sessionStorage.getItem('hb_pin_ok') === '1') {
+    pinVerified = true;
+  }
+  showAuthenticatedUI();
+  document.getElementById('pin-input').focus();
+</script>
+
+</body>
+</html>
