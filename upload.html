@@ -416,6 +416,36 @@
   }
   .manage-confirm-no:hover { background: #f5f0e8; }
 
+  .manage-pager {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 12px;
+  }
+
+  .manage-pager-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: none;
+    border: 1px solid #bfad90;
+    color: var(--muted);
+    padding: 6px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .manage-pager-btn:hover { background: #f5f0e8; color: var(--soil); }
+  .manage-pager-btn:disabled { opacity: 0.3; cursor: default; background: none; }
+
+  .manage-pager-info {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+
   .back-link {
     display: block;
     text-align: center;
@@ -489,6 +519,11 @@
         </div>
       </div>
       <ul class="manage-list" id="manage-list"></ul>
+      <div class="manage-pager" id="manage-pager" style="display:none;">
+        <button class="manage-pager-btn" id="pager-prev" onclick="changePage(-1)">&larr; Newer</button>
+        <span class="manage-pager-info" id="pager-info"></span>
+        <button class="manage-pager-btn" id="pager-next" onclick="changePage(1)">Older &rarr;</button>
+      </div>
     </div>
   </div>
 
@@ -781,43 +816,75 @@
 
   // ── Manage newsletters ──
   var deleteTarget = null;
+  var allNewsletters = [];
+  var managePage = 0;
+  var PAGE_SIZE = 5;
 
   function loadNewsletters() {
-    var manageSection = document.getElementById('manage-section');
-    var list = document.getElementById('manage-list');
-
     fetch('newsletters.json?t=' + Date.now())
       .then(function(res) { return res.json(); })
       .then(function(newsletters) {
-        manageSection.classList.add('visible');
-        list.innerHTML = '';
-
-        if (newsletters.length === 0) {
-          list.innerHTML = '<li class="manage-empty">No newsletters published yet.</li>';
-          return;
-        }
-
-        newsletters.slice().reverse().forEach(function(entry) {
-          var li = document.createElement('li');
-          li.className = 'manage-item';
-          li.innerHTML =
-            '<div class="manage-item-info">' +
-              '<div class="manage-item-title">' + entry.title + '</div>' +
-              '<div class="manage-item-date">' + entry.date + '</div>' +
-            '</div>' +
-            '<button class="manage-delete" data-file="' + entry.file + '">Delete</button>';
-          list.appendChild(li);
-        });
-
-        list.querySelectorAll('.manage-delete').forEach(function(btn) {
-          btn.addEventListener('click', function() {
-            promptDelete(btn.getAttribute('data-file'));
-          });
-        });
+        allNewsletters = newsletters.slice().reverse();
+        managePage = 0;
+        renderPage();
       })
       .catch(function() {
-        manageSection.classList.remove('visible');
+        document.getElementById('manage-section').classList.remove('visible');
       });
+  }
+
+  function renderPage() {
+    var manageSection = document.getElementById('manage-section');
+    var list = document.getElementById('manage-list');
+    var pager = document.getElementById('manage-pager');
+
+    manageSection.classList.add('visible');
+    list.innerHTML = '';
+
+    if (allNewsletters.length === 0) {
+      list.innerHTML = '<li class="manage-empty">No newsletters published yet.</li>';
+      pager.style.display = 'none';
+      return;
+    }
+
+    var totalPages = Math.ceil(allNewsletters.length / PAGE_SIZE);
+    var start = managePage * PAGE_SIZE;
+    var pageItems = allNewsletters.slice(start, start + PAGE_SIZE);
+
+    pageItems.forEach(function(entry) {
+      var li = document.createElement('li');
+      li.className = 'manage-item';
+      li.innerHTML =
+        '<div class="manage-item-info">' +
+          '<div class="manage-item-title">' + entry.title + '</div>' +
+          '<div class="manage-item-date">' + entry.date + '</div>' +
+        '</div>' +
+        '<button class="manage-delete" data-file="' + entry.file + '">Delete</button>';
+      list.appendChild(li);
+    });
+
+    list.querySelectorAll('.manage-delete').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        promptDelete(btn.getAttribute('data-file'));
+      });
+    });
+
+    if (totalPages > 1) {
+      pager.style.display = 'flex';
+      document.getElementById('pager-prev').disabled = (managePage === 0);
+      document.getElementById('pager-next').disabled = (managePage >= totalPages - 1);
+      document.getElementById('pager-info').textContent = (managePage + 1) + ' / ' + totalPages;
+    } else {
+      pager.style.display = 'none';
+    }
+  }
+
+  function changePage(dir) {
+    var totalPages = Math.ceil(allNewsletters.length / PAGE_SIZE);
+    managePage += dir;
+    if (managePage < 0) managePage = 0;
+    if (managePage >= totalPages) managePage = totalPages - 1;
+    renderPage();
   }
 
   function promptDelete(filename) {
