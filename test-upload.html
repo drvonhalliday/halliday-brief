@@ -487,6 +487,7 @@
     border: 1px solid #bfad90;
     background: #ffffff;
     min-height: 400px;
+    transform-origin: top left;
   }
 
   .preview-email-btn {
@@ -1183,29 +1184,36 @@
 
   function showPreviewFrame(mode) {
     var frame = document.getElementById('email-preview-frame');
+    var container = frame.parentElement;
+    var containerWidth = container.offsetWidth;
     var html = mode === 'email' ? emailPreviewHtml : webPreviewHtml;
+
+    // Inject a style to constrain content width and add scaling meta
+    var widthStyle = '<style>body{margin:0;padding:0;} .page-wrapper{max-width:100%!important;box-shadow:none!important;}</style>';
+    var injected = html.replace('</head>', widthStyle + '</head>');
+
     frame.contentDocument.open();
-    frame.contentDocument.write(html);
+    frame.contentDocument.write(injected);
     frame.contentDocument.close();
 
-    frame.onload = function() {
+    var resizePreview = function() {
       try {
         var body = frame.contentDocument.body;
         var docEl = frame.contentDocument.documentElement;
+        var contentWidth = Math.max(body.scrollWidth, docEl.scrollWidth);
+        var scale = contentWidth > containerWidth ? containerWidth / contentWidth : 1;
+        frame.style.transform = 'scale(' + scale + ')';
+        frame.style.width = (100 / scale) + '%';
         var h = Math.max(body.scrollHeight, body.offsetHeight, docEl.scrollHeight, docEl.offsetHeight);
-        frame.style.height = h + 'px';
+        frame.style.height = (h * scale) + 'px';
       } catch(e) {
         frame.style.height = '2000px';
       }
     };
-    setTimeout(function() {
-      try {
-        var body = frame.contentDocument.body;
-        var docEl = frame.contentDocument.documentElement;
-        var h = Math.max(body.scrollHeight, body.offsetHeight, docEl.scrollHeight, docEl.offsetHeight);
-        frame.style.height = h + 'px';
-      } catch(e) {}
-    }, 500);
+
+    frame.onload = resizePreview;
+    setTimeout(resizePreview, 500);
+    setTimeout(resizePreview, 1500);
   }
 
   function switchPreviewTab(mode) {
