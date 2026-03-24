@@ -100,12 +100,54 @@
   }
 
   /* ── NEWSLETTER FRAME ── */
+  .newsletter-wrap {
+    position: relative;
+  }
+
   .newsletter-frame {
     width: 100%;
     border: 1px solid #bfad90;
     box-shadow: 6px 8px 48px rgba(0,0,0,0.22), 0 0 0 7px #faf6ee, 0 0 0 8px #bfad90;
     background: var(--cream);
     min-height: 600px;
+  }
+
+  .newsletter-loading {
+    position: absolute;
+    inset: 0;
+    background: var(--cream);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    z-index: 1;
+    transition: opacity 0.5s ease;
+  }
+
+  .newsletter-loading.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 2px solid #bfad90;
+    border-top-color: var(--wheat);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  .loading-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
   }
 
   /* ── ARCHIVE PANEL ── */
@@ -295,7 +337,13 @@
   </div>
 
   <!-- NEWSLETTER -->
-  <iframe class="newsletter-frame" id="newsletter-frame" frameborder="0" scrolling="no"></iframe>
+  <div class="newsletter-wrap">
+    <div class="newsletter-loading" id="newsletter-loading">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Loading newsletter&hellip;</div>
+    </div>
+    <iframe class="newsletter-frame" id="newsletter-frame" frameborder="0" scrolling="no"></iframe>
+  </div>
 
   <!-- NAV -->
   <div class="nav-bar">
@@ -345,6 +393,7 @@
     const frame = document.getElementById('newsletter-frame');
 
     frame.onload = function() {
+      document.getElementById('newsletter-loading').classList.add('hidden');
       resizeFrame();
       setTimeout(resizeFrame, 500);
       setTimeout(resizeFrame, 1500);
