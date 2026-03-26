@@ -5,7 +5,7 @@
     <link>https://brief.vonhalliday.com</link>
     <description>Strategic insights from Von Halliday Consulting</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 26 Mar 2026 15:26:18 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 26 Mar 2026 17:06:09 +0000</lastBuildDate>
     <atom:link href="https://brief.vonhalliday.com/rss.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>The Halliday Brief — Vol. 1, No. 1 — March 21, 2026</title>
@@ -293,15 +293,15 @@
   }
   .chart-title {
     font-family: 'Playfair Display', serif;
-    font-size: 16px;
+    font-size: 19px;
     font-weight: 700;
     color: var(--soil);
-    margin-bottom: 5px;
+    margin-bottom: 6px;
     line-height: 1.35;
   }
   .chart-sub {
     font-family: 'Space Mono', monospace;
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: #7a4e28;
@@ -374,8 +374,8 @@
   }
   .hbar-note {
     font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    color: #7a4e28;
+    font-size: 9px;
+    color: #a08060;
     margin-top: 10px;
     line-height: 1.65;
   }
@@ -945,7 +945,7 @@
 
         </div>
 
-        <p class="hbar-note">Source: ND HHS Deputy Commissioner Emily O'Brien, Rugby Stakeholder Meeting, March 17, 2026. Reported by Charles Crane, Minot Daily News. The $10M Round 1 workforce retention window is open now with an April 30 deadline.</p>
+        <p class="hbar-note" style="font-size:8px; color:#a08060;">Source: ND HHS Deputy Commissioner Emily O'Brien, Rugby Stakeholder Meeting, March 17, 2026. Reported by Charles Crane, Minot Daily News. The $10M Round 1 workforce retention window is open now with an April 30 deadline.</p>
       </div>
 
       <div class="deadline-box">
@@ -1142,7 +1142,7 @@
           <div class="legend-item"><div class="legend-dot" style="background:#c9a227;"></div>Elevated risk (25–35%)</div>
           <div class="legend-item"><div class="legend-dot" style="background:#7a4e28;"></div>Statewide baseline</div>
         </div>
-        <p class="hbar-note" style="margin-top:12px;">* Estimates based on ND HHS Medicaid data and county population figures. Actual impact depends on federal exemption criteria not yet released.</p>
+        <p class="hbar-note" style="margin-top:12px; font-size:9px; color:#a08060;">* Estimates based on ND HHS Medicaid data and county population figures. Actual impact depends on federal exemption criteria not yet released.</p>
       </div>
 
       <p>The state is in a holding pattern. Without detailed federal guidance from CMS, ND HHS cannot calculate implementation costs, finalize administrative processes, or launch the public information campaign it knows will be necessary. North Dakota does not use a provider tax system, which insulates its hospitals from one of the bill's more disruptive provisions — but rural CAHs, many of which carry thin margins and serve high proportions of Medicaid patients, are watching closely.</p>
