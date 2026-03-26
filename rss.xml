@@ -5,7 +5,7 @@
     <link>https://brief.vonhalliday.com</link>
     <description>Strategic insights from Von Halliday Consulting</description>
     <language>en-us</language>
-    <lastBuildDate>Mon, 23 Mar 2026 22:59:14 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 26 Mar 2026 15:26:18 +0000</lastBuildDate>
     <atom:link href="https://brief.vonhalliday.com/rss.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>The Halliday Brief — Vol. 1, No. 1 — March 21, 2026</title>
@@ -283,20 +283,21 @@
   .story p:last-child { margin-bottom: 0; }
 
   /* ══════════════════════════════
-     RHTP FUNDING VISUAL (SVG chart)
+     CHART CONTAINERS (shared)
   ══════════════════════════════ */
   .chart-container {
     background: var(--off-white);
     border: 1px solid #c4a882;
-    padding: 28px 28px 20px;
+    padding: 28px 28px 22px;
     margin: 28px 0;
   }
   .chart-title {
     font-family: 'Playfair Display', serif;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 700;
     color: var(--soil);
-    margin-bottom: 4px;
+    margin-bottom: 5px;
+    line-height: 1.35;
   }
   .chart-sub {
     font-family: 'Space Mono', monospace;
@@ -304,9 +305,218 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: #7a4e28;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
+    line-height: 1.6;
   }
   .chart-svg { width: 100%; overflow: hidden; display: block; }
+
+  /* ══════════════════════════════
+     HTML BAR CHART (RHTP Funding)
+  ══════════════════════════════ */
+  .hbar-chart { display: flex; flex-direction: column; gap: 16px; margin-bottom: 16px; }
+  .hbar-row { display: flex; flex-direction: column; gap: 6px; }
+  .hbar-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .hbar-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--soil);
+    line-height: 1.3;
+  }
+  .hbar-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--soil);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .hbar-track {
+    width: 100%;
+    height: 34px;
+    background: #e3ddd0;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+  .hbar-fill {
+    height: 100%;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
+    min-width: 40px;
+  }
+  .hbar-fill-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    color: rgba(255,255,255,0.92);
+    white-space: nowrap;
+  }
+  .hbar-badge {
+    display: inline-block;
+    margin-top: 4px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: #e8c840;
+    color: #1a3a1f;
+    padding: 3px 10px;
+    font-weight: 700;
+    border-radius: 2px;
+  }
+  .hbar-note {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: #7a4e28;
+    margin-top: 10px;
+    line-height: 1.65;
+  }
+
+  /* ══════════════════════════════
+     TIMELINE (HTML version)
+  ══════════════════════════════ */
+  .html-timeline { margin: 16px 0 8px; }
+  .ht-track-wrap {
+    position: relative;
+    padding: 0 0 0 0;
+    margin-bottom: 8px;
+  }
+  .ht-line {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    right: 18px;
+    height: 4px;
+    background: #d0c4a8;
+    border-radius: 2px;
+    z-index: 0;
+  }
+  .ht-line-progress {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    background: #c9a227;
+    border-radius: 2px;
+  }
+  .ht-nodes {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+  }
+  .ht-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    gap: 10px;
+  }
+  .ht-dot {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 3px solid var(--cream);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 2px #c4a882;
+  }
+  .ht-dot.active  { background: #c9a227; box-shadow: 0 0 0 2px #c9a227; }
+  .ht-dot.urgent  { background: #8b2020; box-shadow: 0 0 0 2px #8b2020; }
+  .ht-dot.pending { background: #c4a882; }
+  .ht-dot-icon { font-size: 14px; }
+  .ht-info { text-align: center; padding: 0 4px; }
+  .ht-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: #2a1505;
+    margin-bottom: 2px;
+  }
+  .ht-date.urgent { color: #8b2020; }
+  .ht-desc {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: #7a4e28;
+    line-height: 1.5;
+  }
+  .ht-desc.urgent { color: #8b2020; font-weight: 700; }
+  .ht-legend {
+    display: flex; gap: 18px; flex-wrap: wrap;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid #d8d0bc;
+  }
+  .ht-legend-item {
+    display: flex; align-items: center; gap: 7px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: #7a4e28;
+  }
+  .ht-legend-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ══════════════════════════════
+     MEDICAID COUNTY CHART (HTML)
+  ══════════════════════════════ */
+  .county-chart { display: flex; flex-direction: column; gap: 14px; margin-bottom: 14px; }
+  .county-row { display: flex; flex-direction: column; gap: 5px; }
+  .county-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 8px;
+  }
+  .county-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--soil);
+  }
+  .county-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8b2020;
+    margin-top: 1px;
+  }
+  .county-pct {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 900;
+    white-space: nowrap;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+  .county-track {
+    width: 100%;
+    height: 28px;
+    background: #e3ddd0;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .county-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+  .county-fill.high { background: #8b2020; }
+  .county-fill.mid  { background: #c9a227; }
+  .county-fill.base { background: #7a4e28; }
+  .county-baseline-row {
+    padding-top: 6px;
+    border-top: 1px dashed #c4a882;
+    margin-top: 4px;
+  }
 
   /* ══════════════════════════════
      NUMBERS ROW
@@ -443,59 +653,20 @@
   }
 
   /* ══════════════════════════════
-     MEDICAID BAR CHART
+     CHART LEGEND (shared)
   ══════════════════════════════ */
-  .bar-chart { margin: 28px 0; }
-  .bar-row {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 14px;
-  }
-  .bar-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: #2a1505;
-    width: 140px;
-    flex-shrink: 0;
-    line-height: 1.4;
-  }
-  .bar-track {
-    flex: 1;
-    background: #e8e0d0;
-    height: 32px;
-    position: relative;
-    border-radius: 2px;
-  }
-  .bar-fill {
-    height: 100%;
-    border-radius: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: 10px;
-    transition: width 0.3s;
-  }
-  .bar-fill span {
-    font-family: 'Playfair Display', serif;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--cream);
-  }
-  .bar-fill.high { background: var(--red); }
-  .bar-fill.mid  { background: #b05a20; }
-  .bar-fill.low  { background: #c9a227; }
-  .bar-fill.base { background: var(--muted); }
   .chart-legend {
     display: flex;
     gap: 18px;
-    margin-top: 10px;
+    margin-top: 14px;
     flex-wrap: wrap;
+    padding-top: 14px;
+    border-top: 1px solid #d8d0bc;
   }
   .legend-item {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 7px;
     font-family: 'Space Mono', monospace;
     font-size: 10px;
     color: #7a4e28;
@@ -541,67 +712,7 @@
     margin-bottom: 4px;
   }
 
-  /* ══════════════════════════════
-     TIMELINE GRAPHIC
-  ══════════════════════════════ */
-  .timeline {
-    margin: 28px 0;
-    position: relative;
-  }
-  .timeline-track {
-    height: 4px;
-    background: #c4a882;
-    position: relative;
-    margin: 32px 0 56px;
-  }
-  .timeline-progress {
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    background: #c9a227;
-    width: 12%;
-  }
-  .timeline-nodes {
-    display: flex;
-    justify-content: space-between;
-    position: absolute;
-    top: -10px;
-    left: 0; right: 0;
-  }
-  .t-node {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-  }
-  .t-dot {
-    width: 24px; height: 24px;
-    border-radius: 50%;
-    border: 3px solid var(--cream);
-    box-shadow: 0 0 0 2px #d0c4a8;
-    background: #c4a882;
-    z-index: 2;
-  }
-  .t-dot.active {
-    background: #c9a227;
-    box-shadow: 0 0 0 2px var(--wheat);
-  }
-  .t-dot.urgent {
-    background: var(--red);
-    box-shadow: 0 0 0 2px var(--red);
-  }
-  .t-label {
-    position: absolute;
-    top: 30px;
-    font-family: 'Space Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.08em;
-    text-align: center;
-    color: #7a4e28;
-    width: 80px;
-    transform: translateX(-28px);
-    line-height: 1.4;
-  }
-  .t-label.urgent { color: var(--red); font-weight: 700; }
+  /* timeline CSS handled by html-timeline above */
 
   /* ══════════════════════════════
      ORNAMENT DIVIDERS
@@ -671,13 +782,27 @@
   @media (max-width: 640px) {
     .masthead { padding: 36px 28px 28px; }
     .masthead-title { font-size: 52px; }
-    .content { padding: 36px 28px; }
-    .intro-band { padding: 14px 28px; }
+    .content { padding: 36px 24px; }
+    .this-week { padding: 22px 24px 24px; }
+    .intro-band { padding: 14px 24px; }
     .numbers-row { grid-template-columns: 1fr; }
-    .footer { padding: 28px; }
+    .footer { padding: 28px 24px; }
     .footer-grid { grid-template-columns: 1fr; gap: 24px; }
-    .bar-label { width: 100px; font-size: 10px; }
     .story h2 { font-size: 25px; }
+    .chart-container { padding: 20px 16px 16px; }
+
+    /* mobile timeline: stack into 2-column grid */
+    .ht-nodes { flex-wrap: wrap; gap: 20px 0; }
+    .ht-node { flex: 0 0 33.33%; min-width: 0; }
+    .ht-dot { width: 32px; height: 32px; }
+    .ht-date { font-size: 10px; }
+    .ht-desc { font-size: 8px; }
+    .ht-line { display: none; } /* hide connecting line on mobile wrap */
+
+    /* mobile county/hbar charts */
+    .county-pct { font-size: 17px; }
+    .hbar-label { font-size: 13px; }
+    .hbar-value { font-size: 12px; }
   }
 </style>
 </head>
@@ -760,63 +885,67 @@
       <div class="chart-container">
         <div class="chart-title">RHTP $198.9M Funding Pipeline — Confirmed Allocation by Category</div>
         <div class="chart-sub">Year One · North Dakota · Source: ND HHS Deputy Commissioner Emily O'Brien, Rugby Stakeholder Meeting, March 17, 2026</div>
-        <svg class="chart-svg" viewBox="0 0 660 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="RHTP funding allocation bar chart">
-          <!--
-            Scale: $0–$120M across bar area x=150–630 (480px total → 4px per $1M)
-            4 rows: workforce y=30, healthy y=85, access y=140, technology y=195
-            Axis labels at y=240, sub-label at y=258
-            Bar height: 36px each
-          -->
 
-          <!-- Axis baseline -->
-          <line x1="150" y1="12" x2="150" y2="225" stroke="#c4a882" stroke-width="1.5"/>
+        <div class="hbar-chart">
 
-          <!-- Grid lines: $0, $25M=250, $50M=350, $75M=450, $100M=550, $120M=630 -->
-          <line x1="250" y1="12" x2="250" y2="225" stroke="#c4a882" stroke-width="0.5" stroke-dasharray="4,3"/>
-          <line x1="350" y1="12" x2="350" y2="225" stroke="#c4a882" stroke-width="0.5" stroke-dasharray="4,3"/>
-          <line x1="450" y1="12" x2="450" y2="225" stroke="#c4a882" stroke-width="0.5" stroke-dasharray="4,3"/>
-          <line x1="550" y1="12" x2="550" y2="225" stroke="#c4a882" stroke-width="0.5" stroke-dasharray="4,3"/>
-          <line x1="630" y1="12" x2="630" y2="225" stroke="#c4a882" stroke-width="0.5" stroke-dasharray="4,3"/>
+          <!-- Bar 1: Healthcare Closer to Home · $101.4M = 51% of $198.9M -->
+          <div class="hbar-row">
+            <div class="hbar-meta">
+              <span class="hbar-label">Healthcare Closer to Home</span>
+              <span class="hbar-value" style="color:#8b2020;">$101.4M</span>
+            </div>
+            <div class="hbar-track">
+              <div class="hbar-fill" style="width:51%; background:#8b2020;">
+                <span class="hbar-fill-label">51% of total</span>
+              </div>
+            </div>
+          </div>
 
-          <!-- X-axis labels -->
-          <text x="150" y="242" font-family="monospace" font-size="10" fill="#7a4e28" text-anchor="middle">$0</text>
-          <text x="250" y="242" font-family="monospace" font-size="10" fill="#7a4e28" text-anchor="middle">$25M</text>
-          <text x="350" y="242" font-family="monospace" font-size="10" fill="#7a4e28" text-anchor="middle">$50M</text>
-          <text x="450" y="242" font-family="monospace" font-size="10" fill="#7a4e28" text-anchor="middle">$75M</text>
-          <text x="550" y="242" font-family="monospace" font-size="10" fill="#7a4e28" text-anchor="middle">$100M</text>
-          <text x="630" y="242" font-family="monospace" font-size="10" fill="#7a4e28" text-anchor="middle">$120M</text>
-          <text x="390" y="262" font-family="monospace" font-size="9" fill="#c4a882" text-anchor="middle">Confirmed dollar allocation (Year One · $198.9M total)</text>
+          <!-- Bar 2: Workforce Stabilization · $44.4M = 22.3% -->
+          <div class="hbar-row">
+            <div class="hbar-meta">
+              <span class="hbar-label">Workforce Stabilization</span>
+              <span class="hbar-value" style="color:#1a3a1f;">$44.4M</span>
+            </div>
+            <div class="hbar-track">
+              <div class="hbar-fill" style="width:22.3%; background:#c9a227; min-width: 120px;">
+                <span class="hbar-fill-label">22% of total</span>
+              </div>
+            </div>
+            <div style="margin-top:5px;">
+              <span class="hbar-badge">⚑ $10M Round 1 Open — Deadline Apr 30</span>
+            </div>
+          </div>
 
-          <!-- ── Bar 1: Workforce Stabilization · $44.4M = 177.6px ── -->
-          <text x="144" y="44" font-family="serif" font-size="11" fill="#1a3a1f" text-anchor="end">Workforce</text>
-          <text x="144" y="57" font-family="serif" font-size="11" fill="#1a3a1f" text-anchor="end">Stabilization</text>
-          <rect x="151" y="30" width="178" height="36" fill="#c9a227" rx="2"/>
-          <!-- $10M Round 1 open — highlight stripe -->
-          <rect x="151" y="30" width="40" height="36" fill="#e8c840" rx="2"/>
-          <text x="197" y="52" font-family="monospace" font-size="10" fill="#faf8f2" font-weight="bold">$44.4M</text>
-          <!-- Round 1 badge -->
-          <rect x="335" y="35" width="104" height="18" fill="#c9a227" rx="2"/>
-          <text x="387" y="47" font-family="monospace" font-size="9" fill="#faf8f2" font-weight="bold" text-anchor="middle">$10M OPEN NOW ↑</text>
+          <!-- Bar 3: Technology, Data & Providers · $33.9M = 17% -->
+          <div class="hbar-row">
+            <div class="hbar-meta">
+              <span class="hbar-label">Technology, Data &amp; Providers</span>
+              <span class="hbar-value" style="color:#4a2e10;">$33.9M</span>
+            </div>
+            <div class="hbar-track">
+              <div class="hbar-fill" style="width:17%; background:#4a2e10; min-width:60px;">
+                <span class="hbar-fill-label">17%</span>
+              </div>
+            </div>
+          </div>
 
-          <!-- ── Bar 2: Make ND Healthy Again · $19.2M = 76.8px ── -->
-          <text x="144" y="96" font-family="serif" font-size="11" fill="#1a3a1f" text-anchor="end">Make ND</text>
-          <text x="144" y="109" font-family="serif" font-size="11" fill="#1a3a1f" text-anchor="end">Healthy Again</text>
-          <rect x="151" y="85" width="77" height="36" fill="#7a4e28" rx="2"/>
-          <text x="236" y="107" font-family="monospace" font-size="10" fill="#1a3a1f" font-weight="bold">$19.2M</text>
+          <!-- Bar 4: Make ND Healthy Again · $19.2M = 9.7% -->
+          <div class="hbar-row">
+            <div class="hbar-meta">
+              <span class="hbar-label">Make ND Healthy Again</span>
+              <span class="hbar-value" style="color:#7a4e28;">$19.2M</span>
+            </div>
+            <div class="hbar-track">
+              <div class="hbar-fill" style="width:9.7%; background:#7a4e28; min-width:50px;">
+                <span class="hbar-fill-label">10%</span>
+              </div>
+            </div>
+          </div>
 
-          <!-- ── Bar 3: Healthcare Closer to Home · $101.4M = 405.6px ── -->
-          <text x="144" y="151" font-family="serif" font-size="11" fill="#1a3a1f" text-anchor="end">Healthcare</text>
-          <text x="144" y="164" font-family="serif" font-size="11" fill="#1a3a1f" text-anchor="end">Closer to Home</text>
-          <rect x="151" y="140" width="406" height="36" fill="#8b2020" rx="2" opacity="0.85"/>
-          <text x="360" y="162" font-family="monospace" font-size="10" fill="#faf8f2" font-weight="bold">$101.4M</text>
+        </div>
 
-          <!-- ── Bar 4: Technology, Data & Providers · $33.9M = 135.6px ── -->
-          <text x="144" y="206" font-family="serif" font-size="11" fill="#1a3a1f" text-anchor="end">Technology,</text>
-          <text x="144" y="219" font-family="serif" font-size="11" fill="#1a3a1f" text-anchor="end">Data &amp; Providers</text>
-          <rect x="151" y="195" width="136" height="36" fill="#4a2e10" rx="2" opacity="0.85"/>
-          <text x="295" y="217" font-family="monospace" font-size="10" fill="#2a1505" font-weight="bold">$33.9M</text>
-        </svg>
-        <p style="font-family:monospace; font-size:10px; color:#7a4e28; margin-top:8px;">Source: ND HHS Deputy Commissioner Emily O'Brien, Rugby Stakeholder Meeting, March 17, 2026. Reported by Charles Crane, Minot Daily News. The $10M Round 1 workforce retention window (highlighted) is open now with an April 30 deadline.</p>
+        <p class="hbar-note">Source: ND HHS Deputy Commissioner Emily O'Brien, Rugby Stakeholder Meeting, March 17, 2026. Reported by Charles Crane, Minot Daily News. The $10M Round 1 workforce retention window is open now with an April 30 deadline.</p>
       </div>
 
       <div class="deadline-box">
@@ -844,63 +973,69 @@
       <div class="chart-container">
         <div class="chart-title">RHTP Year One — Key Milestones</div>
         <div class="chart-sub">March → October 2026</div>
-        <svg width="100%" viewBox="0 0 640 110" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="RHTP Year One milestone timeline">
-          <!--
-            6 nodes evenly spaced across x=30 to x=610 (step=116)
-            Track line at y=44
-            Dots at y=44
-            Labels below at y=62+
-          -->
 
-          <!-- Track: full gray -->
-          <line x1="30" y1="44" x2="610" y2="44" stroke="#c4a882" stroke-width="4" stroke-linecap="round"/>
-          <!-- Progress: first two nodes completed (x=30 to x=146) -->
-          <line x1="30" y1="44" x2="146" y2="44" stroke="#c9a84c" stroke-width="4" stroke-linecap="round"/>
+        <div class="html-timeline">
+          <div class="ht-track-wrap">
+            <div class="ht-line"><div class="ht-line-progress" style="width:28%;"></div></div>
+            <div class="ht-nodes">
 
-          <!-- Node 1: Mar 21 · active (wheat) -->
-          <circle cx="30"  cy="44" r="9" fill="#c9a227" stroke="#f8f6f0" stroke-width="2.5"/>
-          <text x="30"  y="62" font-family="monospace" font-size="9" fill="#1a3a1f" text-anchor="middle" font-weight="bold">Mar 21</text>
-          <text x="30"  y="73" font-family="monospace" font-size="8" fill="#7a4e28" text-anchor="middle">Grants</text>
-          <text x="30"  y="83" font-family="monospace" font-size="8" fill="#7a4e28" text-anchor="middle">Open</text>
+              <div class="ht-node">
+                <div class="ht-dot active"><span class="ht-dot-icon">✓</span></div>
+                <div class="ht-info">
+                  <div class="ht-date">Mar 21</div>
+                  <div class="ht-desc">Grants Open</div>
+                </div>
+              </div>
 
-          <!-- Node 2: Mar 30 · active (wheat) -->
-          <circle cx="146" cy="44" r="9" fill="#c9a227" stroke="#f8f6f0" stroke-width="2.5"/>
-          <text x="146" y="62" font-family="monospace" font-size="9" fill="#1a3a1f" text-anchor="middle" font-weight="bold">Mar 30</text>
-          <text x="146" y="73" font-family="monospace" font-size="8" fill="#7a4e28" text-anchor="middle">HHS</text>
-          <text x="146" y="83" font-family="monospace" font-size="8" fill="#7a4e28" text-anchor="middle">Stakeholder Call</text>
+              <div class="ht-node">
+                <div class="ht-dot active"><span class="ht-dot-icon">✓</span></div>
+                <div class="ht-info">
+                  <div class="ht-date">Mar 30</div>
+                  <div class="ht-desc">HHS<br/>Stakeholder Call</div>
+                </div>
+              </div>
 
-          <!-- Node 3: Apr 30 · URGENT (red) -->
-          <circle cx="262" cy="44" r="11" fill="#8b2020" stroke="#f8f6f0" stroke-width="2.5"/>
-          <text x="262" y="62" font-family="monospace" font-size="9" fill="#8b2020" text-anchor="middle" font-weight="bold">Apr 30</text>
-          <text x="262" y="73" font-family="monospace" font-size="8" fill="#8b2020" text-anchor="middle" font-weight="bold">Round 1</text>
-          <text x="262" y="83" font-family="monospace" font-size="8" fill="#8b2020" text-anchor="middle" font-weight="bold">DEADLINE</text>
+              <div class="ht-node">
+                <div class="ht-dot urgent"><span class="ht-dot-icon" style="color:#fff; font-weight:700;">!</span></div>
+                <div class="ht-info">
+                  <div class="ht-date urgent">Apr 30</div>
+                  <div class="ht-desc urgent">Round 1<br/>DEADLINE</div>
+                </div>
+              </div>
 
-          <!-- Node 4: May–Jun -->
-          <circle cx="378" cy="44" r="9" fill="#c4a882" stroke="#f8f6f0" stroke-width="2.5"/>
-          <text x="378" y="62" font-family="monospace" font-size="9" fill="#1a3a1f" text-anchor="middle">May–Jun</text>
-          <text x="378" y="73" font-family="monospace" font-size="8" fill="#7a4e28" text-anchor="middle">Rounds 2–3</text>
-          <text x="378" y="83" font-family="monospace" font-size="8" fill="#7a4e28" text-anchor="middle">Open</text>
+              <div class="ht-node">
+                <div class="ht-dot pending"></div>
+                <div class="ht-info">
+                  <div class="ht-date">May–Jun</div>
+                  <div class="ht-desc">Rounds 2–3<br/>Open</div>
+                </div>
+              </div>
 
-          <!-- Node 5: Jun Conference -->
-          <circle cx="494" cy="44" r="9" fill="#c4a882" stroke="#f8f6f0" stroke-width="2.5"/>
-          <text x="494" y="62" font-family="monospace" font-size="9" fill="#1a3a1f" text-anchor="middle">June</text>
-          <text x="494" y="73" font-family="monospace" font-size="8" fill="#7a4e28" text-anchor="middle">Dakota</text>
-          <text x="494" y="83" font-family="monospace" font-size="8" fill="#7a4e28" text-anchor="middle">Conference</text>
+              <div class="ht-node">
+                <div class="ht-dot pending"></div>
+                <div class="ht-info">
+                  <div class="ht-date">June</div>
+                  <div class="ht-desc">Dakota<br/>Conference</div>
+                </div>
+              </div>
 
-          <!-- Node 6: Oct 31 -->
-          <circle cx="610" cy="44" r="9" fill="#c4a882" stroke="#f8f6f0" stroke-width="2.5"/>
-          <text x="610" y="62" font-family="monospace" font-size="9" fill="#1a3a1f" text-anchor="middle">Oct 31</text>
-          <text x="610" y="73" font-family="monospace" font-size="8" fill="#7a4e28" text-anchor="middle">Federal Spend</text>
-          <text x="610" y="83" font-family="monospace" font-size="8" fill="#7a4e28" text-anchor="middle">Deadline</text>
+              <div class="ht-node">
+                <div class="ht-dot pending"></div>
+                <div class="ht-info">
+                  <div class="ht-date">Oct 31</div>
+                  <div class="ht-desc">Federal Spend<br/>Deadline</div>
+                </div>
+              </div>
 
-          <!-- Legend dots at top -->
-          <circle cx="30" cy="14" r="6" fill="#c9a227"/>
-          <text x="42" y="18" font-family="monospace" font-size="9" fill="#7a4e28">Completed / Active</text>
-          <circle cx="180" cy="14" r="6" fill="#8b2020"/>
-          <text x="192" y="18" font-family="monospace" font-size="9" fill="#7a4e28">Urgent deadline</text>
-          <circle cx="330" cy="14" r="6" fill="#c4a882"/>
-          <text x="342" y="18" font-family="monospace" font-size="9" fill="#7a4e28">Upcoming</text>
-        </svg>
+            </div>
+          </div>
+
+          <div class="ht-legend">
+            <div class="ht-legend-item"><div class="ht-legend-dot" style="background:#c9a227;"></div>Completed / Active</div>
+            <div class="ht-legend-item"><div class="ht-legend-dot" style="background:#8b2020;"></div>Urgent deadline</div>
+            <div class="ht-legend-item"><div class="ht-legend-dot" style="background:#c4a882;"></div>Upcoming</div>
+          </div>
+        </div>
       </div>
 
       <p>For rural health organizations not yet deep in the RHTP weeds, the March 30 call is a low-barrier entry point. The state is expected to outline the scoring rubric for the current workforce grants, preview subsequent grant windows — access expansion, telehealth, healthy lifestyles, and technology — and field questions from prospective applicants.</p>
@@ -935,70 +1070,79 @@
         <div class="chart-title">Medicaid Enrollment by County — High-Exposure Rural Counties</div>
         <div class="chart-sub">Estimated % of county population enrolled in Medicaid · Tribal land counties at greatest risk</div>
 
-        <svg width="100%" viewBox="0 0 640 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Medicaid county enrollment bar chart">
-          <!--
-            Label column: x=0–148
-            Bar area:     x=150–590  (440px = 0–50% scale, 8.8px per 1%)
-            Value labels: just inside right edge of each bar
-            Row heights: 36px bars, 10px gap → row centers at y=28,74,120,166,212
-          -->
+        <div class="county-chart">
 
-          <!-- Axis -->
-          <line x1="150" y1="8" x2="150" y2="195" stroke="#c4a882" stroke-width="1.5"/>
+          <div class="county-row">
+            <div class="county-meta">
+              <div>
+                <div class="county-name">Sioux County</div>
+                <div class="county-tag">Tribal land</div>
+              </div>
+              <div class="county-pct" style="color:#8b2020;">~40%</div>
+            </div>
+            <div class="county-track">
+              <div class="county-fill high" style="width:80%;"></div>
+            </div>
+          </div>
 
-          <!-- Grid: 10%, 20%, 30%, 40%, 50% -->
-          <!-- 10% = 150+88=238, 20%=326, 30%=414, 40%=502, 50%=590 -->
-          <line x1="238" y1="8" x2="238" y2="195" stroke="#c4a882" stroke-width="0.5" stroke-dasharray="3,3"/>
-          <line x1="326" y1="8" x2="326" y2="195" stroke="#c4a882" stroke-width="0.5" stroke-dasharray="3,3"/>
-          <line x1="414" y1="8" x2="414" y2="195" stroke="#c4a882" stroke-width="0.5" stroke-dasharray="3,3"/>
-          <line x1="502" y1="8" x2="502" y2="195" stroke="#c4a882" stroke-width="0.5" stroke-dasharray="3,3"/>
-          <line x1="590" y1="8" x2="590" y2="195" stroke="#c4a882" stroke-width="0.5" stroke-dasharray="3,3"/>
+          <div class="county-row">
+            <div class="county-meta">
+              <div>
+                <div class="county-name">Rolette County</div>
+                <div class="county-tag">Tribal land</div>
+              </div>
+              <div class="county-pct" style="color:#8b2020;">~36%</div>
+            </div>
+            <div class="county-track">
+              <div class="county-fill high" style="width:72%;"></div>
+            </div>
+          </div>
 
-          <!-- X-axis labels -->
-          <text x="150" y="210" font-family="monospace" font-size="9" fill="#7a4e28" text-anchor="middle">0%</text>
-          <text x="238" y="210" font-family="monospace" font-size="9" fill="#7a4e28" text-anchor="middle">10%</text>
-          <text x="326" y="210" font-family="monospace" font-size="9" fill="#7a4e28" text-anchor="middle">20%</text>
-          <text x="414" y="210" font-family="monospace" font-size="9" fill="#7a4e28" text-anchor="middle">30%</text>
-          <text x="502" y="210" font-family="monospace" font-size="9" fill="#7a4e28" text-anchor="middle">40%</text>
-          <text x="590" y="210" font-family="monospace" font-size="9" fill="#7a4e28" text-anchor="middle">50%</text>
-          <text x="370" y="225" font-family="monospace" font-size="9" fill="#c4a882" text-anchor="middle">% of county population enrolled in Medicaid</text>
+          <div class="county-row">
+            <div class="county-meta">
+              <div>
+                <div class="county-name">Benson County</div>
+                <div class="county-tag">Tribal land</div>
+              </div>
+              <div class="county-pct" style="color:#b07a10;">~33%</div>
+            </div>
+            <div class="county-track">
+              <div class="county-fill mid" style="width:66%;"></div>
+            </div>
+          </div>
 
-          <!-- ── Row 1: Sioux County ~40% → 40*8.8=352px ── -->
-          <text x="144" y="24" font-family="monospace" font-size="10" fill="#1a3a1f" text-anchor="end">Sioux County</text>
-          <text x="144" y="35" font-family="monospace" font-size="8" fill="#8b2020" text-anchor="end">Tribal land</text>
-          <rect x="151" y="12" width="352" height="28" fill="#8b2020" rx="2"/>
-          <text x="494" y="30" font-family="monospace" font-size="10" fill="#faf8f2" font-weight="bold" text-anchor="end">~40%</text>
+          <div class="county-row">
+            <div class="county-meta">
+              <div>
+                <div class="county-name">Mountrail County</div>
+              </div>
+              <div class="county-pct" style="color:#b07a10;">~25%</div>
+            </div>
+            <div class="county-track">
+              <div class="county-fill mid" style="width:50%;"></div>
+            </div>
+          </div>
 
-          <!-- ── Row 2: Rolette County ~36% → 316.8px ── -->
-          <text x="144" y="70" font-family="monospace" font-size="10" fill="#1a3a1f" text-anchor="end">Rolette County</text>
-          <text x="144" y="81" font-family="monospace" font-size="8" fill="#8b2020" text-anchor="end">Tribal land</text>
-          <rect x="151" y="58" width="317" height="28" fill="#8b2020" rx="2"/>
-          <text x="459" y="76" font-family="monospace" font-size="10" fill="#faf8f2" font-weight="bold" text-anchor="end">~36%</text>
+          <div class="county-row county-baseline-row">
+            <div class="county-meta">
+              <div>
+                <div class="county-name" style="font-size:13px; color:#7a4e28;">ND Statewide Average</div>
+              </div>
+              <div class="county-pct" style="color:#7a4e28; font-size:16px;">~14%</div>
+            </div>
+            <div class="county-track" style="height:20px;">
+              <div class="county-fill base" style="width:28%;"></div>
+            </div>
+          </div>
 
-          <!-- ── Row 3: Benson County ~33% → 290.4px ── -->
-          <text x="144" y="116" font-family="monospace" font-size="10" fill="#1a3a1f" text-anchor="end">Benson County</text>
-          <text x="144" y="127" font-family="monospace" font-size="8" fill="#8b2020" text-anchor="end">Tribal land</text>
-          <rect x="151" y="104" width="290" height="28" fill="#c9a227" rx="2"/>
-          <text x="432" y="122" font-family="monospace" font-size="10" fill="#faf8f2" font-weight="bold" text-anchor="end">~33%</text>
+        </div>
 
-          <!-- ── Row 4: Mountrail County ~25% → 220px ── -->
-          <text x="144" y="160" font-family="monospace" font-size="10" fill="#1a3a1f" text-anchor="end">Mountrail County</text>
-          <rect x="151" y="150" width="220" height="28" fill="#c9a227" rx="2"/>
-          <text x="362" y="168" font-family="monospace" font-size="10" fill="#faf8f2" font-weight="bold" text-anchor="end">~25%</text>
-
-          <!-- ── Row 5: ND Statewide ~14% → 123.2px ── -->
-          <text x="144" y="196" font-family="monospace" font-size="10" fill="#1a3a1f" text-anchor="end">ND Statewide</text>
-          <rect x="151" y="186" width="123" height="14" fill="#7a4e28" rx="2"/>
-          <text x="270" y="196" font-family="monospace" font-size="9" fill="#faf8f2" font-weight="bold" text-anchor="end">~14%</text>
-        </svg>
-
-        <!-- Legend -->
         <div class="chart-legend">
           <div class="legend-item"><div class="legend-dot" style="background:#8b2020;"></div>High risk (&gt;35%)</div>
           <div class="legend-item"><div class="legend-dot" style="background:#c9a227;"></div>Elevated risk (25–35%)</div>
           <div class="legend-item"><div class="legend-dot" style="background:#7a4e28;"></div>Statewide baseline</div>
         </div>
-        <p style="font-family:monospace; font-size:10px; color:#7a4e28; margin-top:10px;">* Estimates based on ND HHS Medicaid data and county population figures. Actual impact depends on federal exemption criteria not yet released.</p>
+        <p class="hbar-note" style="margin-top:12px;">* Estimates based on ND HHS Medicaid data and county population figures. Actual impact depends on federal exemption criteria not yet released.</p>
       </div>
 
       <p>The state is in a holding pattern. Without detailed federal guidance from CMS, ND HHS cannot calculate implementation costs, finalize administrative processes, or launch the public information campaign it knows will be necessary. North Dakota does not use a provider tax system, which insulates its hospitals from one of the bill's more disruptive provisions — but rural CAHs, many of which carry thin margins and serve high proportions of Medicaid patients, are watching closely.</p>
@@ -1080,7 +1224,7 @@
       <p><em>The Halliday Brief</em> is published weekly by Von Halliday Consulting. It synthesizes federal and North Dakota state rural health policy developments for administrators, clinicians, tribal health leaders, foundation officers, and state-level decision-makers who need accurate, actionable intelligence — without wading through agency websites and legislative reports themselves.</p>
       <p>If a colleague should be reading this, forward it. If you have a policy question, a funding opportunity your organization is navigating, or a challenge that deserves a closer look — reach out. That's what we're here for.</p>
       <span class="sig" style="font-style:normal;">Von Halliday Consulting<small>North Dakota Rural Health Policy &amp; Strategy</small></span>
-      <a href="mailto:doson@vonhalliday.com?subject=Consultation%20Request" style="display:inline-block;margin-top:24px;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;background:#1a3a1f;color:#e8c840;padding:14px 28px;text-decoration:none;border:2px solid #c9a227;">Book a Consultation →</a>
+      <a href="/cdn-cgi/l/email-protection#7e1a110d11103e081110161f1212171a1f07501d1113410d0b1c141b1d0a433d11100d0b120a1f0a1711105b4c4e2c1b0f0b1b0d0a" style="display:inline-block;margin-top:24px;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;background:#1a3a1f;color:#e8c840;padding:14px 28px;text-decoration:none;border:2px solid #c9a227;">Book a Consultation →</a>
     </div>
 
   </main>
@@ -1109,14 +1253,7 @@
     </div>
     <div class="footer-bottom">
       <div class="footer-brand">The <em>Halliday</em> Brief</div>
-      <div class="footer-fine">© 2026 Von Halliday Consulting · North Dakota · Published Weekly</div>
-    </div>
-  </footer>
-
-</div>
-</body>
-</html>
-]]></content:encoded>
+      <div class="footer-fine">© 2026 Von Halliday Consulting · North Dakot]]></content:encoded>
     </item>
   </channel>
 </rss>
