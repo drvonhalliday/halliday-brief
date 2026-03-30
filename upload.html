@@ -1226,6 +1226,18 @@
         var ornaments = doc.querySelectorAll('.ornament');
         for (var q = 0; q < ornaments.length; q++) ornaments[q].style.textAlign = 'center';
 
+        // Strip decorative styles that email clients don't render
+        var pw = doc.querySelector('.page-wrapper');
+        if (pw) {
+          pw.style.removeProperty('box-shadow');
+          pw.style.removeProperty('border');
+          pw.style.removeProperty('border-top');
+          pw.style.removeProperty('border-bottom');
+          pw.style.removeProperty('border-left');
+          pw.style.removeProperty('border-right');
+          pw.style.maxWidth = '100%';
+        }
+
         var emailHtml = '<!DOCTYPE html><html><body>' + doc.body.innerHTML + '</body></html>';
         document.body.removeChild(hiddenFrame);
         resolve(emailHtml);
@@ -1662,7 +1674,19 @@
         ornaments[q].style.textAlign = 'center';
       }
 
-      emailPreviewHtml = '<!DOCTYPE html><html><body>' + doc.body.innerHTML + '</body></html>';
+      // Strip decorative styles that email clients don't render
+      var pw = doc.querySelector('.page-wrapper');
+      if (pw) {
+        pw.style.removeProperty('box-shadow');
+        pw.style.removeProperty('border');
+        pw.style.removeProperty('border-top');
+        pw.style.removeProperty('border-bottom');
+        pw.style.removeProperty('border-left');
+        pw.style.removeProperty('border-right');
+        pw.style.maxWidth = '100%';
+      }
+
+      emailPreviewHtml = '<!DOCTYPE html><html><head></head><body style="margin:0;padding:0;">' + doc.body.innerHTML + '</body></html>';
 
       document.body.removeChild(hiddenFrame);
 
