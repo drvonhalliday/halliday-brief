@@ -1154,6 +1154,20 @@
         var links = doc.querySelectorAll('link[rel="stylesheet"]');
         for (var l = 0; l < links.length; l++) links[l].remove();
 
+        // Strip event handlers and expand collapsed sections
+        var stripEls = doc.querySelectorAll('*');
+        for (var se = 0; se < stripEls.length; se++) {
+          var attrs = stripEls[se].attributes;
+          for (var a = attrs.length - 1; a >= 0; a--) {
+            if (/^on[a-z]/i.test(attrs[a].name)) {
+              stripEls[se].removeAttribute(attrs[a].name);
+            }
+          }
+          if (stripEls[se].style.display === 'none') {
+            stripEls[se].style.display = 'block';
+          }
+        }
+
         var allAfter = doc.querySelectorAll('*');
         for (var k = 0; k < allAfter.length; k++) {
           var style = allAfter[k].style;
@@ -1569,11 +1583,24 @@
         styles[s].remove();
       }
 
-      // Remove :root block (no longer needed)
       // Remove <link> stylesheet tags
       var links = doc.querySelectorAll('link[rel="stylesheet"]');
       for (var l = 0; l < links.length; l++) {
         links[l].remove();
+      }
+
+      // Strip event handlers and expand collapsed sections
+      var stripEls = doc.querySelectorAll('*');
+      for (var se = 0; se < stripEls.length; se++) {
+        var attrs = stripEls[se].attributes;
+        for (var a = attrs.length - 1; a >= 0; a--) {
+          if (/^on[a-z]/i.test(attrs[a].name)) {
+            stripEls[se].removeAttribute(attrs[a].name);
+          }
+        }
+        if (stripEls[se].style.display === 'none') {
+          stripEls[se].style.display = 'block';
+        }
       }
 
       // Step 2: Flatten grid/flex to block
