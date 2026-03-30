@@ -516,6 +516,147 @@
     letter-spacing: 0.08em;
   }
   .back-link:hover { color: var(--soil); }
+
+  /* Publish modal */
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26, 22, 18, 0.6);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .modal-backdrop.visible { display: flex; }
+
+  .modal {
+    background: var(--cream);
+    border: 1px solid #bfad90;
+    box-shadow: 6px 8px 48px rgba(0,0,0,0.32);
+    padding: 36px;
+    max-width: 440px;
+    width: 100%;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--soil);
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .modal-option {
+    padding: 20px;
+    border: 1.5px solid #bfad90;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .modal-option:hover { border-color: var(--wheat); background: rgba(201,168,76,0.06); }
+  .modal-option.selected { border-color: var(--wheat); background: rgba(201,168,76,0.1); }
+
+  .modal-option-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--soil);
+    margin-bottom: 4px;
+  }
+
+  .modal-option-desc {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+
+  .schedule-fields {
+    display: none;
+    padding: 16px 0 0;
+  }
+  .schedule-fields.visible { display: block; }
+
+  .schedule-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .schedule-field {
+    flex: 1;
+  }
+
+  .schedule-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .schedule-input {
+    width: 100%;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    padding: 10px 12px;
+    border: 1.5px solid #bfad90;
+    background: #f5f0e8;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .schedule-input:focus { border-color: var(--wheat); }
+  .schedule-input.input-error { border-color: var(--red); }
+
+  .schedule-error {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--red);
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+    display: none;
+  }
+  .schedule-error.visible { display: block; }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .modal-btn {
+    flex: 1;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 14px 16px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .modal-btn-confirm {
+    background: var(--soil);
+    color: var(--cream);
+  }
+  .modal-btn-confirm:hover { background: #4a3520; }
+  .modal-btn-confirm:disabled { opacity: 0.5; cursor: default; }
+
+  .modal-btn-cancel {
+    background: none;
+    border: 1.5px solid #bfad90;
+    color: var(--muted);
+  }
+  .modal-btn-cancel:hover { background: #f5f0e8; color: var(--soil); }
 </style>
 </head>
 <body>
@@ -576,7 +717,44 @@
       <iframe class="email-preview-frame" id="email-preview-frame" frameborder="0" scrolling="no"></iframe>
     </div>
 
-    <button class="btn btn-primary publish-btn" id="publish-btn" onclick="publish()">Publish Newsletter</button>
+    <button class="btn btn-primary publish-btn" id="publish-btn" onclick="openPublishModal()">Publish Newsletter</button>
+
+    <div class="modal-backdrop" id="publish-modal">
+      <div class="modal">
+        <div class="modal-title">Publish Newsletter</div>
+
+        <div class="modal-option" id="opt-now" onclick="selectPublishMode('now')">
+          <div class="modal-option-title">Publish Now</div>
+          <div class="modal-option-desc">Publish to the site and send email immediately</div>
+        </div>
+
+        <div class="modal-option" id="opt-schedule" onclick="selectPublishMode('schedule')">
+          <div class="modal-option-title">Schedule Later</div>
+          <div class="modal-option-desc">Publish to the site now, send email at a future date &amp; time</div>
+        </div>
+
+        <div class="schedule-fields" id="schedule-fields">
+          <div class="schedule-row">
+            <div class="schedule-field">
+              <div class="schedule-label">Date (UTC)</div>
+              <input type="date" class="schedule-input" id="schedule-date" />
+            </div>
+            <div class="schedule-field">
+              <div class="schedule-label">Time (UTC)</div>
+              <select class="schedule-input" id="schedule-time">
+                <option value="">Select time...</option>
+              </select>
+            </div>
+          </div>
+          <div class="schedule-error" id="schedule-error"></div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="modal-btn modal-btn-cancel" onclick="closePublishModal()">Cancel</button>
+          <button class="modal-btn modal-btn-confirm" id="modal-confirm" disabled>Select an option</button>
+        </div>
+      </div>
+    </div>
 
     <div class="manage-section" id="manage-section">
       <div class="manage-header">Published Newsletters</div>
@@ -824,33 +1002,315 @@
     if (fileInput.files.length > 0) handleFile(fileInput.files[0]);
   });
 
-  // ── Publish ──
-  function publish() {
+  // ── Publish modal ──
+  var publishMode = null;
+
+  function populateTimeOptions() {
+    var select = document.getElementById('schedule-time');
+    for (var h = 0; h < 24; h++) {
+      for (var m = 0; m < 60; m += 15) {
+        var hh = String(h).padStart(2, '0');
+        var mm = String(m).padStart(2, '0');
+        var opt = document.createElement('option');
+        opt.value = hh + ':' + mm;
+        opt.textContent = hh + ':' + mm + ' UTC';
+        select.appendChild(opt);
+      }
+    }
+  }
+  populateTimeOptions();
+
+  function openPublishModal() {
     if (!pendingFile || !getPat()) return;
+    publishMode = null;
+    document.getElementById('opt-now').classList.remove('selected');
+    document.getElementById('opt-schedule').classList.remove('selected');
+    document.getElementById('schedule-fields').classList.remove('visible');
+    document.getElementById('schedule-error').classList.remove('visible');
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementById('schedule-date').value = '';
+    document.getElementById('schedule-date').min = today;
+    document.getElementById('schedule-date').classList.remove('input-error');
+    document.getElementById('schedule-time').value = '';
+    document.getElementById('schedule-time').classList.remove('input-error');
+    var confirmBtn = document.getElementById('modal-confirm');
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = 'Select an option';
+    confirmBtn.onclick = null;
+    document.getElementById('publish-modal').classList.add('visible');
+  }
+
+  function closePublishModal() {
+    document.getElementById('publish-modal').classList.remove('visible');
+  }
+
+  function selectPublishMode(mode) {
+    publishMode = mode;
+    var confirmBtn = document.getElementById('modal-confirm');
+    document.getElementById('opt-now').classList.toggle('selected', mode === 'now');
+    document.getElementById('opt-schedule').classList.toggle('selected', mode === 'schedule');
+    document.getElementById('schedule-fields').classList.toggle('visible', mode === 'schedule');
+    document.getElementById('schedule-error').classList.remove('visible');
+
+    if (mode === 'now') {
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = 'Publish Now';
+      confirmBtn.onclick = function() { executePublish('now'); };
+    } else {
+      confirmBtn.textContent = 'Schedule';
+      confirmBtn.disabled = false;
+      confirmBtn.onclick = function() { executePublish('schedule'); };
+    }
+  }
+
+  function validateSchedule() {
+    var dateVal = document.getElementById('schedule-date').value;
+    var timeVal = document.getElementById('schedule-time').value;
+    var errorEl = document.getElementById('schedule-error');
+    var dateInput = document.getElementById('schedule-date');
+    var timeInput = document.getElementById('schedule-time');
+
+    dateInput.classList.remove('input-error');
+    timeInput.classList.remove('input-error');
+    errorEl.classList.remove('visible');
+
+    if (!dateVal) {
+      dateInput.classList.add('input-error');
+      errorEl.textContent = 'Date is required';
+      errorEl.classList.add('visible');
+      return null;
+    }
+    if (!timeVal) {
+      timeInput.classList.add('input-error');
+      errorEl.textContent = 'Time is required';
+      errorEl.classList.add('visible');
+      return null;
+    }
+
+    var scheduledDate = new Date(dateVal + 'T' + timeVal + ':00Z');
+    if (isNaN(scheduledDate.getTime())) {
+      errorEl.textContent = 'Invalid date or time';
+      errorEl.classList.add('visible');
+      return null;
+    }
+
+    if (scheduledDate <= new Date()) {
+      dateInput.classList.add('input-error');
+      timeInput.classList.add('input-error');
+      errorEl.textContent = 'Scheduled time must be in the future';
+      errorEl.classList.add('visible');
+      return null;
+    }
+
+    return scheduledDate.toISOString();
+  }
+
+  function getButtondownKey() {
+    return localStorage.getItem('hb_bd_key') || '';
+  }
+
+  function buildEmailHtml(rawContent) {
+    var html = rawContent;
+    for (var v in CSS_VARS) {
+      html = html.split(v).join(CSS_VARS[v]);
+    }
+
+    return new Promise(function(resolve) {
+      var hiddenFrame = document.createElement('iframe');
+      hiddenFrame.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:820px;height:1px;';
+      document.body.appendChild(hiddenFrame);
+
+      hiddenFrame.onload = function() {
+        var doc = hiddenFrame.contentDocument;
+
+        var allEls = doc.querySelectorAll('*');
+        for (var i = 0; i < allEls.length; i++) {
+          var el = allEls[i];
+          var tag = el.tagName.toLowerCase();
+          if (tag === 'html' || tag === 'head' || tag === 'meta' ||
+              tag === 'title' || tag === 'link' || tag === 'script') continue;
+
+          var computed = hiddenFrame.contentWindow.getComputedStyle(el);
+          var props = [
+            'color', 'background-color', 'background',
+            'font-family', 'font-size', 'font-weight', 'font-style',
+            'letter-spacing', 'text-transform', 'line-height', 'text-align',
+            'text-decoration', 'padding', 'margin', 'border',
+            'border-top', 'border-bottom', 'border-left', 'border-right',
+            'display', 'position', 'opacity', 'white-space',
+            'border-radius', 'box-shadow', 'overflow'
+          ];
+          var inlineStyle = '';
+          for (var j = 0; j < props.length; j++) {
+            var val = computed.getPropertyValue(props[j]);
+            if (val && val !== '' && val !== 'none' && val !== 'normal' && val !== 'auto') {
+              inlineStyle += props[j] + ':' + val + ';';
+            }
+          }
+          el.setAttribute('style', inlineStyle);
+        }
+
+        var styles = doc.querySelectorAll('style');
+        for (var s = 0; s < styles.length; s++) styles[s].remove();
+        var links = doc.querySelectorAll('link[rel="stylesheet"]');
+        for (var l = 0; l < links.length; l++) links[l].remove();
+
+        var allAfter = doc.querySelectorAll('*');
+        for (var k = 0; k < allAfter.length; k++) {
+          var style = allAfter[k].style;
+          var disp = style.display;
+          if (disp && (disp.indexOf('grid') !== -1 || disp.indexOf('flex') !== -1)) {
+            style.display = 'block';
+            style.removeProperty('grid-template-columns');
+            style.removeProperty('gap');
+            style.removeProperty('align-items');
+            style.removeProperty('justify-content');
+            style.removeProperty('flex-wrap');
+            style.removeProperty('flex-direction');
+          }
+        }
+
+        var numberCells = doc.querySelectorAll('.number-cell');
+        for (var n = 0; n < numberCells.length; n++) {
+          numberCells[n].style.display = 'block';
+          numberCells[n].style.padding = '20px 24px';
+          numberCells[n].style.textAlign = 'center';
+          numberCells[n].style.borderBottom = '1px solid #c8b890';
+        }
+
+        var footerCols = doc.querySelectorAll('.footer-col');
+        for (var fc = 0; fc < footerCols.length; fc++) {
+          footerCols[fc].style.display = 'block';
+          footerCols[fc].style.marginBottom = '24px';
+        }
+
+        var watchItems = doc.querySelectorAll('.watch-list li');
+        for (var wi = 0; wi < watchItems.length; wi++) watchItems[wi].style.display = 'block';
+
+        var twSpans = doc.querySelectorAll('.this-week-items li span');
+        for (var tw = 0; tw < twSpans.length; tw++) twSpans[tw].style.display = 'inline';
+
+        var metaSpans = doc.querySelectorAll('.masthead-meta span');
+        for (var ms = 0; ms < metaSpans.length; ms++) {
+          metaSpans[ms].style.display = 'inline-block';
+          metaSpans[ms].style.padding = '0 12px';
+        }
+
+        var ornLines = doc.querySelectorAll('.ornament-line');
+        for (var o = 0; o < ornLines.length; o++) {
+          ornLines[o].style.display = 'inline-block';
+          ornLines[o].style.width = '30%';
+          ornLines[o].style.height = '1px';
+          ornLines[o].style.verticalAlign = 'middle';
+        }
+        var ornSyms = doc.querySelectorAll('.ornament-symbol');
+        for (var p = 0; p < ornSyms.length; p++) {
+          ornSyms[p].style.display = 'inline-block';
+          ornSyms[p].style.verticalAlign = 'middle';
+          ornSyms[p].style.padding = '0 12px';
+        }
+        var ornaments = doc.querySelectorAll('.ornament');
+        for (var q = 0; q < ornaments.length; q++) ornaments[q].style.textAlign = 'center';
+
+        var emailHtml = '<!DOCTYPE html><html><body>' + doc.body.innerHTML + '</body></html>';
+        document.body.removeChild(hiddenFrame);
+        resolve(emailHtml);
+      };
+
+      hiddenFrame.contentDocument.open();
+      hiddenFrame.contentDocument.write(html);
+      hiddenFrame.contentDocument.close();
+    });
+  }
+
+  function getEmailSubject() {
+    if (!pendingFile) return 'The Halliday Brief';
+    var titleMatch = pendingFile.content.match(/<title>(.*?)<\/title>/i);
+    if (!titleMatch) return 'The Halliday Brief';
+    var parts = titleMatch[1].trim().split('|').map(function(p) { return p.trim(); });
+    if (parts.length >= 3) return parts[0] + ' \u2014 ' + parts[2];
+    return 'The Halliday Brief';
+  }
+
+  async function executePublish(mode) {
+    if (!pendingFile || !getPat()) return;
+
+    if (mode === 'schedule') {
+      var publishDate = validateSchedule();
+      if (!publishDate) return;
+
+      var bdKey = getButtondownKey();
+      if (!bdKey) {
+        var errorEl = document.getElementById('schedule-error');
+        errorEl.textContent = 'Buttondown API key not found. Visit the Subscribers page first to save your key.';
+        errorEl.classList.add('visible');
+        return;
+      }
+    }
+
+    var confirmBtn = document.getElementById('modal-confirm');
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = mode === 'now' ? 'Publishing...' : 'Scheduling...';
+
+    closePublishModal();
 
     var btn = document.getElementById('publish-btn');
     btn.disabled = true;
-    btn.textContent = 'Publishing...';
+    btn.textContent = mode === 'now' ? 'Publishing...' : 'Scheduling...';
     showStatus('Uploading to GitHub...', 'uploading');
 
-    var path = 'newsletters/' + pendingFile.name;
-    var content = btoa(unescape(encodeURIComponent(pendingFile.content)));
+    try {
+      var path = 'newsletters/' + pendingFile.name;
+      var content = btoa(unescape(encodeURIComponent(pendingFile.content)));
 
-    fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
-      headers: { 'Authorization': 'Bearer ' + getPat() }
-    })
-    .then(function(res) {
-      if (res.ok) {
-        return res.json().then(function(data) {
-          return commitFile(path, content, data.sha);
-        });
-      } else {
-        return commitFile(path, content, null);
+      var existingRes = await fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
+        headers: { 'Authorization': 'Bearer ' + getPat() }
+      });
+
+      var sha = null;
+      if (existingRes.ok) {
+        var existingData = await existingRes.json();
+        sha = existingData.sha;
       }
-    })
-    .then(function() {
-      showStatus('Published! The newsletter will be live in about 2 minutes.', 'success');
-      btn.textContent = 'Published';
+
+      await commitFile(path, content, sha);
+
+      if (mode === 'schedule') {
+        showStatus('Uploaded to GitHub. Scheduling email...', 'uploading');
+
+        var emailHtml = await buildEmailHtml(pendingFile.content);
+        var subject = getEmailSubject();
+        var body = '<!-- buttondown-editor-mode: fancy -->\n' + emailHtml;
+
+        var payload = {
+          subject: subject,
+          body: body,
+          status: 'scheduled',
+          publish_date: publishDate
+        };
+
+        var bdRes = await fetch('https://api.buttondown.com/v1/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Token ' + bdKey,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!bdRes.ok) {
+          var bdErr = await bdRes.json();
+          throw new Error('Buttondown: ' + (bdErr.detail || bdErr.message || JSON.stringify(bdErr)));
+        }
+
+        var schedDate = new Date(publishDate);
+        var formatted = schedDate.toUTCString();
+        showStatus('Published to site. Email scheduled for ' + formatted + '.', 'success');
+      } else {
+        showStatus('Published! The newsletter will be live in about 2 minutes.', 'success');
+      }
+
+      btn.textContent = mode === 'now' ? 'Published' : 'Scheduled';
       pendingFile = null;
       loadNewsletters();
       setTimeout(function() {
@@ -858,14 +1318,15 @@
         btn.classList.remove('visible');
         btn.disabled = false;
         btn.textContent = 'Publish Newsletter';
+        document.getElementById('preview-email-btn').classList.remove('visible');
+        document.getElementById('email-preview-section').classList.remove('visible');
         fileInput.value = '';
       }, 5000);
-    })
-    .catch(function(err) {
+    } catch (err) {
       showStatus('Error: ' + err.message, 'error');
       btn.disabled = false;
       btn.textContent = 'Publish Newsletter';
-    });
+    }
   }
 
   function commitFile(path, content, sha) {
