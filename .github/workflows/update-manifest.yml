@@ -366,14 +366,26 @@ jobs:
                   ss['padding'] = '0 12px'
                   sym['style'] = to_style_str(ss)
 
+          # Inject unsubscribe link before closing </footer>
+          footer = soup.find('footer')
+          if footer:
+              unsub_div = soup.new_tag('div')
+              unsub_div['style'] = 'text-align:center; padding:20px 0 0; margin-top:16px; border-top:1px solid #3a5a3e;'
+              unsub_link = soup.new_tag('a', href='{{ unsubscribe_url }}')
+              unsub_link['style'] = 'font-family:\"Space Mono\",monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:#7a9a7e; text-decoration:none;'
+              unsub_link.string = 'Unsubscribe'
+              unsub_div.append(unsub_link)
+              footer.append(unsub_div)
+
           email_html = str(soup)
 
-          body_html = '<!-- buttondown-editor-mode: fancy -->\n' + email_html
+          body_html = email_html
 
           payload = json.dumps({
               'subject': subject,
               'body': body_html,
-              'status': 'about_to_send'
+              'status': 'about_to_send',
+              'template': ''
           }).encode('utf-8')
 
           api_key = os.environ['BUTTONDOWN_API_KEY']
