@@ -1245,6 +1245,19 @@
           contentEl.style.removeProperty('padding-bottom');
         }
 
+        // Inject unsubscribe link into footer
+        var footer = doc.querySelector('footer');
+        if (footer) {
+          var unsubDiv = doc.createElement('div');
+          unsubDiv.setAttribute('style', 'text-align:center; padding:20px 0 0; margin-top:16px; border-top:1px solid #3a5a3e;');
+          var unsubLink = doc.createElement('a');
+          unsubLink.href = '{{ unsubscribe_url }}';
+          unsubLink.setAttribute('style', 'font-family:"Space Mono",monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:#7a9a7e; text-decoration:none;');
+          unsubLink.textContent = 'Unsubscribe';
+          unsubDiv.appendChild(unsubLink);
+          footer.appendChild(unsubDiv);
+        }
+
         var emailHtml = '<!DOCTYPE html><html><body>' + doc.body.innerHTML + '</body></html>';
         document.body.removeChild(hiddenFrame);
         resolve(emailHtml);
@@ -1313,13 +1326,12 @@
 
         var emailHtml = await buildEmailHtml(pendingFile.content);
         var subject = getEmailSubject();
-        var body = '<!-- buttondown-editor-mode: fancy -->\n' + emailHtml;
-
         var payload = {
           subject: subject,
-          body: body,
+          body: emailHtml,
           status: 'draft',
-          publish_date: publishDate
+          publish_date: publishDate,
+          template: ''
         };
 
         var bdRes = await fetch('https://api.buttondown.com/v1/emails', {
