@@ -1237,6 +1237,14 @@
           pw.style.removeProperty('border-right');
           pw.style.maxWidth = '100%';
         }
+        var contentEl = doc.querySelector('.content');
+        if (contentEl) {
+          contentEl.style.removeProperty('padding');
+          contentEl.style.removeProperty('padding-left');
+          contentEl.style.removeProperty('padding-right');
+          contentEl.style.removeProperty('padding-top');
+          contentEl.style.removeProperty('padding-bottom');
+        }
 
         var emailHtml = '<!DOCTYPE html><html><body>' + doc.body.innerHTML + '</body></html>';
         document.body.removeChild(hiddenFrame);
@@ -1684,6 +1692,14 @@
         pw.style.removeProperty('border-left');
         pw.style.removeProperty('border-right');
         pw.style.maxWidth = '100%';
+      }
+      var contentEl = doc.querySelector('.content');
+      if (contentEl) {
+        contentEl.style.removeProperty('padding');
+        contentEl.style.removeProperty('padding-left');
+        contentEl.style.removeProperty('padding-right');
+        contentEl.style.removeProperty('padding-top');
+        contentEl.style.removeProperty('padding-bottom');
       }
 
       emailPreviewHtml = '<!DOCTYPE html><html><head></head><body style="margin:0;padding:0;">' + doc.body.innerHTML + '</body></html>';
