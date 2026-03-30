@@ -210,6 +210,17 @@ jobs:
 
           soup = BeautifulSoup(email_html, 'html.parser')
 
+          # ── Step 0: Strip event handlers and expand collapsed sections ──
+          import re as _re
+          for el in soup.find_all(True):
+              for attr in list(el.attrs):
+                  if _re.match(r'^on[a-z]', attr, _re.IGNORECASE):
+                      del el[attr]
+              # Expand hidden collapsible sections (display:none)
+              style_val = el.get('style', '')
+              if 'display:none' in style_val.replace(' ', '').lower() or 'display: none' in style_val.lower():
+                  el['style'] = _re.sub(r'display\s*:\s*none', 'display:block', style_val, flags=_re.IGNORECASE)
+
           # ── Step 1: Propagate inherited CSS to all elements ──
           INHERITED = ['color', 'font-family', 'font-size', 'font-weight',
                        'font-style', 'letter-spacing', 'text-transform',
