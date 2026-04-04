@@ -48,23 +48,6 @@
     margin: 0 auto;
   }
 
-  .vh-logo-link {
-    display: block;
-    text-align: center;
-    margin-bottom: 24px;
-    font-family: 'Playfair Display', serif;
-    font-size: 1.25rem;
-    font-weight: 500;
-    color: #c9a84c;
-    text-decoration: none;
-    letter-spacing: 0.02em;
-    opacity: 0.85;
-    transition: opacity 0.2s;
-  }
-
-  .vh-logo-link:hover {
-    opacity: 1;
-  }
 
   /* ── NAV BAR ── */
   .nav-bar {
@@ -349,8 +332,6 @@
 
 <div class="site-wrapper">
 
-  <a href="https://vonhalliday.com" class="vh-logo-link">Von Halliday Consulting</a>
-
   <!-- SUBSCRIBE -->
   <div class="subscribe-bar">
     <div class="subscribe-text">
@@ -378,7 +359,10 @@
       <button class="nav-btn" id="prev-btn" onclick="navigate(-1)">&#8592; Older</button>
       <button class="nav-btn" id="next-btn" onclick="navigate(1)">Newer &#8594;</button>
     </div>
-    <button class="archive-btn" id="archive-toggle" onclick="toggleArchive()">Archive</button>
+    <div class="nav-arrows" style="gap:8px;">
+      <a href="https://vonhalliday.com" class="archive-btn" style="text-decoration:none;">Homepage</a>
+      <button class="archive-btn" id="archive-toggle" onclick="toggleArchive()">Archive</button>
+    </div>
   </div>
 
   <!-- ARCHIVE PANEL -->
