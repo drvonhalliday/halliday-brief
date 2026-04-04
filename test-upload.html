@@ -1278,20 +1278,22 @@
     return '[TEST] The Halliday Brief';
   }
 
+  var TEST_RECIPIENT = 'doson@vonhalliday.com';
+
   async function executePublish(mode) {
     if (!pendingFile || !getPat()) return;
 
     if (mode === 'schedule') {
       var publishDate = validateSchedule();
       if (!publishDate) return;
+    }
 
-      var bdKey = getButtondownKey();
-      if (!bdKey) {
-        var errorEl = document.getElementById('schedule-error');
-        errorEl.textContent = 'Buttondown API key not found. Visit the Subscribers page first to save your key.';
-        errorEl.classList.add('visible');
-        return;
-      }
+    var bdKey = getButtondownKey();
+    if (!bdKey) {
+      var errorEl = document.getElementById('schedule-error');
+      errorEl.textContent = 'Buttondown API key not found. Visit the Subscribers page first to save your key.';
+      errorEl.classList.add('visible');
+      return;
     }
 
     var confirmBtn = document.getElementById('modal-confirm');
@@ -1321,38 +1323,62 @@
 
       await commitFile(path, content, sha);
 
+      showStatus('Uploaded to GitHub. Preparing test email...', 'uploading');
+
+      var emailHtml = await buildEmailHtml(pendingFile.content);
+      var subject = getEmailSubject();
+
+      // Create draft
+      var draftPayload = {
+        subject: subject,
+        body: emailHtml,
+        status: 'draft',
+        template: ''
+      };
       if (mode === 'schedule') {
-        showStatus('Uploaded to GitHub. Preparing scheduled email...', 'uploading');
+        draftPayload.publish_date = publishDate;
+      }
 
-        var emailHtml = await buildEmailHtml(pendingFile.content);
-        var subject = getEmailSubject();
-        var payload = {
-          subject: subject,
-          body: emailHtml,
-          status: 'draft',
-          publish_date: publishDate,
-          template: ''
-        };
+      var bdRes = await fetch('https://api.buttondown.com/v1/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Token ' + bdKey,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(draftPayload)
+      });
 
-        var bdRes = await fetch('https://api.buttondown.com/v1/emails', {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Token ' + bdKey,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        });
+      if (!bdRes.ok) {
+        var bdErr = await bdRes.json();
+        throw new Error('Buttondown: ' + (bdErr.detail || bdErr.message || JSON.stringify(bdErr)));
+      }
 
-        if (!bdRes.ok) {
-          var bdErr = await bdRes.json();
-          throw new Error('Buttondown: ' + (bdErr.detail || bdErr.message || JSON.stringify(bdErr)));
-        }
+      var draftData = await bdRes.json();
+      var emailId = draftData.id;
 
+      // Send draft to test recipient
+      showStatus('Sending test email to ' + TEST_RECIPIENT + '...', 'uploading');
+
+      var sendRes = await fetch('https://api.buttondown.com/v1/emails/' + emailId + '/send-draft', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Token ' + bdKey,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ recipients: [TEST_RECIPIENT] })
+      });
+
+      if (!sendRes.ok) {
+        var sendErr = await sendRes.json();
+        throw new Error('Send draft: ' + (sendErr.detail || sendErr.message || JSON.stringify(sendErr)));
+      }
+
+      if (mode === 'schedule') {
         var schedDate = new Date(publishDate);
         var formatted = schedDate.toUTCString();
-        showStatus('Published to site. Email draft created for ' + formatted + ' (test mode — will not send).', 'success');
+        showStatus('Test email sent to ' + TEST_RECIPIENT + '. Draft saved for ' + formatted + '.', 'success');
       } else {
-        showStatus('Published! The newsletter will be live in about 2 minutes.', 'success');
+        showStatus('Test email sent to ' + TEST_RECIPIENT + '.', 'success');
       }
 
       btn.textContent = mode === 'now' ? 'Published' : 'Scheduled';
