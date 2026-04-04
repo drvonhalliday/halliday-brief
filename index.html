@@ -48,6 +48,23 @@
     margin: 0 auto;
   }
 
+  .vh-logo-link {
+    display: block;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .vh-logo-link img {
+    height: 36px;
+    width: auto;
+    opacity: 0.85;
+    transition: opacity 0.2s;
+  }
+
+  .vh-logo-link:hover img {
+    opacity: 1;
+  }
+
   /* ── NAV BAR ── */
   .nav-bar {
     display: flex;
@@ -330,6 +347,10 @@
 <body>
 
 <div class="site-wrapper">
+
+  <a href="https://vonhalliday.com" class="vh-logo-link">
+    <img src="vh-logo.png" alt="Von Halliday Consulting" />
+  </a>
 
   <!-- SUBSCRIBE -->
   <div class="subscribe-bar">
