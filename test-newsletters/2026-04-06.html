@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Halliday Brief | Vol. 1, No. 3 | April 6, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #2a1505;
+    --soil: #1a3a1f;
+    --wheat: #c9a227;
+    --wheat-light: #f0d878;
+    --cream: #faf8f2;
+    --off-white: #f0ede3;
+    --muted: #7a4e28;
+    --red: #8b2020;
+    --blue: #c9a227;
+    --green: #e8c840;
+  }
+
+  body {
+    background: #2a1f10;
+    font-family: 'Source Serif 4', Georgia, serif;
+    color: #2a1505;
+    min-height: 100vh;
+    padding: 40px 16px;
+  }
+
+  .page-wrapper {
+    max-width: 820px;
+    margin: 0 auto;
+    background: var(--cream);
+    border: 1px solid #a08050;
+    box-shadow: 0 12px 60px rgba(20,10,0,0.55), 0 0 0 6px #faf8f2, 0 0 0 7px #8a6040;
+  }
+
+  /* MASTHEAD */
+  .masthead {
+    background: #1a3a1f;
+    padding: 52px 56px 36px;
+    text-align: center;
+    border-bottom: 5px solid #c9a227;
+    position: relative;
+    overflow: hidden;
+  }
+  .masthead::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg, transparent, transparent 22px,
+      rgba(201,162,39,0.07) 22px, rgba(201,162,39,0.07) 44px
+    );
+  }
+  .masthead-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #c9a227;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .masthead-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 76px;
+    font-weight: 900;
+    color: var(--cream);
+    letter-spacing: -0.01em;
+    line-height: 1.0;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .masthead-title em { font-style: italic; color: #e8c840; }
+  .masthead-subtitle {
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: #c4a882;
+    margin-bottom: 24px;
+    letter-spacing: 0.03em;
+    position: relative;
+  }
+  .masthead-rule {
+    width: 72px; height: 2px;
+    background: #c9a227;
+    margin: 0 auto 22px;
+    position: relative;
+  }
+  .masthead-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: #a08060;
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .masthead-meta span { text-transform: uppercase; }
+
+  /* THIS WEEK BAND */
+  .this-week {
+    background: #1a3a1f;
+    border-top: 1px solid rgba(201,162,39,0.3);
+    border-bottom: 4px solid #c9a227;
+    padding: 28px 56px 30px;
+  }
+  .this-week-header {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #c9a227;
+    margin-bottom: 18px;
+  }
+  .this-week-items {
+    list-style: none;
+    margin: 0; padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+  .this-week-items li {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+  .this-week-bullet {
+    color: #e8c840;
+    font-size: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .this-week-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.3;
+  }
+  .this-week-text em {
+    font-style: italic;
+    color: #f0d878;
+    font-weight: 400;
+  }
+
+  /* CONTENT AREA */
+  .content { padding: 48px 56px; }
+
+  /* FROM THE DESK */
+  .from-desk {
+    border-left: 4px solid #c9a227;
+    padding: 6px 0 6px 26px;
+    margin-bottom: 52px;
+  }
+  .from-desk-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #7a4e28;
+    margin-bottom: 12px;
+  }
+  .from-desk p {
+    font-size: 17px;
+    line-height: 1.82;
+    color: var(--soil);
+    font-style: italic;
+    font-weight: 300;
+  }
+  .from-desk p + p { margin-top: 14px; }
+  .from-desk .sig {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    color: #2a1505;
+    margin-top: 18px;
+    display: block;
+  }
+  .from-desk .sig small {
+    display: block;
+    font-weight: 300;
+    font-size: 13px;
+    color: #7a4e28;
+    font-style: italic;
+    margin-top: 3px;
+  }
+
+  /* SECTION HEADERS */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 30px;
+    margin-top: 52px;
+  }
+  .section-header:first-child { margin-top: 0; }
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 15px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    background: #1a3a1f;
+    color: #e8c840;
+    padding: 8px 18px;
+    white-space: nowrap;
+  }
+  .section-rule {
+    flex: 1; height: 1px;
+    background: linear-gradient(to right, #c9a227, transparent);
+  }
+
+  /* STORY CARDS */
+  .story {
+    margin-bottom: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px dashed #c4a882;
+  }
+  .story:last-of-type { border-bottom: none; }
+  .story-kicker {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 8px;
+  }
+  .story h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.22;
+    color: var(--soil);
+    margin-bottom: 14px;
+  }
+  .story .deck {
+    font-size: 17px;
+    font-style: italic;
+    color: #7a4e28;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    font-weight: 300;
+  }
+  .story p {
+    font-size: 16px;
+    line-height: 1.88;
+    color: #2a1505;
+    margin-bottom: 16px;
+  }
+  .story p:last-child { margin-bottom: 0; }
+
+  /* CHART CONTAINERS */
+  .chart-container {
+    background: var(--off-white);
+    border: 1px solid #c4a882;
+    padding: 28px 28px 22px;
+    margin: 28px 0;
+  }
+  .chart-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--soil);
+    margin-bottom: 6px;
+    line-height: 1.35;
+  }
+  .chart-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #7a4e28;
+    margin-bottom: 22px;
+    line-height: 1.6;
+  }
+
+  /* NUMBERS ROW */
+  .numbers-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: #7a4e28;
+    border: 1px solid #a08050;
+    margin: 28px 0;
+  }
+  .number-cell {
+    background: var(--off-white);
+    padding: 24px 18px;
+    text-align: center;
+  }
+  .number-cell .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 900;
+    color: var(--soil);
+    line-height: 1;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .number-cell .num-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #7a4e28;
+    line-height: 1.6;
+  }
+
+  /* DEADLINE BOX */
+  .deadline-box {
+    background: #1a3a1f;
+    color: var(--cream);
+    padding: 26px 32px;
+    margin: 24px 0;
+    position: relative;
+  }
+  .deadline-box::before {
+    content: '⚑';
+    position: absolute;
+    top: 20px; right: 24px;
+    color: #c9a227;
+    font-size: 28px;
+  }
+  .deadline-box-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c9a227;
+    margin-bottom: 10px;
+  }
+  .deadline-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .deadline-box p {
+    font-size: 15px !important;
+    line-height: 1.75 !important;
+    color: #f0d878 !important;
+    margin-bottom: 0 !important;
+  }
+  .deadline-date {
+    display: inline-block;
+    margin-top: 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    background: #c9a227;
+    color: #1a3a1f;
+    padding: 6px 16px;
+    font-weight: 700;
+  }
+
+  /* PULLQUOTE */
+  .pullquote {
+    border-top: 3px solid #c9a227;
+    border-bottom: 3px solid #c9a227;
+    padding: 26px 0;
+    margin: 32px 0;
+    text-align: center;
+  }
+  .pullquote p {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px !important;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--soil) !important;
+    margin-bottom: 12px !important;
+  }
+  .pullquote cite {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #7a4e28;
+  }
+
+  /* INTEL BOX */
+  .intel-box {
+    background: #eaf2e8;
+    border-left: 5px solid #2d5a34;
+    padding: 22px 28px;
+    margin: 24px 0;
+  }
+  .intel-box-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #2d5a34;
+    margin-bottom: 10px;
+  }
+  .intel-box p {
+    font-size: 15px !important;
+    line-height: 1.78 !important;
+    color: #2a1505 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* DIRECTIVES TABLE */
+  .directives-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    border: 1px solid #a08050;
+  }
+  .directives-table thead tr {
+    background: #1a3a1f;
+  }
+  .directives-table thead td {
+    padding: 14px 18px 10px;
+  }
+  .directives-table thead .dt-header {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c9a227;
+    margin-bottom: 4px;
+  }
+  .directives-table thead .dt-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.3;
+  }
+  .directives-table thead .dt-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: #a08060;
+    margin-top: 4px;
+    font-style: italic;
+  }
+  .directives-table tbody tr {
+    border-bottom: 1px solid #d8d0bc;
+  }
+  .directives-table tbody tr:last-child {
+    border-bottom: none;
+  }
+  .directives-table tbody tr:nth-child(even) {
+    background: #f5f1e8;
+  }
+  .directives-table tbody tr:nth-child(odd) {
+    background: var(--cream);
+  }
+  .directives-table tbody td {
+    padding: 12px 18px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #2a1505;
+  }
+  .directives-table tbody td:first-child {
+    width: 28px;
+    text-align: center;
+    color: #c9a227;
+    font-size: 16px;
+    padding-right: 4px;
+  }
+  .directives-table tfoot tr {
+    background: #f5f1e8;
+    border-top: 2px solid #c9a227;
+  }
+  .directives-table tfoot td {
+    padding: 10px 18px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: #7a4e28;
+    text-transform: uppercase;
+  }
+
+  /* WHAT TO WATCH LIST */
+  .watch-list { list-style: none; margin: 0; }
+  .watch-list li {
+    display: flex;
+    gap: 18px;
+    padding: 18px 0;
+    border-bottom: 1px dashed #c4a882;
+    align-items: flex-start;
+  }
+  .watch-list li:last-child { border-bottom: none; }
+  .watch-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 38px;
+    font-weight: 900;
+    color: #2d5a34;
+    line-height: 1;
+    min-width: 36px;
+    padding-top: 2px;
+  }
+  .watch-text {
+    font-size: 16px;
+    line-height: 1.75;
+    color: #2a1505;
+    padding-top: 4px;
+  }
+  .watch-text strong {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    display: block;
+    color: var(--soil);
+    margin-bottom: 4px;
+  }
+  .watch-text a {
+    color: #2d5a34;
+    text-decoration: underline;
+  }
+  .watch-badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: #8b2020;
+    color: #fff;
+    padding: 2px 8px;
+    margin-left: 8px;
+    vertical-align: middle;
+    position: relative;
+    top: -2px;
+  }
+  .watch-badge.today {
+    background: #e8c840;
+    color: #1a3a1f;
+  }
+  .watch-badge.upcoming {
+    background: #2d5a34;
+    color: #e8c840;
+  }
+
+  /* ORNAMENT DIVIDERS */
+  .ornament {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 44px 0;
+  }
+  .ornament-line { flex: 1; height: 1px; background: #c4a882; }
+  .ornament-symbol { font-family: 'Playfair Display', serif; font-size: 22px; color: #2d5a34; }
+
+  /* FOOTER */
+  .footer {
+    background: #1a3a1f;
+    padding: 40px 56px;
+    border-top: 5px solid #c9a227;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 28px;
+  }
+  .footer-col-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #c9a227;
+    margin-bottom: 14px;
+  }
+  .footer-col p, .footer-col a {
+    font-size: 14px;
+    color: #c4a882;
+    line-height: 1.82;
+    text-decoration: none;
+  }
+  .footer-col a:hover { color: #f0d878; }
+  .footer-bottom {
+    border-top: 1px solid #2d5a34;
+    padding-top: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--cream);
+  }
+  .footer-brand em { color: #c9a227; font-style: italic; }
+  .footer-fine {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: #7a4e28;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 640px) {
+    .masthead { padding: 36px 28px 28px; }
+    .masthead-title { font-size: 52px; }
+    .content { padding: 36px 24px; }
+    .this-week { padding: 22px 24px 24px; }
+    .numbers-row { grid-template-columns: 1fr; }
+    .footer { padding: 28px 24px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    .story h2 { font-size: 25px; }
+    .chart-container { padding: 20px 16px 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <!-- MASTHEAD -->
+  <header class="masthead">
+    <div class="masthead-eyebrow">Von Halliday Consulting &nbsp;·&nbsp; North Dakota Rural Health Intelligence</div>
+    <div class="masthead-title">The <em>Halliday</em> Brief</div>
+    <div class="masthead-subtitle">Rural Health Policy · North Dakota &amp; Federal</div>
+    <div class="masthead-rule"></div>
+    <div class="masthead-meta">
+      <span>Vol. 1 · No. 3</span>
+      <span>April 6, 2026</span>
+      <span>24 Days to Round 1 Deadline</span>
+    </div>
+  </header>
+
+  <!-- THIS WEEK -->
+  <div class="this-week">
+    <div class="this-week-header">This Week</div>
+    <ul class="this-week-items">
+      <li>
+        <span class="this-week-bullet">◆</span>
+        <span class="this-week-text">FY2027 budget lands — <em>HRSA rural grants on the chopping block</em></span>
+      </li>
+      <li>
+        <span class="this-week-bullet">◆</span>
+        <span class="this-week-text">Medicaid work requirements: <em>the June 1 rule is now less than 60 days out</em></span>
+      </li>
+      <li>
+        <span class="this-week-bullet">◆</span>
+        <span class="this-week-text">Medicare ambulance add-ons extended through 2027 — <em>but the structural problem remains</em></span>
+      </li>
+      <li>
+        <span class="this-week-bullet">◆</span>
+        <span class="this-week-text">ND ambulance district mandate in implementation — <em>property tax caps create a new fiscal risk</em></span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- FROM THE DESK -->
+    <div class="from-desk">
+      <div class="from-desk-label">From the Desk</div>
+      <p>The Trump administration released its FY2027 budget request last Thursday, and the headline for rural health is not the top-line number — it's what's inside it. Programs that North Dakota's critical access hospitals have quietly relied on for years are proposed for elimination, at the same moment the RHTP is still standing up. The math deserves a close look, and we do that below.</p>
+      <p>We also publish this week the Medicaid work requirements analysis that was held from the last issue. The framework is now law, the binding rules are still coming, and the window for administrative planning is narrower than it looks.</p>
+      <p>In What to Watch this week, we turn attention to rural EMS — specifically the Medicare ambulance add-on extension that runs through 2027 and the CARE Act that would fundamentally restructure how EMS is reimbursed. Alongside it, the ND ambulance district mandate is in active implementation statewide, and a property tax cap interaction is creating a fiscal risk that CAH administrators in affected counties need to understand.</p>
+      <span class="sig">Doson<small>Founder, Von Halliday Consulting · Minot</small></span>
+    </div>
+
+    <!-- ════════════════════════
+         SECTION 1 · FEDERAL POLICY
+    ═════════════════════════ -->
+    <div class="section-header">
+      <div class="section-tag">Federal Policy</div>
+      <div class="section-rule"></div>
+    </div>
+
+    <!-- STORY 1: FY2027 BUDGET -->
+    <article class="story">
+      <div class="story-kicker">Federal Budget · HHS · HRSA</div>
+      <h2>The Budget Lands: What the FY2027 HHS Proposal Means for Rural North Dakota</h2>
+      <p class="deck">The Trump administration's fiscal year 2027 budget cuts HHS by 12.5% and proposes eliminating HRSA rural hospital grant programs — at the same moment the RHTP is the administration's stated offset. The math is worth examining honestly.</p>
+
+      <p>The FY2027 budget request, released April 3, proposes $111.1 billion for the Department of Health and Human Services — a $15.8 billion reduction from 2026 levels. For rural health providers, the headline number matters less than what's inside it. The proposal targets HRSA for a $626 million reduction in provider workforce initiatives, including cuts to programs that support Critical Access Hospital quality improvement, financial benchmarking, and technical assistance.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">1</sup> For North Dakota's CAHs, these are not abstract line items — they are the operational connective tissue that doesn't show up in a grant award announcement but matters for day-to-day administration.</p>
+
+      <!-- STAT TRIO -->
+      <div class="numbers-row">
+        <div class="number-cell"><span class="num">$15.8B</span><span class="num-label">Proposed HHS cut<br/>FY2027</span></div>
+        <div class="number-cell"><span class="num">$626M</span><span class="num-label">HRSA workforce<br/>programs targeted</span></div>
+        <div class="number-cell"><span class="num">12.5%</span><span class="num-label">Reduction from<br/>FY2026 HHS level</span></div>
+      </div>
+
+      <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:#1a3a1f; margin:28px 0 14px;">The RHTP as Offset — and Its Limits</h3>
+
+      <p>The administration's answer to these cuts is the $50 billion Rural Health Transformation Program, which is mandatory spending and not subject to the annual appropriations process that makes these HRSA programs vulnerable. But RHTP and HRSA grants are not substitutes — they operate on different timelines, require different administrative capacities to access, and serve different functions. RHTP funds transformation; HRSA programs have funded ongoing operations and technical assistance.</p>
+
+      <p>National rural health advocates have been direct about the gap. The RHTP represents roughly $10 billion per year spread across all fifty states. KFF estimates that federal Medicaid spending in rural areas will decline by approximately $137 billion over the next decade as a result of H.R. 1 — a figure the RHTP does not come close to covering.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">2</sup> Separately, the Cecil G. Sheps Center for Health Services Research at UNC Chapel Hill found that more than 300 rural hospitals were at risk of closure or service reduction under the law.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">3</sup> CMS Administrator Dr. Mehmet Oz has acknowledged the fund is designed to push states toward creativity, not to replace baseline revenue.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">4</sup></p>
+
+      <!-- BUDGET IMPACT TABLE -->
+      <table class="directives-table" cellpadding="0" cellspacing="0">
+        <thead>
+          <tr>
+            <td colspan="2">
+              <div class="dt-header">FY2027 Budget — Rural Health Impact Summary</div>
+              <div class="dt-title">What the Proposal Cuts vs. What Remains</div>
+              <div class="dt-sub">HHS discretionary programs · Released April 3, 2026 · Subject to congressional action</div>
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color:#8b2020;">✕</td>
+            <td>HRSA rural hospital grant programs — $626M reduction proposed; the budget names "certain grant programs for rural hospitals," following a pattern established in the FY2026 proposal that targeted the Flex program, State Offices of Rural Health, and the Rural Residency Development Program</td>
+          </tr>
+          <tr>
+            <td style="color:#8b2020;">✕</td>
+            <td>NIH funding cut by approximately $5 billion; three institutes proposed for elimination, including the National Institute on Minority Health and Health Disparities</td>
+          </tr>
+          <tr>
+            <td style="color:#8b2020;">✕</td>
+            <td>CMS program management activities lose $437 million — reducing administrative capacity for Medicaid and Medicare oversight</td>
+          </tr>
+          <tr>
+            <td style="color:#c9a227;">◆</td>
+            <td>National Health Service Corps retains $130 million — rural workforce pipeline program preserved in this proposal</td>
+          </tr>
+          <tr>
+            <td style="color:#c9a227;">◆</td>
+            <td>Behavioral health workforce education and training retains $129 million, with focus on behavioral health integration into primary care</td>
+          </tr>
+          <tr>
+            <td style="color:#2d5a34;">✔</td>
+            <td>Rural Health Transformation Program ($10B/year, FY2026–2030) is mandatory spending — protected from annual appropriations cuts regardless of this budget</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2">Source: FY2027 Budget of the U.S. Government, released April 3, 2026 · Congressional approval required for all discretionary changes</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:#1a3a1f; margin:28px 0 14px;">The Congressional Question</h3>
+
+      <p>Congress rejected the bulk of the administration's HHS cut proposals in last year's budget process, ultimately boosting federal health spending, and the FY2027 request faces the same political headwinds — Flex and SHIP have bipartisan support in rural-state delegations, and eliminating FORHP technical assistance is not an easy vote for members who represent rural constituents. But the budget signals priorities, shapes the negotiating floor, and puts rural health advocates on defense. Organizations that have relied on HRSA programs without tracking their congressional support should begin building that case now, ahead of House and Senate Appropriations subcommittee markups this spring — that is where the program-level negotiation happens, and where North Dakota's delegation will carry the most weight.</p>
+
+      <div class="intel-box">
+        <div class="intel-box-label">Von Halliday Analysis</div>
+        <p>The budget is a proposal, not a law — and this administration's track record on HHS cuts suggests Congress will push back. But the direction of travel is clear: federal discretionary support for rural hospitals is being narrowed, and the RHTP is being positioned as the durable alternative. For CAH administrators, the practical question is whether your organization is positioned to access RHTP funding at the level needed to replace what HRSA programs have historically provided. If the answer is uncertain, that's the conversation to have with your board now — before Congress finalizes FY2027 appropriations this fall.</p>
+      </div>
+    </article>
+
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-symbol">◆</div><div class="ornament-line"></div></div>
+
+    <!-- ════════════════════════
+         SECTION 2 · STATE POLICY
+    ═════════════════════════ -->
+    <div class="section-header" style="margin-top:0;">
+      <div class="section-tag">State Policy</div>
+      <div class="section-rule"></div>
+    </div>
+
+    <!-- STORY 2: MEDICAID WORK REQUIREMENTS -->
+    <article class="story">
+      <div class="story-kicker">Medicaid · Work Requirements</div>
+      <h2>What Hospital Administrators Need to Know About Medicaid Work Requirements — Right Now</h2>
+      <p class="deck">The federal framework is set. The binding rules aren't final yet. Here's what is confirmed, what is still coming, and what your organization should be doing before June.</p>
+
+      <p><strong>What's already law.</strong> The One Big Beautiful Bill Act (P.L. 119-21), signed July 4, 2025, requires states to condition Medicaid eligibility for expansion adults ages 19–64 on completing at least 80 hours per month of qualifying community engagement — work, job training, education, or community service.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">6</sup> States must implement by January 1, 2027.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">6</sup> North Dakota has expanded Medicaid, so this applies here.</p>
+
+      <p><strong>What CMS has issued so far.</strong> On December 8, 2025, CMS released an informational bulletin clarifying who is subject to the requirements, what activities count toward the 80-hour threshold, and how states must verify compliance using existing data before requesting documentation from enrollees.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">7</sup> That guidance is sub-regulatory — it does not resolve all operational questions and does not constitute a final rule.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">7</sup></p>
+
+      <p><strong>What is still coming.</strong> CMS is required by statute to issue an interim final rule by June 1, 2026.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">8</sup> That rulemaking will establish the binding implementation framework. States must also begin outreach to affected Medicaid enrollees no later than summer 2026 — the exact deadline depends on the compliance lookback period the state selects.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">8</sup> ND HHS cannot finalize its administrative processes or member communication plan until the June rule lands.</p>
+
+      <p><strong>What this means for your facility.</strong> In North Dakota, roughly 23,000 Medicaid expansion enrollees are subject to the new requirements.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">9</sup> CAHs in high-enrollment rural and tribal counties carry disproportionate exposure. The operational question your CFO should be modeling now: what does a partial coverage loss in your Medicaid expansion population do to your payer mix? The answers will be cleaner before the June rule than after it.</p>
+
+      <!-- MEDICAID TIMELINE TABLE -->
+      <div class="chart-container">
+        <div class="chart-title">Medicaid Work Requirements — Implementation Clock</div>
+        <div class="chart-sub">Key dates for state and provider planning · January 2027 deadline</div>
+
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse; width:100%;">
+
+          <!-- Row 1 -->
+          <tr>
+            <td width="4" bgcolor="#c9a227" style="width:4px; background-color:#c9a227; font-size:0; line-height:0;">&nbsp;</td>
+            <td width="16" style="width:16px; font-size:0;">&nbsp;</td>
+            <td width="10" bgcolor="#c9a227" style="width:10px; height:10px; background-color:#c9a227; font-size:0; line-height:0;">&nbsp;</td>
+            <td width="16" style="width:16px; font-size:0;">&nbsp;</td>
+            <td style="padding:12px 0 12px 0;">
+              <span style="font-family:'Courier New',monospace; font-size:12px; font-weight:bold; color:#c9a227;">DEC 8, 2025</span>
+              &nbsp;&nbsp;
+              <span style="font-family:Georgia,serif; font-size:14px; color:#1a3a1f; font-weight:bold;">CMS Informational Bulletin Issued</span>
+              &nbsp;&nbsp;
+              <span style="font-family:'Courier New',monospace; font-size:10px; color:#7a4e28;">Sub-regulatory guidance only</span>
+            </td>
+          </tr>
+
+          <!-- Row 2 — URGENT -->
+          <tr>
+            <td width="4" bgcolor="#8b2020" style="width:4px; background-color:#8b2020; font-size:0; line-height:0;">&nbsp;</td>
+            <td width="16" style="width:16px; font-size:0;">&nbsp;</td>
+            <td width="10" bgcolor="#8b2020" style="width:10px; height:10px; background-color:#8b2020; font-size:0; line-height:0;">&nbsp;</td>
+            <td width="16" style="width:16px; font-size:0;">&nbsp;</td>
+            <td style="padding:12px 0 12px 0;">
+              <span style="font-family:'Courier New',monospace; font-size:12px; font-weight:bold; color:#8b2020;">JUNE 1, 2026</span>
+              &nbsp;&nbsp;
+              <span style="font-family:Georgia,serif; font-size:14px; color:#8b2020; font-weight:bold;">CMS Interim Final Rule Due</span>
+              &nbsp;&nbsp;
+              <span style="font-family:'Courier New',monospace; font-size:10px; font-weight:bold; color:#ffffff; background-color:#8b2020; padding:2px 7px;">BINDING FRAMEWORK</span>
+            </td>
+          </tr>
+
+          <!-- Row 3 -->
+          <tr>
+            <td width="4" bgcolor="#c9a227" style="width:4px; background-color:#c9a227; font-size:0; line-height:0;">&nbsp;</td>
+            <td width="16" style="width:16px; font-size:0;">&nbsp;</td>
+            <td width="10" bgcolor="#c9a227" style="width:10px; height:10px; background-color:#c9a227; font-size:0; line-height:0;">&nbsp;</td>
+            <td width="16" style="width:16px; font-size:0;">&nbsp;</td>
+            <td style="padding:12px 0 12px 0;">
+              <span style="font-family:'Courier New',monospace; font-size:12px; font-weight:bold; color:#c9a227;">JUL–SEP 2026</span>
+              &nbsp;&nbsp;
+              <span style="font-family:Georgia,serif; font-size:14px; color:#1a3a1f; font-weight:bold;">State Member Outreach Window</span>
+              &nbsp;&nbsp;
+              <span style="font-family:'Courier New',monospace; font-size:10px; color:#7a4e28;">Deadline depends on lookback period selected</span>
+            </td>
+          </tr>
+
+          <!-- Row 4 — URGENT -->
+          <tr>
+            <td width="4" bgcolor="#8b2020" style="width:4px; background-color:#8b2020; font-size:0; line-height:0;">&nbsp;</td>
+            <td width="16" style="width:16px; font-size:0;">&nbsp;</td>
+            <td width="10" bgcolor="#8b2020" style="width:10px; height:10px; background-color:#8b2020; font-size:0; line-height:0;">&nbsp;</td>
+            <td width="16" style="width:16px; font-size:0;">&nbsp;</td>
+            <td style="padding:12px 0 4px 0;">
+              <span style="font-family:'Courier New',monospace; font-size:12px; font-weight:bold; color:#8b2020;">JAN 1, 2027</span>
+              &nbsp;&nbsp;
+              <span style="font-family:Georgia,serif; font-size:14px; color:#8b2020; font-weight:bold;">Mandatory Implementation Deadline</span>
+              &nbsp;&nbsp;
+              <span style="font-family:'Courier New',monospace; font-size:10px; font-weight:bold; color:#ffffff; background-color:#8b2020; padding:2px 7px;">ALL EXPANSION STATES</span>
+            </td>
+          </tr>
+
+        </table>
+
+        <p style="font-family:'Courier New',monospace; font-size:9px; color:#a08060; margin-top:14px; line-height:1.6;">Sources: H.R. 1 (P.L. 119-21), Sec. 71119; CMS CMCS Informational Bulletin, Dec. 8, 2025; Center for Health Care Strategies, Medicaid Work Requirements Summary. Extension to Dec. 31, 2028 available for states demonstrating good-faith implementation effort.</p>
+      </div>
+
+      <p>The state is in a holding pattern pending the June rule — and North Dakota has historically not utilized a provider tax mechanism, which insulates its hospitals from one of the bill's more disruptive financing provisions.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">10</sup> But rural CAHs carrying thin margins and high Medicaid proportions are watching closely regardless.</p>
+
+      <div class="intel-box">
+        <div class="intel-box-label">Von Halliday Analysis</div>
+        <p>The June 1 interim final rule is the single date that matters most for administrative planning. Before it, ND HHS cannot design its compliance system, calculate implementation costs, or launch its outreach campaign — and once it drops, the agency will be running that Medicaid outreach simultaneously with ongoing RHTP grant administration.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">8,11</sup> CAH boards that receive a payer-mix scenario analysis before June will be better positioned than those that wait. The time to build the model is before you need it.</p>
+      </div>
+    </article>
+
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-symbol">◆</div><div class="ornament-line"></div></div>
+
+    <div class="section-header" style="margin-top:0;">
+      <div class="section-tag">What to Watch</div>
+      <div class="section-rule"></div>
+    </div>
+
+    <ul class="watch-list">
+      <li>
+        <div class="watch-num">1</div>
+        <div class="watch-text">
+          <strong>RHTP Round 1 Deadline <span class="watch-badge">24 Days</span></strong>
+          April 30 at 5:00 p.m. CT. A strong application needs a clear theory of change, quantifiable retention metrics, and alignment with CMS's sustainability scoring rubric. Confirm your W-9 is ready before you submit — ND HHS requires it to set up your organization in the contract system. If you attended the March 30 technical assistance call, check the RHTP page for any posted follow-up materials.
+        </div>
+      </li>
+      <li>
+        <div class="watch-num">2</div>
+        <div class="watch-text">
+          <strong>Medicare Ambulance Add-On Payments &amp; the CARE Act</strong>
+          Rural ambulance services are reimbursed by Medicare at rates set in 2002 — rates that were never designed to cover the fixed cost of keeping a unit staffed and ready around the clock regardless of call volume. Congress has addressed this gap with temporary "add-on" payments that modestly increase per-transport rates in rural and frontier areas. The most recent extension, in the Consolidated Appropriations Act 2026, runs through December 31, 2027. Two bills pending in Congress — the CARE Act (S. 3145) and EMS ROCS Act (S. 3730/H.R. 7277) — would take a more structural approach, allowing Medicare to reimburse EMS for treating patients on scene without transport. Under current rules, Medicare only pays if the patient is transported to a hospital, creating a financial incentive that doesn't always match the clinically appropriate response. CAH administrators should track both: the extension determines how your EMS partners are funded through 2027; the legislation determines the model that follows.
+        </div>
+      </li>
+      <li>
+        <div class="watch-num">3</div>
+        <div class="watch-text">
+          <strong>ND Ambulance District Formation — A Funding Stability Question</strong>
+          North Dakota has been moving to require rural areas to form dedicated ambulance service districts — taxing entities that can levy local mill rates to provide stable, predictable funding for emergency medical services. This matters to CAH administrators because most rural hospitals depend on a functioning EMS system to deliver patients who need inpatient care. The concern: legislation capping property tax levy increases at 3% per year may limit how much revenue a newly formed district can raise, creating a gap between what the district is authorized to collect and what it actually costs to staff an ambulance around the clock. A district that cannot sustain 24/7 coverage means some rural residents may call 911 and find no unit available — arriving at your facility later, and in worse condition, than they otherwise would.
+        </div>
+      </li>
+      <li>
+        <div class="watch-num">4</div>
+        <div class="watch-text">
+          <strong>RHTP Workforce &amp; Infrastructure Surveys — Coming Soon</strong>
+          ND HHS has confirmed it is coordinating two surveys in the coming months to gather background information on rural health infrastructure and workforce needs, which will directly shape how future RHTP funding opportunities — including the remaining $189 million in Year One — are designed. These surveys are not yet live as of this issue; watch the <a href="https://www.hhs.nd.gov/rural-health-transformation">ND HHS RHTP page</a> for the launch announcement. Completing them when they open is a direct line to influencing the structure of future grant windows before they are written.
+        </div>
+      </li>
+      <li>
+        <div class="watch-num">5</div>
+        <div class="watch-text">
+          <strong>S. 1868 — Senate Floor Vote</strong>
+          The Critical Access for Veterans Care Act passed the Senate Veterans' Affairs Committee on March 18 and now heads toward a full Senate floor vote. No timeline has been announced. VA rulemaking will follow passage — that's when the pilot's reimbursement terms get set and the financial viability of participation becomes clear. CAHs in frontier states should monitor progress and consider engaging their congressional delegations ahead of any floor action.
+        </div>
+      </li>
+    </ul>
+
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-symbol">◆</div><div class="ornament-line"></div></div>
+
+    <!-- COLLAPSIBLE SOURCES -->
+    <div style="margin: 0 0 40px; border-top: 1px solid #d8d0bc; padding-top: 20px;">
+      <button onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.querySelector('.src-arrow').textContent = this.nextElementSibling.style.display === 'none' ? '▸' : '▾';"
+        style="background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:10px; padding:0; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#a08060;">
+        <span class="src-arrow" style="font-size:9px; color:#c4a882;">▸</span>
+        Sources &amp; Citations — This Issue
+      </button>
+      <div style="display:none; margin-top:16px;">
+        <p style="font-family:'Space Mono',monospace; font-size:10px; line-height:2.2; color:#a08060;">
+          <strong style="color:#7a4e28;">Federal Budget / HRSA</strong><br/>
+          <sup style="color:#8b2020;">1</sup> "Trump's FY27 HHS budget proposal outlines cuts, CMS operational changes," HFMA, April 4, 2026. hfma.org. The budget document describes "certain grant programs for rural hospitals" within the $626M HRSA reduction; specific program names follow the pattern of NRHA's FY2026 budget analysis (ruralhealth.us).<br/>
+          <sup style="color:#8b2020;">2</sup> KFF, "Rural Health Fund Will Do Little to Offset Harm to Rural Providers in Republican Megabill," September 26, 2025; confirmed by KFF Health News / CBS News reporting, October–December 2025. The $137B figure represents KFF's estimate of H.R. 1's reduction in federal Medicaid spending in rural areas over 10 years.<br/>
+          <sup style="color:#8b2020;">3</sup> Cecil G. Sheps Center for Health Services Research, UNC Chapel Hill, analysis of H.R. 1 rural hospital closure risk, as reported by PBS NewsHour, December 29, 2025. The Sheps Center's figure is the 300+ hospitals at risk; the $137B is a separate KFF estimate.<br/>
+          <sup style="color:#8b2020;">4</sup> CMS Administrator Dr. Mehmet Oz, press call on RHTP rollout, as reported by PBS NewsHour / AP, December 29, 2025.<br/>
+          <sup style="color:#8b2020;">5</sup> FY2027 Budget of the U.S. Government, released April 3, 2026. whitehouse.gov/omb.<br/>
+          <br/>
+          <strong style="color:#7a4e28;">Medicaid Work Requirements</strong><br/>
+          <sup style="color:#8b2020;">6</sup> H.R. 1 (P.L. 119-21), One Big Beautiful Bill Act, Sec. 71119, "Requirement for States to Establish Medicaid Community Engagement Requirements for Certain Individuals," signed July 4, 2025. congress.gov. Ages 19–64, expansion population; 80 hours/month threshold; January 1, 2027 mandatory implementation date; June 1, 2026 statutory deadline for CMS interim final rule.<br/>
+          <sup style="color:#8b2020;">7</sup> CMS CMCS Informational Bulletin, "Community Engagement Requirements," December 8, 2025. medicaid.gov/federal-policy-guidance/downloads/cib12082025.pdf. Establishes sub-regulatory guidance on who is subject to requirements, qualifying activities, and data-first verification approach. Does not constitute final rule.<br/>
+          <sup style="color:#8b2020;">8</sup> Center for Health Care Strategies, "A Summary of Federal Medicaid Work Requirements," updated December 2025. chcs.org. Source for: June 1, 2026 rule deadline; June 30–August 31, 2026 outreach window; six-month redetermination cycle; good-faith extension to December 31, 2028.<br/>
+          <sup style="color:#8b2020;">9</sup> Sarah Aker, Executive Director of Medical Services, North Dakota HHS, as reported by the North Dakota Monitor, August 6, 2025. northdakotamonitor.com. Source for: ~23,000 ND Medicaid expansion enrollees subject to requirements; total ND enrollment ~108,000 as of June 2025.<br/>
+          <sup style="color:#8b2020;">10</sup> ND HHS, "Stay Enrolled: Updates on SNAP and Medicaid," updated January 23, 2026. hhs.nd.gov/stayenrolled. Confirms six-month redetermination cycle beginning January 1, 2027 for expansion enrollees; tribal members excluded (annual redetermination retained).<br/>
+          <br/>
+          <strong style="color:#7a4e28;">RHTP Surveys</strong><br/>
+          <sup style="color:#8b2020;">11</sup> ND HHS, "HHS announces first Rural Health Transformation Program funding opportunity," March 18, 2026. hhs.nd.gov. Source for surveys described as "coordinating two surveys in the coming months."
+        </p>
+      </div>
+    </div>
+
+    <!-- CLOSING NOTE -->
+    <div class="from-desk" style="margin-bottom:0;">
+      <div class="from-desk-label">A Note on This Brief</div>
+      <p><em>The Halliday Brief</em> is published weekly by Von Halliday Consulting. It synthesizes federal and North Dakota state rural health policy developments for administrators, clinicians, tribal health leaders, foundation officers, and state-level decision-makers who need accurate, actionable intelligence — without wading through agency websites and legislative reports themselves.</p>
+      <p>If a colleague should be reading this, forward it. If you have a policy question, a funding opportunity your organization is navigating, or a challenge that deserves a closer look — reach out.</p>
+      <span class="sig" style="font-style:normal;">Von Halliday Consulting<small>North Dakota Rural Health Policy &amp; Strategy</small></span>
+      <a href="https://vonhalliday.com/contact/" style="display:inline-block;margin-top:24px;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;background:#1a3a1f;color:#e8c840;padding:14px 28px;text-decoration:none;border:2px solid #c9a227;">Book a Consultation →</a>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-col-label">Key Dates</div>
+        <p>
+          April 30 — RHTP Round 1 Workforce Grant Deadline<br/>
+          June 1 — CMS Interim Final Rule, Medicaid Work Requirements<br/>
+          June 3–4 — Dakota Conference on Rural Health, Grand Forks<br/>
+          Summer 2026 — ND HHS Medicaid Enrollee Outreach Window<br/>
+          Oct. 31 — Federal RHTP Spend Obligation Deadline<br/>
+          Jan. 1, 2027 — Medicaid Work Requirements Take Effect
+        </p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-label">Key Resources</div>
+        <p>
+          <a href="https://www.hhs.nd.gov/rural-health-transformation">ND HHS RHTP Page →</a><br/>
+          <a href="https://www.hhs.nd.gov/rural-health-transformation/funding/workforce">RHTP Workforce Grant Application →</a><br/>
+          <a href="https://ruralhealth.und.edu/dakota-conference">Dakota Conference on Rural Health →</a><br/>
+          <a href="https://cramer.senate.gov">Sen. Cramer — S. 1868 →</a><br/>
+          <a href="https://vonhalliday.com/contact/">Subscribe to The Halliday Brief →</a>
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-brand">The <em>Halliday</em> Brief</div>
+      <div class="footer-fine">© 2026 Von Halliday Consulting · North Dakota</div>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
