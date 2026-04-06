@@ -505,6 +505,82 @@
     color: var(--cream);
   }
 
+  /* Delete confirmation modal */
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26, 22, 18, 0.6);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .modal-backdrop.visible { display: flex; }
+
+  .modal {
+    background: var(--cream);
+    border: 1px solid #bfad90;
+    box-shadow: 6px 8px 48px rgba(0,0,0,0.32);
+    padding: 36px;
+    max-width: 440px;
+    width: 100%;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--soil);
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .confirm-warning {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--ink);
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .confirm-warning strong {
+    color: var(--red);
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .modal-btn {
+    flex: 1;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 14px 16px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .modal-btn-cancel {
+    background: none;
+    border: 1.5px solid #bfad90;
+    color: var(--muted);
+  }
+  .modal-btn-cancel:hover { background: #f5f0e8; color: var(--soil); }
+
+  .modal-btn-danger {
+    background: var(--red);
+    color: var(--cream);
+  }
+  .modal-btn-danger:hover { background: #6b1515; }
+
   .back-link {
     display: block;
     text-align: center;
@@ -581,11 +657,15 @@
 
     <div class="manage-section" id="manage-section">
       <div class="manage-header">Published Newsletters</div>
-      <div class="manage-confirm" id="manage-confirm">
-        <div class="manage-confirm-text" id="manage-confirm-text"></div>
-        <div class="manage-confirm-buttons">
-          <button class="manage-confirm-yes" id="manage-confirm-yes">Yes, delete</button>
-          <button class="manage-confirm-no" onclick="cancelDelete()">Cancel</button>
+      <div class="modal-backdrop" id="delete-confirm-modal">
+        <div class="modal">
+          <div class="modal-title">Delete Newsletter</div>
+          <div class="confirm-warning" id="delete-confirm-text"></div>
+          <div class="confirm-warning">This will remove it from the site. <strong>This cannot be undone.</strong></div>
+          <div class="modal-actions">
+            <button class="modal-btn modal-btn-cancel" onclick="cancelDelete()">Cancel</button>
+            <button class="modal-btn modal-btn-danger" id="delete-confirm-yes">Delete</button>
+          </div>
         </div>
       </div>
       <ul class="manage-list" id="manage-list"></ul>
@@ -1202,28 +1282,26 @@
 
   function promptDelete(filename) {
     deleteTarget = filename;
-    var confirm = document.getElementById('manage-confirm');
-    var text = document.getElementById('manage-confirm-text');
-    text.textContent = 'Delete ' + filename + '? This cannot be undone.';
-    confirm.classList.add('visible');
+    var text = document.getElementById('delete-confirm-text');
+    text.textContent = 'Are you sure you want to delete ' + filename + '?';
+    document.getElementById('delete-confirm-modal').classList.add('visible');
 
-    document.getElementById('manage-confirm-yes').onclick = function() {
+    document.getElementById('delete-confirm-yes').onclick = function() {
       executeDelete(filename);
     };
   }
 
   function cancelDelete() {
     deleteTarget = null;
-    document.getElementById('manage-confirm').classList.remove('visible');
+    document.getElementById('delete-confirm-modal').classList.remove('visible');
   }
 
   async function executeDelete(filename) {
-    var confirm = document.getElementById('manage-confirm');
+    document.getElementById('delete-confirm-modal').classList.remove('visible');
 
     // Optimistically remove from UI immediately
     addPendingDelete(filename);
     allNewsletters = allNewsletters.filter(function(n) { return n.file !== filename; });
-    confirm.classList.remove('visible');
     deleteTarget = null;
     renderPage();
     showStatus('Deleted ' + filename + '. Site will update in about 2 minutes.', 'success');
