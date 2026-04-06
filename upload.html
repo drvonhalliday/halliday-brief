@@ -657,6 +657,25 @@
     color: var(--muted);
   }
   .modal-btn-cancel:hover { background: #f5f0e8; color: var(--soil); }
+
+  .confirm-warning {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--ink);
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .confirm-warning strong {
+    color: var(--red);
+  }
+
+  .modal-btn-danger {
+    background: var(--red);
+    color: var(--cream);
+  }
+  .modal-btn-danger:hover { background: #6b1515; }
 </style>
 </head>
 <body>
@@ -752,6 +771,20 @@
         <div class="modal-actions">
           <button class="modal-btn modal-btn-cancel" onclick="closePublishModal()">Cancel</button>
           <button class="modal-btn modal-btn-confirm" id="modal-confirm" disabled>Select an option</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" id="send-confirm-modal">
+      <div class="modal">
+        <div class="modal-title">Are you sure?</div>
+        <div class="confirm-warning">
+          This will send the newsletter email to <strong>all subscribers</strong>.
+        </div>
+        <div class="confirm-warning" id="send-confirm-detail"></div>
+        <div class="modal-actions">
+          <button class="modal-btn modal-btn-cancel" onclick="closeSendConfirm()">Cancel</button>
+          <button class="modal-btn modal-btn-danger" id="send-confirm-yes">Send to All Subscribers</button>
         </div>
       </div>
     </div>
@@ -1055,12 +1088,43 @@
     if (mode === 'now') {
       confirmBtn.disabled = false;
       confirmBtn.textContent = 'Publish Now';
-      confirmBtn.onclick = function() { executePublish('now'); };
+      confirmBtn.onclick = function() { showSendConfirm('now'); };
     } else {
       confirmBtn.textContent = 'Schedule';
       confirmBtn.disabled = false;
-      confirmBtn.onclick = function() { executePublish('schedule'); };
+      confirmBtn.onclick = function() { showSendConfirm('schedule'); };
     }
+  }
+
+  function showSendConfirm(mode) {
+    if (mode === 'schedule') {
+      var publishDate = validateSchedule();
+      if (!publishDate) return;
+    }
+
+    var detail = document.getElementById('send-confirm-detail');
+    var yesBtn = document.getElementById('send-confirm-yes');
+
+    if (mode === 'now') {
+      detail.textContent = 'The email will be sent immediately.';
+      yesBtn.textContent = 'Send Now';
+    } else {
+      var d = new Date(publishDate);
+      detail.textContent = 'The email will be sent on ' + d.toUTCString() + '.';
+      yesBtn.textContent = 'Schedule Send';
+    }
+
+    closePublishModal();
+    document.getElementById('send-confirm-modal').classList.add('visible');
+
+    yesBtn.onclick = function() {
+      document.getElementById('send-confirm-modal').classList.remove('visible');
+      executePublish(mode);
+    };
+  }
+
+  function closeSendConfirm() {
+    document.getElementById('send-confirm-modal').classList.remove('visible');
   }
 
   function validateSchedule() {
