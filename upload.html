@@ -421,6 +421,39 @@
     cursor: default;
   }
 
+  .manage-unschedule {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--wheat);
+    background: none;
+    border: 1px solid var(--wheat);
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: 12px;
+    flex-shrink: 0;
+  }
+  .manage-unschedule:hover {
+    background: var(--wheat);
+    color: var(--soil);
+  }
+
+  .manage-scheduled-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--wheat);
+    margin-top: 2px;
+  }
+
+  .manage-item-actions {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
   .manage-empty {
     font-family: 'Space Mono', monospace;
     font-size: 11px;
@@ -1476,10 +1509,37 @@
     sessionStorage.setItem(DELETED_KEY, JSON.stringify(deleted));
   }
 
+  var scheduledEmails = {};
+
   function loadNewsletters() {
-    fetch('newsletters.json?t=' + Date.now())
-      .then(function(res) { return res.json(); })
-      .then(function(newsletters) {
+    var newslettersPromise = fetch('newsletters.json?t=' + Date.now()).then(function(res) { return res.json(); });
+
+    var bdKey = getButtondownKey();
+    var scheduledPromise = bdKey
+      ? fetch('https://api.buttondown.com/v1/emails?status=scheduled', {
+          headers: { 'Authorization': 'Token ' + bdKey }
+        }).then(function(res) { return res.ok ? res.json() : { results: [] }; })
+        .catch(function() { return { results: [] }; })
+      : Promise.resolve({ results: [] });
+
+    Promise.all([newslettersPromise, scheduledPromise])
+      .then(function(results) {
+        var newsletters = results[0];
+        var scheduled = results[1].results || [];
+
+        scheduledEmails = {};
+        scheduled.forEach(function(email) {
+          var subj = email.subject || '';
+          newsletters.forEach(function(n) {
+            if (subj.indexOf(n.date) !== -1 || subj.indexOf(n.title) !== -1) {
+              scheduledEmails[n.file] = {
+                id: email.id,
+                publish_date: email.publish_date
+              };
+            }
+          });
+        });
+
         var deleted = getPendingDeletes();
         var filtered = newsletters.filter(function(n) { return deleted.indexOf(n.file) === -1; });
         allNewsletters = filtered.slice().reverse();
@@ -1512,18 +1572,38 @@
     pageItems.forEach(function(entry) {
       var li = document.createElement('li');
       li.className = 'manage-item';
+
+      var sched = scheduledEmails[entry.file];
+      var badgeHtml = '';
+      var unschedHtml = '';
+      if (sched) {
+        var schedDate = new Date(sched.publish_date);
+        badgeHtml = '<div class="manage-scheduled-badge">Scheduled: ' + schedDate.toUTCString() + '</div>';
+        unschedHtml = '<button class="manage-unschedule" data-email-id="' + sched.id + '" data-file="' + entry.file + '">Unschedule</button>';
+      }
+
       li.innerHTML =
         '<div class="manage-item-info">' +
           '<div class="manage-item-title">' + entry.title + '</div>' +
           '<div class="manage-item-date">' + entry.date + '</div>' +
+          badgeHtml +
         '</div>' +
-        '<button class="manage-delete" data-file="' + entry.file + '">Delete</button>';
+        '<div class="manage-item-actions">' +
+          unschedHtml +
+          '<button class="manage-delete" data-file="' + entry.file + '">Delete</button>' +
+        '</div>';
       list.appendChild(li);
     });
 
     list.querySelectorAll('.manage-delete').forEach(function(btn) {
       btn.addEventListener('click', function() {
         promptDelete(btn.getAttribute('data-file'));
+      });
+    });
+
+    list.querySelectorAll('.manage-unschedule').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        unscheduleEmail(btn.getAttribute('data-email-id'), btn.getAttribute('data-file'));
       });
     });
 
@@ -1543,6 +1623,38 @@
     if (managePage < 0) managePage = 0;
     if (managePage >= totalPages) managePage = totalPages - 1;
     renderPage();
+  }
+
+  async function unscheduleEmail(emailId, filename) {
+    var bdKey = getButtondownKey();
+    if (!bdKey) {
+      showStatus('Buttondown API key not found.', 'error');
+      return;
+    }
+
+    showStatus('Unscheduling...', 'uploading');
+
+    try {
+      var res = await fetch('https://api.buttondown.com/v1/emails/' + emailId, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': 'Token ' + bdKey,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: 'draft' })
+      });
+
+      if (!res.ok) {
+        var err = await res.json();
+        throw new Error(err.detail || err.message || 'Unschedule failed');
+      }
+
+      delete scheduledEmails[filename];
+      renderPage();
+      showStatus('Email unscheduled. It has been moved to drafts in Buttondown.', 'success');
+    } catch (err) {
+      showStatus('Error: ' + err.message, 'error');
+    }
   }
 
   function promptDelete(filename) {
