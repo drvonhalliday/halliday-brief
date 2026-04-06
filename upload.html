@@ -824,11 +824,15 @@
 
     <div class="manage-section" id="manage-section">
       <div class="manage-header">Published Newsletters</div>
-      <div class="manage-confirm" id="manage-confirm">
-        <div class="manage-confirm-text" id="manage-confirm-text"></div>
-        <div class="manage-confirm-buttons">
-          <button class="manage-confirm-yes" id="manage-confirm-yes">Yes, delete</button>
-          <button class="manage-confirm-no" onclick="cancelDelete()">Cancel</button>
+      <div class="modal-backdrop" id="delete-confirm-modal">
+        <div class="modal">
+          <div class="modal-title">Delete Newsletter</div>
+          <div class="confirm-warning" id="delete-confirm-text"></div>
+          <div class="confirm-warning">This will remove it from the site. <strong>This cannot be undone.</strong></div>
+          <div class="modal-actions">
+            <button class="modal-btn modal-btn-cancel" onclick="cancelDelete()">Cancel</button>
+            <button class="modal-btn modal-btn-danger" id="delete-confirm-yes">Delete</button>
+          </div>
         </div>
       </div>
       <ul class="manage-list" id="manage-list"></ul>
@@ -1659,28 +1663,26 @@
 
   function promptDelete(filename) {
     deleteTarget = filename;
-    var confirm = document.getElementById('manage-confirm');
-    var text = document.getElementById('manage-confirm-text');
-    text.textContent = 'Delete ' + filename + '? This cannot be undone.';
-    confirm.classList.add('visible');
+    var text = document.getElementById('delete-confirm-text');
+    text.textContent = 'Are you sure you want to delete ' + filename + '?';
+    document.getElementById('delete-confirm-modal').classList.add('visible');
 
-    document.getElementById('manage-confirm-yes').onclick = function() {
+    document.getElementById('delete-confirm-yes').onclick = function() {
       executeDelete(filename);
     };
   }
 
   function cancelDelete() {
     deleteTarget = null;
-    document.getElementById('manage-confirm').classList.remove('visible');
+    document.getElementById('delete-confirm-modal').classList.remove('visible');
   }
 
   async function executeDelete(filename) {
-    var confirm = document.getElementById('manage-confirm');
+    document.getElementById('delete-confirm-modal').classList.remove('visible');
 
     // Optimistically remove from UI immediately
     addPendingDelete(filename);
     allNewsletters = allNewsletters.filter(function(n) { return n.file !== filename; });
-    confirm.classList.remove('visible');
     deleteTarget = null;
     renderPage();
     showStatus('Deleted ' + filename + '. Site will update in about 2 minutes.', 'success');
