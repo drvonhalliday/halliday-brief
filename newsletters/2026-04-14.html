@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Halliday Brief | Vol. 1, No. 4 | April 14, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #2a1505;
+    --soil: #1a3a1f;
+    --wheat: #c9a227;
+    --wheat-light: #f0d878;
+    --cream: #faf8f2;
+    --off-white: #f0ede3;
+    --muted: #7a4e28;
+    --red: #8b2020;
+    --blue: #c9a227;
+    --green: #e8c840;
+  }
+
+  body {
+    background: #2a1f10;
+    font-family: 'Source Serif 4', Georgia, serif;
+    color: #2a1505;
+    min-height: 100vh;
+    padding: 40px 16px;
+  }
+
+  .page-wrapper {
+    max-width: 820px;
+    margin: 0 auto;
+    background: var(--cream);
+    border: 1px solid #a08050;
+    box-shadow: 0 12px 60px rgba(20,10,0,0.55), 0 0 0 6px #faf8f2, 0 0 0 7px #8a6040;
+  }
+
+  /* MASTHEAD */
+  .masthead {
+    background: #1a3a1f;
+    padding: 52px 56px 36px;
+    text-align: center;
+    border-bottom: 5px solid #c9a227;
+    position: relative;
+    overflow: hidden;
+  }
+  .masthead::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg, transparent, transparent 22px,
+      rgba(201,162,39,0.07) 22px, rgba(201,162,39,0.07) 44px
+    );
+  }
+  .masthead-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #c9a227;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .masthead-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 76px;
+    font-weight: 900;
+    color: var(--cream);
+    letter-spacing: -0.01em;
+    line-height: 1.0;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .masthead-title em { font-style: italic; color: #e8c840; }
+  .masthead-subtitle {
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: #c4a882;
+    margin-bottom: 24px;
+    letter-spacing: 0.03em;
+    position: relative;
+  }
+  .masthead-rule {
+    width: 72px; height: 2px;
+    background: #c9a227;
+    margin: 0 auto 22px;
+    position: relative;
+  }
+  .masthead-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: #a08060;
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .masthead-meta span { text-transform: uppercase; }
+
+  /* THIS WEEK BAND */
+  .this-week {
+    background: #1a3a1f;
+    border-top: 1px solid rgba(201,162,39,0.3);
+    border-bottom: 4px solid #c9a227;
+    padding: 28px 56px 30px;
+  }
+  .this-week-header {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #c9a227;
+    margin-bottom: 18px;
+  }
+  .this-week-items {
+    list-style: none;
+    margin: 0; padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+  .this-week-items li {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+  .this-week-bullet {
+    color: #e8c840;
+    font-size: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .this-week-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.3;
+  }
+  .this-week-text em {
+    font-style: italic;
+    color: #f0d878;
+    font-weight: 400;
+  }
+
+  /* CONTENT AREA */
+  .content { padding: 48px 56px; }
+
+  /* FROM THE DESK */
+  .from-desk {
+    border-left: 4px solid #c9a227;
+    padding: 6px 0 6px 26px;
+    margin-bottom: 52px;
+  }
+  .from-desk-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #7a4e28;
+    margin-bottom: 12px;
+  }
+  .from-desk p {
+    font-size: 17px;
+    line-height: 1.82;
+    color: var(--soil);
+    font-style: italic;
+    font-weight: 300;
+  }
+  .from-desk p + p { margin-top: 14px; }
+  .from-desk .sig {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    color: #2a1505;
+    margin-top: 18px;
+    display: block;
+  }
+  .from-desk .sig small {
+    display: block;
+    font-weight: 300;
+    font-size: 13px;
+    color: #7a4e28;
+    font-style: italic;
+    margin-top: 3px;
+  }
+
+  /* SECTION HEADERS */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 30px;
+    margin-top: 52px;
+  }
+  .section-header:first-child { margin-top: 0; }
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 15px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    background: #1a3a1f;
+    color: #e8c840;
+    padding: 8px 18px;
+    white-space: nowrap;
+  }
+  .section-rule {
+    flex: 1; height: 1px;
+    background: linear-gradient(to right, #c9a227, transparent);
+  }
+
+  /* STORY CARDS */
+  .story {
+    margin-bottom: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px dashed #c4a882;
+  }
+  .story:last-of-type { border-bottom: none; }
+  .story-kicker {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 8px;
+  }
+  .story h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.22;
+    color: var(--soil);
+    margin-bottom: 14px;
+  }
+  .story .deck {
+    font-size: 17px;
+    font-style: italic;
+    color: #7a4e28;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    font-weight: 300;
+  }
+  .story p {
+    font-size: 16px;
+    line-height: 1.88;
+    color: #2a1505;
+    margin-bottom: 16px;
+  }
+  .story p:last-child { margin-bottom: 0; }
+  .story h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a3a1f;
+    margin: 28px 0 14px;
+  }
+
+  /* NUMBERS ROW */
+  .numbers-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: #7a4e28;
+    border: 1px solid #a08050;
+    margin: 28px 0;
+  }
+  .number-cell {
+    background: var(--off-white);
+    padding: 24px 18px;
+    text-align: center;
+  }
+  .number-cell .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 900;
+    color: var(--soil);
+    line-height: 1;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .number-cell .num-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #7a4e28;
+    line-height: 1.6;
+  }
+
+  /* DIRECTIVES TABLE */
+  .directives-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    border: 1px solid #a08050;
+  }
+  .directives-table thead tr {
+    background: #1a3a1f;
+  }
+  .directives-table thead td {
+    padding: 14px 18px 10px;
+  }
+  .directives-table thead .dt-header {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c9a227;
+    margin-bottom: 4px;
+  }
+  .directives-table thead .dt-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.3;
+  }
+  .directives-table thead .dt-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: #a08060;
+    margin-top: 4px;
+    font-style: italic;
+  }
+  .directives-table tbody tr {
+    border-bottom: 1px solid #d8d0bc;
+  }
+  .directives-table tbody tr:last-child {
+    border-bottom: none;
+  }
+  .directives-table tbody tr:nth-child(even) {
+    background: #f5f1e8;
+  }
+  .directives-table tbody tr:nth-child(odd) {
+    background: var(--cream);
+  }
+  .directives-table tbody td {
+    padding: 12px 18px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #2a1505;
+  }
+  .directives-table tbody td:first-child {
+    width: 28px;
+    text-align: center;
+    color: #c9a227;
+    font-size: 16px;
+    padding-right: 4px;
+  }
+  .directives-table tfoot tr {
+    background: #f5f1e8;
+    border-top: 2px solid #c9a227;
+  }
+  .directives-table tfoot td {
+    padding: 10px 18px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: #7a4e28;
+    text-transform: uppercase;
+  }
+
+  /* PULLQUOTE */
+  .pullquote {
+    border-top: 3px solid #c9a227;
+    border-bottom: 3px solid #c9a227;
+    padding: 26px 0;
+    margin: 32px 0;
+    text-align: center;
+  }
+  .pullquote p {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px !important;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--soil) !important;
+    margin-bottom: 12px !important;
+  }
+  .pullquote cite {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #7a4e28;
+  }
+
+  /* INTEL BOX */
+  .intel-box {
+    background: #eaf2e8;
+    border-left: 5px solid #2d5a34;
+    padding: 22px 28px;
+    margin: 24px 0;
+  }
+  .intel-box-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #2d5a34;
+    margin-bottom: 10px;
+  }
+  .intel-box p {
+    font-size: 15px !important;
+    line-height: 1.78 !important;
+    color: #2a1505 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* CHART CONTAINER */
+  .chart-container {
+    background: var(--off-white);
+    border: 1px solid #c4a882;
+    padding: 28px 28px 22px;
+    margin: 28px 0;
+  }
+  .chart-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--soil);
+    margin-bottom: 6px;
+    line-height: 1.35;
+  }
+  .chart-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #7a4e28;
+    margin-bottom: 22px;
+    line-height: 1.6;
+  }
+
+  /* DEADLINE BOX */
+  .deadline-box {
+    background: #1a3a1f;
+    color: var(--cream);
+    padding: 26px 32px;
+    margin: 24px 0;
+    position: relative;
+  }
+  .deadline-box::before {
+    content: '⚑';
+    position: absolute;
+    top: 20px; right: 24px;
+    color: #c9a227;
+    font-size: 28px;
+  }
+  .deadline-box-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c9a227;
+    margin-bottom: 10px;
+  }
+  .deadline-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 1.3;
+    color: var(--cream);
+  }
+  .deadline-box p {
+    font-size: 15px !important;
+    line-height: 1.75 !important;
+    color: #f0d878 !important;
+    margin-bottom: 0 !important;
+  }
+  .deadline-date {
+    display: inline-block;
+    margin-top: 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    background: #c9a227;
+    color: #1a3a1f;
+    padding: 6px 16px;
+    font-weight: 700;
+  }
+
+  /* WHAT TO WATCH LIST */
+  .watch-list { list-style: none; margin: 0; }
+  .watch-list li {
+    display: flex;
+    gap: 18px;
+    padding: 18px 0;
+    border-bottom: 1px dashed #c4a882;
+    align-items: flex-start;
+  }
+  .watch-list li:last-child { border-bottom: none; }
+  .watch-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 38px;
+    font-weight: 900;
+    color: #2d5a34;
+    line-height: 1;
+    min-width: 36px;
+    padding-top: 2px;
+  }
+  .watch-text {
+    font-size: 16px;
+    line-height: 1.75;
+    color: #2a1505;
+    padding-top: 4px;
+  }
+  .watch-text strong {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    display: block;
+    color: var(--soil);
+    margin-bottom: 4px;
+  }
+  .watch-text a { color: #2d5a34; text-decoration: underline; }
+  .watch-badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: #8b2020;
+    color: #fff;
+    padding: 2px 8px;
+    margin-left: 8px;
+    vertical-align: middle;
+    position: relative;
+    top: -2px;
+  }
+  .watch-badge.upcoming { background: #2d5a34; color: #e8c840; }
+
+  /* ORNAMENT DIVIDERS */
+  .ornament {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 44px 0;
+  }
+  .ornament-line { flex: 1; height: 1px; background: #c4a882; }
+  .ornament-symbol { font-family: 'Playfair Display', serif; font-size: 22px; color: #2d5a34; }
+
+  /* FOOTER */
+  .footer {
+    background: #1a3a1f;
+    padding: 40px 56px;
+    border-top: 5px solid #c9a227;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 28px;
+  }
+  .footer-col-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #c9a227;
+    margin-bottom: 14px;
+  }
+  .footer-col p, .footer-col a {
+    font-size: 14px;
+    color: #c4a882;
+    line-height: 1.82;
+    text-decoration: none;
+  }
+  .footer-col a:hover { color: #f0d878; }
+  .footer-bottom {
+    border-top: 1px solid #2d5a34;
+    padding-top: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--cream);
+  }
+  .footer-brand em { color: #c9a227; font-style: italic; }
+  .footer-fine {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: #7a4e28;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 640px) {
+    .masthead { padding: 36px 28px 28px; }
+    .masthead-title { font-size: 52px; }
+    .content { padding: 36px 24px; }
+    .this-week { padding: 22px 24px 24px; }
+    .numbers-row { grid-template-columns: 1fr; }
+    .footer { padding: 28px 24px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    .story h2 { font-size: 25px; }
+    .chart-container { padding: 20px 16px 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <!-- MASTHEAD -->
+  <header class="masthead">
+    <div class="masthead-eyebrow">Von Halliday Consulting &nbsp;·&nbsp; North Dakota Rural Health Intelligence</div>
+    <div class="masthead-title">The <em>Halliday</em> Brief</div>
+    <div class="masthead-subtitle">Rural Health Policy · North Dakota &amp; Federal</div>
+    <div class="masthead-rule"></div>
+    <div class="masthead-meta">
+      <span>Vol. 1 · No. 4</span>
+      <span>April 14, 2026</span>
+      <span>16 Days to Round 1 Deadline</span>
+    </div>
+  </header>
+
+  <!-- THIS WEEK -->
+  <div class="this-week">
+    <div class="this-week-header">This Week</div>
+    <ul class="this-week-items">
+      <li>
+        <span class="this-week-bullet">◆</span>
+        <span class="this-week-text">VA's External Provider Scheduling goes nationwide — <em>and Congress moves to make it permanent</em></span>
+      </li>
+      <li>
+        <span class="this-week-bullet">◆</span>
+        <span class="this-week-text">EMS ROCS Act: <em>the Medicare fix rural EMS needs, if Congress will pass it</em></span>
+      </li>
+      <li>
+        <span class="this-week-bullet">◆</span>
+        <span class="this-week-text">SPA 25-0026: North Dakota codifies Community Health Workers and Community Paramedics under Medicaid</span>
+      </li>
+      <li>
+        <span class="this-week-bullet">◆</span>
+        <span class="this-week-text">IMD waiver debate surfaces at Tribal and State Relations Committee — <em>tribal leaders press for inpatient mental health access</em></span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- FROM THE DESK -->
+    <div class="from-desk">
+      <div class="from-desk-label">From the Desk</div>
+      <p>The VA's External Provider Scheduling program completed its national rollout last month — a development that matters operationally for every Critical Access Hospital enrolled in the Community Care Network. This issue covers EPS in full: how it works, what S. 654 would lock into statute, and what the Nebraska model tells us about how North Dakota might use RHTP dollars to accelerate participation.</p>
+      <p>On the federal side, we also cover the EMS ROCS Act — pending legislation that would require Medicare to reimburse EMS providers for medically necessary care delivered on scene, without transport. That bill connects directly to the state policy section: North Dakota just enacted SPA 25-0026, which creates a Medicaid billing pathway for Community Paramedics doing exactly that kind of work in the home. The federal and state tracks are building the same model from different ends. Understanding both is the right frame for CAH administrators designing community-based care programs.</p>
+      <p>We close with the IMD waiver debate at the Tribal and State Relations Committee — a live policy question with direct consequences for rural hospitals near reservation communities.</p>
+      <span class="sig">Doson<small>Founder, Von Halliday Consulting · Bismarck</small></span>
+    </div>
+
+    <!-- ════════════════════════
+         SECTION 1 · FEDERAL POLICY
+    ═════════════════════════ -->
+    <div class="section-header">
+      <div class="section-tag">Federal Policy</div>
+      <div class="section-rule"></div>
+    </div>
+
+    <!-- STORY 1: EPS -->
+    <article class="story">
+      <div class="story-kicker">Veterans · Community Care · Federal Program</div>
+      <h2>VA's External Provider Scheduling Program Goes Nationwide — And Congress Moves to Make It Permanent</h2>
+      <p class="deck">EPS is now active at every VA facility in the country. Two bills in Congress — one already on the Senate Calendar — would lock the program into statute. For Critical Access Hospitals enrolled in community care, the window to participate is open now.</p>
+
+      <p>For nearly a decade, the bottleneck in the VA's community care program was not authorization — it was scheduling. When a veteran qualified for care outside the VA system, getting that appointment on the calendar required a chain of phone calls between VA staff, the community provider, and the veteran. A single referral could take days or weeks to convert into a confirmed appointment. For veterans in rural and frontier communities already traveling significant distances for care, that delay was a compounding barrier.</p>
+
+      <p>That process is now changing at scale. On March 9, 2026, the Department of Veterans Affairs announced the completion of a nationwide rollout of its External Provider Scheduling (EPS) program — a federally administered scheduling infrastructure that gives VA staff real-time access to participating community providers' appointment calendars, enabling direct online booking without phone coordination.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">1</sup> The rollout — completed by late 2025 under the second Trump administration after the prior administration stalled it — marks the first time EPS has been operational at every VA facility in the country.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">2</sup></p>
+
+      <p>The program is simultaneously the subject of active legislation in both chambers. S. 654, the <em>VA External Provider Scheduling Act</em>, cleared the Senate Veterans' Affairs Committee and was placed on the Senate Calendar on December 2, 2025.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">3</sup> The companion House bill, H.R. 3482, has also advanced through committee.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">4</sup> Together, these bills would permanently codify EPS in title 38 of the U.S. Code, removing any future administration's ability to pause or dismantle the program by administrative action.</p>
+
+      <!-- BY THE NUMBERS -->
+      <div class="numbers-row">
+        <div class="number-cell"><span class="num">25</span><span class="num-label">Appts bookable per day<br/>with EPS (vs. a handful)</span></div>
+        <div class="number-cell"><span class="num">7 min</span><span class="num-label">Avg. scheduling time<br/>(vs. days or weeks)</span></div>
+        <div class="number-cell"><span class="num">27,000</span><span class="num-label">Community providers<br/>enrolled as of March 2026</span></div>
+      </div>
+
+      <h3>Statutory Basis and Legislative History</h3>
+
+      <p>EPS is a direct outgrowth of the VA MISSION Act of 2018, which consolidated the VA's community care programs into the Veterans Community Care Program (VCCP) and mandated that the VA ensure timely scheduling and continuity of care for community referrals.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">5</sup> The MISSION Act's access standards created the legal obligation; EPS is the operational mechanism designed to fulfill it.</p>
+
+      <p>The Elizabeth Dole 21st Century Veterans Healthcare and Benefits Improvement Act, signed in January 2025, reinforced that mandate by prohibiting VA administrators from overriding clinician referrals to community care — a provision that had previously allowed second-review delays to block or slow access to external providers.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">6</sup> The result is a stronger statutory floor for community care access, with EPS as the scheduling infrastructure that delivers on it.</p>
+
+      <p>S. 654, introduced February 24, 2025 by SVAC Chairman Jerry Moran (R-KS) along with Senators Fischer, Boozman, and Budd, would permanently authorize and expand EPS in statute. The bill requires the program to be available at all VA medical centers, mandates real-time schedule visibility for VA schedulers, and requires annual reports to Congress on deployment progress through 2028.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">3</sup> CBO scored the bill at under $500,000 in additional cost, finding that a scheduling system meeting its requirements is already being deployed under current law.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">7</sup> The bill's placement on the Senate Calendar following committee passage signals strong prospects for floor consideration.</p>
+
+      <!-- S. 654 PROVISIONS TABLE -->
+      <table class="directives-table" cellpadding="0" cellspacing="0">
+        <thead>
+          <tr>
+            <td colspan="2">
+              <div class="dt-header">S. 654 — Key Provisions</div>
+              <div class="dt-title">What S. 654 Requires — Locking EPS Into Statute</div>
+              <div class="dt-sub">VA External Provider Scheduling Act · Senate Calendar · December 2, 2025 · Sponsored by Sen. Moran (SVAC Chair)</div>
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color:#2d5a34;">✔</td>
+            <td>Permanently authorizes a national External Provider Scheduling Program within the VA</td>
+          </tr>
+          <tr>
+            <td style="color:#2d5a34;">✔</td>
+            <td>Requires technology that allows VA schedulers to view community provider schedules in real time</td>
+          </tr>
+          <tr>
+            <td style="color:#2d5a34;">✔</td>
+            <td>Mandates program availability at all VA medical centers</td>
+          </tr>
+          <tr>
+            <td style="color:#2d5a34;">✔</td>
+            <td>Requires annual reports to Congress on deployment progress through 2028</td>
+          </tr>
+          <tr>
+            <td style="color:#2d5a34;">✔</td>
+            <td>Directs VA to reduce time from referral to scheduled appointment and time for schedulers to book</td>
+          </tr>
+          <tr>
+            <td style="color:#c9a227;">◆</td>
+            <td>Complements H.R. 3482, the companion House bill also advanced through committee</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2">CBO cost estimate: under $500,000 — qualifying system already being deployed under current law · Congressional approval required to make permanent</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <h3>How EPS Operates</h3>
+
+      <p>EPS functions through a federal contract with WellHive Holdings, LLC, a FedRAMP-authorized technology vendor whose platform integrates with more than 150 electronic health record and practice management systems used by community providers.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">8</sup> The technology enables a VA medical support assistant to search provider availability by specialty and geography, compare open appointment slots across multiple providers on a single screen, and complete a booking in minutes. The appointment appears simultaneously in the provider's own scheduling system, blocking the slot to prevent double-booking.</p>
+
+      <p>The program processes referrals across 78 medical specialties. Provider participation is voluntary and free — no new software or contract modification is required for most providers with existing electronic health record systems. As of March 2026, 27,000 community providers are enrolled. VA has committed to expanding that network by thousands of additional participants through 2026, with particular emphasis on underserved and rural areas.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">1</sup></p>
+
+      <p>Productivity gains have been significant. A pilot at the Orlando VA Medical Center, launched in 2020, demonstrated that average scheduling time fell to about seven minutes per appointment and scheduler productivity increased up to four-fold.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">9</sup> Those results informed the national deployment and have since been cited by members of both SVAC and the House Veterans' Affairs Committee as evidence of the program's durability.</p>
+
+      <h3>What This Means for Critical Access Hospitals</h3>
+
+      <p>For Critical Access Hospitals already enrolled in the VA's Community Care Network, participation in EPS is a low-friction operational decision: no new contract, no new software, no additional cost. The primary change is receiving appointment bookings electronically rather than by phone. For facilities already stretched on administrative bandwidth, that reduction in scheduling overhead is a real operational improvement.</p>
+
+      <p>The program's design specifically addresses rural access gaps. VA's community care network connects veterans with providers across five regional networks, and EPS gives VA schedulers visibility into provider availability by location and drive time — making rural and frontier providers who participate more visible and more bookable in the referral workflow.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">10</sup> CAHs that are enrolled in CCN and have not yet opted into EPS should assess participation now. Those not yet enrolled in CCN should treat that enrollment as the prerequisite step.</p>
+
+      <p>Nebraska offers an early model for how RHTP funding can serve as the activation mechanism for EPS participation. The Nebraska Rural Health Association (NeRHA) is deploying RHTP dollars — drawn from Nebraska's $218.5 million Year One allocation, under a $2 million annual "Veteran EHR Coordination" initiative — to fund a dedicated statewide coordinator position focused explicitly on enrolling rural hospitals and clinics in VA EPS. Governor Pillen, who joined President Trump at the White House Rural Health Roundtable in January 2026, explicitly named veteran care as a top RHTP priority for Nebraska.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">11</sup> The model — using state rural health transformation dollars to build provider network capacity for a federal veterans program — reflects a policy architecture that North Dakota, as an active RHTP recipient, is well-positioned to consider.</p>
+
+      <div class="intel-box">
+        <div class="intel-box-label">Von Halliday Analysis</div>
+        <p>EPS has moved from pilot to national infrastructure in the span of a few years, and the legislative record now supports its durability. The prior administration's decision to pause the rollout — and the current administration's reversal of that decision — underscores precisely why S. 654 matters: a program that can be administratively stalled can also be administratively dismantled. Permanent statutory authorization changes that calculus. The bill's placement on the Senate Calendar, its CBO score near zero in additional cost, and bipartisan support in both chambers put it on a credible path to enactment. For CAH administrators, the practical question is not whether EPS will survive — it likely will, with or without S. 654. The question is whether rural and frontier providers are positioned to capture the referral volume that flows through it. Provider network expansion in underserved areas remains the program's most important unfinished task, and that expansion depends on community providers — including CAHs — opting in. Nebraska's approach reflects something worth naming directly: healthcare is local, and the VA is beginning to build its rural network accordingly — not by expanding its own footprint, but by funding the associations and coordinators who already operate in the communities veterans call home.</p>
+      </div>
+    </article>
+
+    <!-- ORNAMENT -->
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-symbol">◆</div><div class="ornament-line"></div></div>
+
+    <!-- STORY 2: EMS ROCS -->
+    <article class="story">
+      <div class="story-kicker">EMS · Medicare · Federal Legislation</div>
+      <h2>The EMS ROCS Act Would Fix a Medicare Gap That Rural EMS Has Lived With for Decades</h2>
+      <p class="deck">Medicare pays ambulance providers only when a patient is transported to a hospital. The EMS ROCS Act would change that — and it connects directly to what North Dakota just codified under Medicaid.</p>
+
+      <p>Under current Medicare policy, EMS providers receive reimbursement only when they transport a patient to a hospital. If a crew responds, stabilizes the patient, and determines transport isn't necessary — Medicare pays nothing.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">EMS-1</sup> Approximately 22% of 911 calls involve conditions that don't require transport, and Medicare beneficiaries account for roughly 40% of EMS patients nationwide — a share that runs higher in rural areas with older populations.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">EMS-1</sup> Every non-transport call in a rural Medicare population is care delivered at a loss.</p>
+
+      <p>The EMS ROCS Act — reintroduced January 29, 2026 by Senators Welch (D-VT) and Sanders (I-VT) with a companion House bill — would require Medicare to reimburse EMS providers for medically necessary on-scene care even without transport.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">EMS-2</sup> It has not advanced out of committee and carries a Democratic-heavy cosponsor list. A companion vehicle, the CARE Act (S. 3145), would instead direct CMS to test a five-year treatment-in-place demonstration model. Both are worth monitoring.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">EMS-3</sup></p>
+
+      <div class="intel-box">
+        <div class="intel-box-label">Von Halliday Analysis</div>
+        <p>Read this alongside SPA 25-0026 below. The SPA creates a North Dakota Medicaid billing pathway for Community Paramedics delivering chronic disease monitoring and medication compliance checks in the home — exactly the non-transport, community-based EMS care that EMS ROCS is trying to get Medicare to cover. North Dakota has built the Medicaid side of that equation. The Medicare side is pending in Congress. CAH administrators building community paramedic programs should understand both: the SPA is actionable today; EMS ROCS is the federal complement that would make the model financially durable across payers.</p>
+      </div>
+    </article>
+
+    <!-- ORNAMENT -->
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-symbol">◆</div><div class="ornament-line"></div></div>
+
+    <!-- ════════════════════════
+         SECTION 2 · STATE POLICY
+    ═════════════════════════ -->
+    <div class="section-header" style="margin-top:0;">
+      <div class="section-tag">State Policy</div>
+      <div class="section-rule"></div>
+    </div>
+
+    <!-- STORY 3: SPA 25-0026 -->
+    <article class="story">
+      <div class="story-kicker">Medicaid · State Plan Amendment · Workforce</div>
+      <h2>North Dakota Codifies Community Health Workers and Community Paramedics Under Medicaid</h2>
+      <p class="deck">SPA 25-0026 creates formal billing pathways for two workforce categories that rural hospitals have long deployed informally. For CAH administrators, this is a reimbursement mechanism that did not exist before — and a tool worth building into your care model now.</p>
+
+      <p>While the legislative session is in its interim, a significant State Plan Amendment has moved through the final stages of administrative review. Medicaid SPA 25-0026 formally codifies Community Health Workers (CHWs) and Community Paramedics as providers of "preventive services" under North Dakota Medicaid — establishing reimbursement authority for a category of community-based care that has historically been delivered without a billing pathway.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">ND-1</sup></p>
+
+      <p>The scope of the amendment covers two distinct workforce roles. Community Health Workers are now authorized to provide health system navigation, resource coordination, and health education to Medicaid enrollees. Community Paramedics — licensed emergency medical professionals operating in an expanded scope — are now reimbursable for chronic disease monitoring and medication compliance checks conducted in the patient's home. Both categories are recognized as preventive services, which carries important implications for how costs are classified and how RHTP funding may interact with these services going forward.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">ND-1</sup></p>
+
+      <!-- SPA DETAILS TABLE -->
+      <table class="directives-table" cellpadding="0" cellspacing="0">
+        <thead>
+          <tr>
+            <td colspan="2">
+              <div class="dt-header">SPA 25-0026 — What's Now Reimbursable</div>
+              <div class="dt-title">Community Health Workers &amp; Community Paramedics Under ND Medicaid</div>
+              <div class="dt-sub">North Dakota Medicaid State Plan Amendment · Preventive Services Category · Administrative Implementation</div>
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color:#2d5a34;">✔</td>
+            <td><strong>Community Health Workers</strong> — health system navigation, resource coordination, and health education for Medicaid enrollees</td>
+          </tr>
+          <tr>
+            <td style="color:#2d5a34;">✔</td>
+            <td><strong>Community Paramedics</strong> — chronic disease monitoring and medication compliance checks delivered in the home setting</td>
+          </tr>
+          <tr>
+            <td style="color:#2d5a34;">✔</td>
+            <td>Both categories classified as <strong>preventive services</strong> under ND Medicaid — with associated cost-sharing and coverage implications</td>
+          </tr>
+          <tr>
+            <td style="color:#c9a227;">◆</td>
+            <td>Applies to Medicaid enrollees — provider billing authority extends to CAH-affiliated clinics and community programs that employ CHWs or Community Paramedics</td>
+          </tr>
+          <tr>
+            <td style="color:#c9a227;">◆</td>
+            <td>Billing pathway is new — organizations should confirm provider enrollment and billing codes with ND HHS before service delivery</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2">Source: ND HHS Medicaid State Plan Amendment 25-0026 · Contact ND HHS Medical Services for enrollment and billing guidance</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <h3>What This Means for Your Facility</h3>
+
+      <p>For rural hospitals, the value of this amendment is not primarily financial — it is structural. CHWs and Community Paramedics perform work that keeps complex patients out of the emergency department: they navigate people through care transitions, ensure prescriptions are being taken, monitor chronic conditions before they escalate, and connect socially isolated patients to resources. That work has always been done in some form by rural healthcare organizations, often by staff who were not reimbursed for it because no billing pathway existed.</p>
+
+      <p>SPA 25-0026 creates that pathway. A CAH that employs a Community Paramedic for post-discharge home visits can now bill Medicaid for those visits. A rural health clinic that uses CHWs to support care coordination for diabetic patients can now recover some of the cost through Medicaid. These are not large revenue streams — but for organizations operating on thin margins, a formal billing mechanism for work already being done is meaningful.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">ND-1</sup></p>
+
+      <div class="intel-box">
+        <div class="intel-box-label">Von Halliday Analysis</div>
+        <p>CAH administrators should assess now whether their organizations employ or contract with either workforce category — and if so, whether billing codes are in place with ND HHS. If not, this is the moment to build that capacity. The SPA removes the barrier that has historically made community paramedic and CHW programs financially unsustainable in rural settings. The reimbursement architecture is there. Using it is an operational decision, not a policy one.</p>
+      </div>
+    </article>
+
+    <!-- ORNAMENT -->
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-symbol">◆</div><div class="ornament-line"></div></div>
+
+    <!-- STORY 4: IMD WAIVER -->
+    <article class="story">
+      <div class="story-kicker">Tribal Health · Medicaid · Behavioral Health</div>
+      <h2>IMD Waiver Debate Surfaces at State Legislature — Tribal Leaders Press for Inpatient Mental Health Access</h2>
+      <p class="deck">North Dakota is one of thirteen states without an IMD waiver. Tribal officials say the gap is forcing their members to leave the state for mental health treatment. A bill is now in draft. The policy debate is unresolved — but the pressure is real.</p>
+
+      <p>North Dakota lawmakers are drafting a bill that would establish an "Institution for Mental Diseases" (IMD) waiver — a Medicaid mechanism available in 37 other states that allows facilities with more than 16 inpatient beds focused on mental health or substance use treatment to receive Medicaid reimbursement. Without the waiver, those facilities are ineligible for federal matching funds, effectively capping the state's inpatient behavioral health infrastructure at facilities small enough to avoid the restriction.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">ND-2</sup></p>
+
+      <p>The proposal is being driven by tribal officials who describe an access crisis. The Mandan, Hidatsa &amp; Arikara Nation and other tribal governments have reported that demand for inpatient mental health treatment exceeds what local facilities can provide under current Medicaid rules, and that tribal members are routinely sent out of state for care. Mark Fox, Chair of the MHA Nation, told the Tribal and State Relations Committee that North Dakota's lack of an IMD waiver is forcing tribal members to travel hundreds of miles for treatment they should be able to receive at home.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">ND-2</sup></p>
+
+      <p>The opposition is not to the goal. The North Dakota Behavioral Health Planning Council has historically taken the position that community-based services — outpatient treatment, peer support, intensive case management — are a more effective investment than expanding inpatient beds, and that an IMD waiver risks pulling resources toward institutional care at the expense of community infrastructure. Kurt Snyder of the Heartview Foundation in Bismarck argued that expanding peer support specialists statewide would address the access problem without concentrating resources in large facilities.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">ND-2</sup> The IMD waiver debate is, at its core, a debate about where on the care continuum North Dakota should invest its limited behavioral health capacity.</p>
+
+      <p>The Tribal and State Relations Committee meets Monday morning on the Turtle Mountain Reservation to continue deliberations. No legislation has been introduced as of this issue. North Dakota currently uses substance use disorder vouchers and agreements with Prairie St. John's in Fargo as partial workarounds — mechanisms that tribal health leaders describe as insufficient given the scale of need.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">ND-2</sup></p>
+
+      <div class="intel-box">
+        <div class="intel-box-label">Von Halliday Analysis</div>
+        <p>The IMD waiver question does not have a clean answer, and the policy tension the ND Behavioral Health Planning Council is raising is legitimate: inpatient beds are expensive, hard to staff, and not always the most effective intervention for behavioral health conditions. But the tribal framing is also legitimate — when community-based alternatives are unavailable or culturally inaccessible, the absence of inpatient options is not a policy win for community care. It is simply a gap. CAH administrators near reservation communities — particularly in the Devils Lake, Rolla, and Standing Rock corridors — should follow this closely. The referral patterns and Medicaid flows for tribal behavioral health patients run through or around rural hospitals, and the resolution of the IMD question will affect both. For organizations already using RHTP funds to build behavioral health capacity, the SPA 25-0026 community paramedic pathway and this waiver debate are part of the same infrastructure question.</p>
+      </div>
+    </article>
+
+    <!-- ORNAMENT -->
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-symbol">◆</div><div class="ornament-line"></div></div>
+
+    <!-- WHAT TO WATCH -->
+    <div class="section-header" style="margin-top:0;">
+      <div class="section-tag">What to Watch</div>
+      <div class="section-rule"></div>
+    </div>
+
+    <ul class="watch-list">
+      <li>
+        <div class="watch-num">1</div>
+        <div class="watch-text">
+          <strong>RHTP Round 1 Deadline <span class="watch-badge">16 Days</span></strong>
+          April 30 at 5:00 p.m. CT. The first RHTP funding opportunity — focused on workforce retention for ND's 37 Critical Access Hospitals and their affiliated clinics — closes in two weeks. ND HHS allocated $44.4 million of Year One funding to workforce stability. Year One funds must be obligated by October 30, 2026 and fully spent by September 30, 2027. If your organization has not begun an application, confirm your W-9 and Secretary of State registration are current before you submit — both are required before ND HHS can execute a contract. Watch the <a href="https://www.hhs.nd.gov/rural-health-transformation/funding">RHTP funding page</a> for follow-on rounds covering telehealth, mobile clinics, and facility modernization — those announcements are coming.
+        </div>
+      </li>
+      <li>
+        <div class="watch-num">2</div>
+        <div class="watch-text">
+          <strong>CMS Interim Final Rule — Medicaid Work Requirements <span class="watch-badge">June 1</span></strong>
+          The June 1, 2026 interim final rule is the binding implementation framework for Medicaid community engagement requirements. Until it issues, ND HHS cannot finalize its compliance system, calculate implementation costs, or design its enrollee outreach campaign — which must launch no later than late summer 2026. Following the rule, states face a tight administrative sprint: outreach, verification system build, and enrollment system updates before January 1, 2027. CAH CFOs should be modeling payer-mix scenarios now, before the rule narrows the planning window further. ND HHS estimates 3,000–5,000 Medicaid expansion enrollees will be affected — but that number depends heavily on how CMS defines exemptions in the final rule.
+        </div>
+      </li>
+      <li>
+        <div class="watch-num">3</div>
+        <div class="watch-text">
+          <strong>CMS Electronic Prior Authorization for Drugs — Proposed Rule (CMS-0062-P) <span class="watch-badge upcoming">Comment Period Open</span></strong>
+          CMS released a proposed rule this week that would extend electronic prior authorization requirements to drugs — completing the framework established by the 2024 interoperability final rule, which covered items and services but excluded pharmaceuticals. If finalized, impacted payers — including Medicaid and CHIP managed care plans and ACA marketplace plans — would be required to support HL7 FHIR-based prior authorization APIs for drugs beginning October 1, 2027.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">EPA-1</sup> The rule also proposes tightening prior authorization decision timeframes: standard drug requests within 7 days, expedited within 72 hours for Medicaid managed care.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">EPA-2</sup> The comment period closes June 15, 2026.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">EPA-1</sup> For rural providers, this is a double-edged development. The administrative burden reduction is real — automated prior auth workflows mean fewer phone calls and less staff time spent on approvals, which matters acutely for small clinics running lean. But the FHIR technical compliance requirement is an IT infrastructure investment that many smaller rural providers are not positioned to fund independently. That gap is precisely what the RHTP technology pillar — $33.9 million of North Dakota's Year One allocation — is designed to address. CAH administrators and clinic operators should flag this rule for their IT leads and EHR vendors now, and assess whether RHTP technology grants could offset compliance costs before the 2027 deadline.
+        </div>
+      </li>
+    </ul>
+
+    <!-- ORNAMENT -->
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-symbol">◆</div><div class="ornament-line"></div></div>
+
+    <!-- COLLAPSIBLE SOURCES -->
+    <div style="margin: 0 0 40px; border-top: 1px solid #d8d0bc; padding-top: 20px;">
+      <button onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.querySelector('.src-arrow').textContent = this.nextElementSibling.style.display === 'none' ? '▸' : '▾';"
+        style="background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:10px; padding:0; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#a08060;">
+        <span class="src-arrow" style="font-size:9px; color:#c4a882;">▸</span>
+        Sources &amp; Citations — This Issue
+      </button>
+      <div style="display:none; margin-top:16px;">
+        <p style="font-family:'Space Mono',monospace; font-size:10px; line-height:2.2; color:#a08060;">
+          <strong style="color:#7a4e28;">EPS / VA Community Care</strong><br/>
+          <sup style="color:#8b2020;">1</sup> Department of Veterans Affairs, press release: "VA moves to speed up community care appointment scheduling," March 9, 2026. news.va.gov. Source for: EPS deployed at all VA facilities; 27,000 providers; 78 specialties; expansion plans for 2026.<br/>
+          <sup style="color:#8b2020;">2</sup> MeriTalk, "Lawmakers Want Faster Rollout of VA Scheduling Technology," May 6, 2025. meritalk.com; Newsweek, March 9, 2026. Source for: prior administration pause on EPS; second Trump administration acceleration; seven-minute average scheduling time; four-fold productivity increase.<br/>
+          <sup style="color:#8b2020;">3</sup> S. 654, 119th Congress, VA External Provider Scheduling Act. Introduced February 24, 2025 by Sen. Jerry Moran (R-KS). Ordered reported by Senate Veterans' Affairs Committee; placed on Senate Calendar December 2, 2025. congress.gov/bill/119th-congress/senate-bill/654.<br/>
+          <sup style="color:#8b2020;">4</sup> H.R. 3482, Veterans Community Care Scheduling Improvement Act, 119th Congress (Reported). CBO cost estimate, March 2026. cbo.gov.<br/>
+          <sup style="color:#8b2020;">5</sup> VA MISSION Act of 2018 (P.L. 115-182). Title I, Section 101. veterans.house.gov.<br/>
+          <sup style="color:#8b2020;">6</sup> Senator Elizabeth Dole 21st Century Veterans Healthcare and Benefits Improvement Act (P.L. 118-210), signed January 2, 2025. benefits.va.gov/benefits/dole-act.asp.<br/>
+          <sup style="color:#8b2020;">7</sup> Congressional Budget Office, cost estimate for S. 654, September 16, 2025. cbo.gov/publication/61744.<br/>
+          <sup style="color:#8b2020;">8</sup> VA Privacy Impact Assessment, WellHive Enterprise, FY2025. department.va.gov/privacy.<br/>
+          <sup style="color:#8b2020;">9</sup> US Medicine, "VA's Slow Rollout of Community Care Scheduling System Raises Questions from Legislators." usmedicine.com; WellHive press release, September 24, 2023. wellhive.com.<br/>
+          <sup style="color:#8b2020;">10</sup> WellHive, "Rural Health Providers," wellhive.com/rural-health.<br/>
+          <sup style="color:#8b2020;">11</sup> Nebraska DHHS, RHTP Project Narrative, 2025. dhhs.ne.gov; Nebraska Rural Health Association (NeRHA), Veteran Access Coordinator job posting, LinkedIn, April 2026; Office of Governor Jim Pillen, "Gov. Pillen Attends White House Rural Health Roundtable," January 17, 2026. governor.nebraska.gov.<br/>
+          <br/>
+          <strong style="color:#7a4e28;">EMS ROCS Act</strong><br/>
+          <sup style="color:#8b2020;">EMS-1</sup> EMS ROCS Act of 2026, One-Pager, Senator Welch's office. welch.senate.gov/wp-content/uploads/2026/01/EMS-ROCS-Act-of-2026-One-Pager.pdf. Source for: 22% non-transport call rate; 40% Medicare beneficiary share of EMS patients.<br/>
+          <sup style="color:#8b2020;">EMS-2</sup> Senator Peter Welch, press release, "Welch Reintroduces Bicameral 'EMS ROCS' Act to Support EMS Providers in Rural Communities," January 29, 2026. welch.senate.gov. S. 3730 / H.R. 7277, 119th Congress.<br/>
+          <sup style="color:#8b2020;">EMS-3</sup> American Ambulance Association, "EMS ROCS Act Reintroduced in House and Senate," February 2, 2026. ambulance.org. Source for: endorsing organizations; CARE Act (S. 3145) as companion vehicle.<br/>
+          <br/>
+          <strong style="color:#7a4e28;">State Policy — SPA 25-0026 &amp; IMD Waiver</strong><br/>
+          <sup style="color:#8b2020;">ND-1</sup> ND HHS, Medicaid State Plan Amendment 25-0026. ND HHS Medical Services Division. Source for: CHW and Community Paramedic preventive services classification; reimbursable service categories.<br/>
+          <sup style="color:#8b2020;">ND-2</sup> KVRR Local News, "North Dakota may expand Medicaid for mental health but some see other options," April 10, 2026. kvrr.com. Source for: IMD waiver bill in draft; MHA Nation access concerns; Heartview Foundation position; Good Road Recovery context; Turtle Mountain Reservation committee meeting anticipated.<br/>
+          <sup style="color:#8b2020;">ND-3</sup> ND HHS, "HHS announces first Rural Health Transformation Program funding opportunity," March 18, 2026. hhs.nd.gov. Source for: April 30 deadline; Year One workforce allocation of $44.4M; October 30, 2026 obligation deadline; September 30, 2027 expenditure deadline.<br/>
+          <br/>
+          <strong style="color:#7a4e28;">CMS Electronic Prior Authorization — Proposed Rule</strong><br/>
+          <sup style="color:#8b2020;">EPA-1</sup> CMS, "2026 CMS Interoperability Standards and Prior Authorization for Drugs Proposed Rule" (CMS-0062-P), fact sheet, April 2026. cms.gov/newsroom/fact-sheets/2026-cms-interoperability-standards-prior-authorization-drugs-proposed-rule. Source for: FHIR-based prior authorization API requirement for drugs; October 1, 2027 compliance date for impacted payers; June 15, 2026 comment period close; HIPAA covered entity scope.<br/>
+          <sup style="color:#8b2020;">EPA-2</sup> Becker's Payer Issues, "CMS proposes extension of prior authorization rule to cover drugs: 6 notes," April 2026. beckerspayer.com. Source for: Medicaid managed care 7-day standard / 72-hour expedited decision timeframes; annual payer reporting requirement for drug prior auth metrics.
+        </p>
+      </div>
+    </div>
+
+    <!-- CLOSING NOTE -->
+    <div class="from-desk" style="margin-bottom:0;">
+      <div class="from-desk-label">A Note on This Brief</div>
+      <p><em>The Halliday Brief</em> is published weekly by Von Halliday Consulting. It synthesizes federal and North Dakota state rural health policy developments for administrators, clinicians, tribal health leaders, foundation officers, and state-level decision-makers who need accurate, actionable intelligence — without wading through agency websites and legislative reports themselves.</p>
+      <p>If a colleague should be reading this, forward it. If you have a policy question, a funding opportunity your organization is navigating, or a challenge that deserves a closer look — reach out.</p>
+      <span class="sig" style="font-style:normal;">Von Halliday Consulting<small>North Dakota Rural Health Policy &amp; Strategy</small></span>
+      <a href="https://vonhalliday.com/contact/" style="display:inline-block;margin-top:24px;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;background:#1a3a1f;color:#e8c840;padding:14px 28px;text-decoration:none;border:2px solid #c9a227;">Book a Consultation →</a>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-col-label">Key Dates</div>
+        <p>
+          April 30 — RHTP Round 1 Workforce Grant Deadline<br/>
+          June 1 — CMS Interim Final Rule, Medicaid Work Requirements<br/>
+          June 3–4 — Dakota Conference on Rural Health, Grand Forks<br/>
+          Summer 2026 — ND HHS Medicaid Enrollee Outreach Window<br/>
+          Sept. 2026 — CMS RHTP Year 1 Performance Review<br/>
+          Oct. 30 — Federal RHTP Spend Obligation Deadline<br/>
+          Jan. 1, 2027 — Medicaid Work Requirements Take Effect
+        </p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-label">Key Resources</div>
+        <p>
+          <a href="https://www.hhs.nd.gov/rural-health-transformation">ND HHS RHTP Page →</a><br/>
+          <a href="https://www.hhs.nd.gov/rural-health-transformation/funding">RHTP Round 1 Application →</a><br/>
+          <a href="https://www.congress.gov/bill/119th-congress/senate-bill/654">S. 654 — VA External Provider Scheduling Act →</a><br/>
+          <a href="https://www.congress.gov/bill/119th-congress/senate-bill/3730">S. 3730 — EMS ROCS Act →</a><br/>
+          <a href="https://www.medicaid.gov/federal-policy-guidance/state-plan-amendments">ND Medicaid SPA 25-0026 →</a><br/>
+          <a href="https://ruralhealth.und.edu/dakota-conference">Dakota Conference on Rural Health →</a><br/>
+          <a href="https://vonhalliday.com/contact/">Subscribe to The Halliday Brief →</a>
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-brand">The <em>Halliday</em> Brief</div>
+      <div class="footer-fine">© 2026 Von Halliday Consulting · North Dakota</div>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
