@@ -439,6 +439,24 @@
     color: var(--soil);
   }
 
+  .manage-email {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--green);
+    background: none;
+    border: 1px solid var(--green);
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: 12px;
+    flex-shrink: 0;
+  }
+  .manage-email:hover {
+    background: var(--green);
+    color: var(--cream);
+  }
+
   .manage-scheduled-badge {
     font-family: 'Space Mono', monospace;
     font-size: 9px;
@@ -769,58 +787,7 @@
       <iframe class="email-preview-frame" id="email-preview-frame" frameborder="0" scrolling="no"></iframe>
     </div>
 
-    <button class="btn btn-primary publish-btn" id="publish-btn" onclick="openPublishModal()">Publish Newsletter</button>
-
-    <div class="modal-backdrop" id="publish-modal">
-      <div class="modal">
-        <div class="modal-title">Publish Newsletter</div>
-
-        <div class="modal-option" id="opt-now" onclick="selectPublishMode('now')">
-          <div class="modal-option-title">Publish Now</div>
-          <div class="modal-option-desc">Publish to the site and send email immediately</div>
-        </div>
-
-        <div class="modal-option" id="opt-schedule" onclick="selectPublishMode('schedule')">
-          <div class="modal-option-title">Schedule Later</div>
-          <div class="modal-option-desc">Publish to the site now, send email at a future date &amp; time</div>
-        </div>
-
-        <div class="schedule-fields" id="schedule-fields">
-          <div class="schedule-row">
-            <div class="schedule-field">
-              <div class="schedule-label">Date (UTC)</div>
-              <input type="date" class="schedule-input" id="schedule-date" />
-            </div>
-            <div class="schedule-field">
-              <div class="schedule-label">Time (UTC)</div>
-              <select class="schedule-input" id="schedule-time">
-                <option value="">Select time...</option>
-              </select>
-            </div>
-          </div>
-          <div class="schedule-error" id="schedule-error"></div>
-        </div>
-
-        <div class="modal-actions">
-          <button class="modal-btn modal-btn-cancel" onclick="closePublishModal()">Cancel</button>
-          <button class="modal-btn modal-btn-confirm" id="modal-confirm" disabled>Select an option</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-backdrop" id="send-confirm-modal">
-      <div class="modal">
-        <div class="modal-title">Are you sure?</div>
-        <div class="confirm-warning">
-          This will send the newsletter email to <strong>all subscribers</strong>.
-        </div>
-        <div class="confirm-warning" id="send-confirm-detail"></div>
-        <div class="modal-actions">
-          <button class="modal-btn modal-btn-cancel" onclick="closeSendConfirm()">Cancel</button>
-          <button class="modal-btn modal-btn-danger" id="send-confirm-yes">Send to All Subscribers</button>
-        </div>
-      </div>
-    </div>
+    <button class="btn btn-primary publish-btn" id="publish-btn" onclick="uploadToSite()">Upload to Site</button>
 
     <div class="manage-section" id="manage-section">
       <div class="manage-header">Published Newsletters</div>
@@ -832,6 +799,56 @@
           <div class="modal-actions">
             <button class="modal-btn modal-btn-cancel" onclick="cancelDelete()">Cancel</button>
             <button class="modal-btn modal-btn-danger" id="delete-confirm-yes">Delete</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-backdrop" id="email-modal">
+        <div class="modal">
+          <div class="modal-title">Send Newsletter Email</div>
+          <div id="email-modal-info" style="font-family:'Space Mono',monospace; font-size:11px; color:var(--muted); text-align:center; margin-bottom:20px;"></div>
+
+          <div class="modal-option" id="email-opt-now" onclick="selectEmailMode('now')">
+            <div class="modal-option-title">Send Now</div>
+            <div class="modal-option-desc">Send email to all subscribers immediately</div>
+          </div>
+
+          <div class="modal-option" id="email-opt-schedule" onclick="selectEmailMode('schedule')">
+            <div class="modal-option-title">Schedule</div>
+            <div class="modal-option-desc">Send email at a future date &amp; time</div>
+          </div>
+
+          <div class="schedule-fields" id="email-schedule-fields">
+            <div class="schedule-row">
+              <div class="schedule-field">
+                <div class="schedule-label">Date (UTC)</div>
+                <input type="date" class="schedule-input" id="email-schedule-date" />
+              </div>
+              <div class="schedule-field">
+                <div class="schedule-label">Time (UTC)</div>
+                <select class="schedule-input" id="email-schedule-time">
+                  <option value="">Select time...</option>
+                </select>
+              </div>
+            </div>
+            <div class="schedule-error" id="email-schedule-error"></div>
+          </div>
+
+          <div class="modal-actions">
+            <button class="modal-btn modal-btn-cancel" onclick="cancelEmailModal()">Cancel</button>
+            <button class="modal-btn modal-btn-confirm" id="email-modal-confirm" disabled>Select an option</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-backdrop" id="email-send-confirm-modal">
+        <div class="modal">
+          <div class="modal-title">Are you sure?</div>
+          <div class="confirm-warning">
+            This will send the newsletter email to <strong>all subscribers</strong>.
+          </div>
+          <div class="confirm-warning" id="email-send-confirm-detail"></div>
+          <div class="modal-actions">
+            <button class="modal-btn modal-btn-cancel" onclick="closeEmailSendConfirm()">Cancel</button>
+            <button class="modal-btn modal-btn-danger" id="email-send-confirm-yes">Send to All Subscribers</button>
           </div>
         </div>
       </div>
@@ -1072,142 +1089,82 @@
     if (fileInput.files.length > 0) handleFile(fileInput.files[0]);
   });
 
-  // ── Publish modal ──
-  var publishMode = null;
-
-  function populateTimeOptions() {
-    var select = document.getElementById('schedule-time');
-    for (var h = 0; h < 24; h++) {
-      for (var m = 0; m < 60; m += 15) {
-        var hh = String(h).padStart(2, '0');
-        var mm = String(m).padStart(2, '0');
-        var opt = document.createElement('option');
-        opt.value = hh + ':' + mm;
-        opt.textContent = hh + ':' + mm + ' UTC';
-        select.appendChild(opt);
-      }
-    }
-  }
-  populateTimeOptions();
-
-  function openPublishModal() {
+  // ── Upload to site (GitHub only, no email) ──
+  async function uploadToSite() {
     if (!pendingFile || !getPat()) return;
-    publishMode = null;
-    document.getElementById('opt-now').classList.remove('selected');
-    document.getElementById('opt-schedule').classList.remove('selected');
-    document.getElementById('schedule-fields').classList.remove('visible');
-    document.getElementById('schedule-error').classList.remove('visible');
-    var today = new Date().toISOString().split('T')[0];
-    document.getElementById('schedule-date').value = '';
-    document.getElementById('schedule-date').min = today;
-    document.getElementById('schedule-date').classList.remove('input-error');
-    document.getElementById('schedule-time').value = '';
-    document.getElementById('schedule-time').classList.remove('input-error');
-    var confirmBtn = document.getElementById('modal-confirm');
-    confirmBtn.disabled = true;
-    confirmBtn.textContent = 'Select an option';
-    confirmBtn.onclick = null;
-    document.getElementById('publish-modal').classList.add('visible');
-  }
 
-  function closePublishModal() {
-    document.getElementById('publish-modal').classList.remove('visible');
-  }
+    var btn = document.getElementById('publish-btn');
+    btn.disabled = true;
+    btn.textContent = 'Uploading...';
+    showStatus('Uploading to GitHub...', 'uploading');
 
-  function selectPublishMode(mode) {
-    publishMode = mode;
-    var confirmBtn = document.getElementById('modal-confirm');
-    document.getElementById('opt-now').classList.toggle('selected', mode === 'now');
-    document.getElementById('opt-schedule').classList.toggle('selected', mode === 'schedule');
-    document.getElementById('schedule-fields').classList.toggle('visible', mode === 'schedule');
-    document.getElementById('schedule-error').classList.remove('visible');
+    try {
+      var path = 'newsletters/' + pendingFile.name;
+      var content = btoa(unescape(encodeURIComponent(pendingFile.content)));
 
-    if (mode === 'now') {
-      confirmBtn.disabled = false;
-      confirmBtn.textContent = 'Publish Now';
-      confirmBtn.onclick = function() { showSendConfirm('now'); };
-    } else {
-      confirmBtn.textContent = 'Schedule';
-      confirmBtn.disabled = false;
-      confirmBtn.onclick = function() { showSendConfirm('schedule'); };
+      var existingRes = await fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
+        headers: { 'Authorization': 'Bearer ' + getPat() }
+      });
+
+      var sha = null;
+      var isUpdate = false;
+      if (existingRes.ok) {
+        var existingData = await existingRes.json();
+        sha = existingData.sha;
+        isUpdate = true;
+      }
+
+      var msg = (isUpdate ? 'Update ' : 'Publish ') + pendingFile.name;
+      var body = { message: msg, content: content };
+      if (sha) body.sha = sha;
+
+      var commitRes = await fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer ' + getPat(),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+
+      if (!commitRes.ok) {
+        var errData = await commitRes.json();
+        throw new Error(errData.message || 'Upload failed');
+      }
+
+      showStatus(isUpdate ? 'Site updated!' : 'Uploaded! The page will be live in about 2 minutes.', 'success');
+
+      // Optimistically add to Published list so the "Email" button is available immediately,
+      // without waiting ~2 minutes for CI to rebuild newsletters.json.
+      // On next page load, loadNewsletters() will replace this with the real CI-built data.
+      if (!isUpdate) {
+        var meta = parseNewsletter(pendingFile.content);
+        if (meta) {
+          allNewsletters.unshift({
+            file: pendingFile.name,
+            title: meta.vol,
+            date: meta.date,
+            headline: meta.headline
+          });
+        }
+      }
+      renderPage();
+
+      pendingFile = null;
+      setTimeout(function() {
+        document.getElementById('preview').classList.remove('visible');
+        btn.classList.remove('visible');
+        btn.disabled = false;
+        btn.textContent = 'Upload to Site';
+        document.getElementById('preview-email-btn').classList.remove('visible');
+        document.getElementById('email-preview-section').classList.remove('visible');
+        fileInput.value = '';
+      }, 3000);
+    } catch (err) {
+      showStatus('Error: ' + err.message, 'error');
+      btn.disabled = false;
+      btn.textContent = 'Upload to Site';
     }
-  }
-
-  function showSendConfirm(mode) {
-    if (mode === 'schedule') {
-      var publishDate = validateSchedule();
-      if (!publishDate) return;
-    }
-
-    var detail = document.getElementById('send-confirm-detail');
-    var yesBtn = document.getElementById('send-confirm-yes');
-
-    if (mode === 'now') {
-      detail.textContent = 'The email will be sent immediately.';
-      yesBtn.textContent = 'Send Now';
-    } else {
-      var d = new Date(publishDate);
-      detail.textContent = 'The email will be sent on ' + d.toUTCString() + '.';
-      yesBtn.textContent = 'Schedule Send';
-    }
-
-    closePublishModal();
-    document.getElementById('send-confirm-modal').classList.add('visible');
-
-    yesBtn.onclick = function() {
-      document.getElementById('send-confirm-modal').classList.remove('visible');
-      executePublish(mode);
-    };
-  }
-
-  function closeSendConfirm() {
-    document.getElementById('send-confirm-modal').classList.remove('visible');
-  }
-
-  function validateSchedule() {
-    var dateVal = document.getElementById('schedule-date').value;
-    var timeVal = document.getElementById('schedule-time').value;
-    var errorEl = document.getElementById('schedule-error');
-    var dateInput = document.getElementById('schedule-date');
-    var timeInput = document.getElementById('schedule-time');
-
-    dateInput.classList.remove('input-error');
-    timeInput.classList.remove('input-error');
-    errorEl.classList.remove('visible');
-
-    if (!dateVal) {
-      dateInput.classList.add('input-error');
-      errorEl.textContent = 'Date is required';
-      errorEl.classList.add('visible');
-      return null;
-    }
-    if (!timeVal) {
-      timeInput.classList.add('input-error');
-      errorEl.textContent = 'Time is required';
-      errorEl.classList.add('visible');
-      return null;
-    }
-
-    var scheduledDate = new Date(dateVal + 'T' + timeVal + ':00Z');
-    if (isNaN(scheduledDate.getTime())) {
-      errorEl.textContent = 'Invalid date or time';
-      errorEl.classList.add('visible');
-      return null;
-    }
-
-    if (scheduledDate <= new Date()) {
-      dateInput.classList.add('input-error');
-      timeInput.classList.add('input-error');
-      errorEl.textContent = 'Scheduled time must be in the future';
-      errorEl.classList.add('visible');
-      return null;
-    }
-
-    return scheduledDate.toISOString();
-  }
-
-  function getButtondownKey() {
-    return localStorage.getItem('hb_bd_key') || '';
   }
 
   function buildEmailHtml(rawContent) {
@@ -1216,12 +1173,19 @@
       html = html.split(v).join(CSS_VARS[v]);
     }
 
-    return new Promise(function(resolve) {
+    return new Promise(function(resolve, reject) {
       var hiddenFrame = document.createElement('iframe');
       hiddenFrame.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:820px;height:1px;';
       document.body.appendChild(hiddenFrame);
 
+      var timeout = setTimeout(function() {
+        document.body.removeChild(hiddenFrame);
+        reject(new Error('Email rendering timed out. Please try again.'));
+      }, 30000);
+
       hiddenFrame.onload = function() {
+        clearTimeout(timeout);
+        if (!hiddenFrame.parentNode) return; // already removed by timeout
         var doc = hiddenFrame.contentDocument;
 
         var allEls = doc.querySelectorAll('*');
@@ -1371,130 +1335,257 @@
     });
   }
 
-  function getEmailSubject() {
-    if (!pendingFile) return 'The Halliday Brief';
-    var titleMatch = pendingFile.content.match(/<title>(.*?)<\/title>/i);
+  // ── Email flow (separate from upload) ──
+  var emailPendingContent = null;
+  var emailPendingFilename = null;
+
+  function getButtondownKey() {
+    return localStorage.getItem('hb_bd_key') || '';
+  }
+
+  function getSubjectFromContent(content) {
+    var titleMatch = content.match(/<title>(.*?)<\/title>/i);
     if (!titleMatch) return 'The Halliday Brief';
     var parts = titleMatch[1].trim().split('|').map(function(p) { return p.trim(); });
     if (parts.length >= 3) return parts[0] + ' \u2014 ' + parts[2];
     return 'The Halliday Brief';
   }
 
-  async function executePublish(mode) {
-    if (!pendingFile || !getPat()) return;
-
-    if (mode === 'schedule') {
-      var publishDate = validateSchedule();
-      if (!publishDate) return;
-
-      var bdKey = getButtondownKey();
-      if (!bdKey) {
-        var errorEl = document.getElementById('schedule-error');
-        errorEl.textContent = 'Buttondown API key not found. Visit the Subscribers page first to save your key.';
-        errorEl.classList.add('visible');
-        return;
-      }
+  async function openEmailModal(filename) {
+    var bdKey = getButtondownKey();
+    if (!bdKey) {
+      showStatus('Buttondown API key not found. Visit the Subscribers page first to save your key.', 'error');
+      return;
     }
 
-    var confirmBtn = document.getElementById('modal-confirm');
-    confirmBtn.disabled = true;
-    confirmBtn.textContent = mode === 'now' ? 'Publishing...' : 'Scheduling...';
-
-    closePublishModal();
-
-    var btn = document.getElementById('publish-btn');
-    btn.disabled = true;
-    btn.textContent = mode === 'now' ? 'Publishing...' : 'Scheduling...';
-    showStatus('Uploading to GitHub...', 'uploading');
+    showStatus('Loading newsletter...', 'uploading');
 
     try {
-      var path = 'newsletters/' + pendingFile.name;
-      var content = btoa(unescape(encodeURIComponent(pendingFile.content)));
-
-      var existingRes = await fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
+      var path = 'newsletters/' + filename;
+      var res = await fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
         headers: { 'Authorization': 'Bearer ' + getPat() }
       });
 
-      var sha = null;
-      if (existingRes.ok) {
-        var existingData = await existingRes.json();
-        sha = existingData.sha;
-      }
+      if (!res.ok) throw new Error('Could not fetch newsletter from GitHub');
+      var data = await res.json();
+      var content = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
 
-      await commitFile(path, content, sha);
+      emailPendingContent = content;
+      emailPendingFilename = filename;
 
-      if (mode === 'schedule') {
-        showStatus('Uploaded to GitHub. Scheduling email...', 'uploading');
+      hideStatus();
 
-        var emailHtml = await buildEmailHtml(pendingFile.content);
-        var subject = getEmailSubject();
-        var payload = {
-          subject: subject,
-          body: emailHtml,
-          status: 'scheduled',
-          publish_date: publishDate,
-          template: ''
-        };
+      // Set info text
+      var subject = getSubjectFromContent(content);
+      document.getElementById('email-modal-info').textContent = subject;
 
-        var bdRes = await fetch('https://api.buttondown.com/v1/emails', {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Token ' + bdKey,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        });
+      // Reset modal state
+      document.getElementById('email-opt-now').classList.remove('selected');
+      document.getElementById('email-opt-schedule').classList.remove('selected');
+      document.getElementById('email-schedule-fields').classList.remove('visible');
+      document.getElementById('email-schedule-error').classList.remove('visible');
+      var today = new Date().toISOString().split('T')[0];
+      document.getElementById('email-schedule-date').value = '';
+      document.getElementById('email-schedule-date').min = today;
+      document.getElementById('email-schedule-date').classList.remove('input-error');
+      document.getElementById('email-schedule-time').value = '';
+      document.getElementById('email-schedule-time').classList.remove('input-error');
+      var confirmBtn = document.getElementById('email-modal-confirm');
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = 'Select an option';
+      confirmBtn.onclick = null;
 
-        if (!bdRes.ok) {
-          var bdErr = await bdRes.json();
-          throw new Error('Buttondown: ' + (bdErr.detail || bdErr.message || JSON.stringify(bdErr)));
-        }
-
-        var schedDate = new Date(publishDate);
-        var formatted = schedDate.toUTCString();
-        showStatus('Published to site. Email scheduled for ' + formatted + '.', 'success');
-      } else {
-        showStatus('Published! The newsletter will be live in about 2 minutes.', 'success');
-      }
-
-      btn.textContent = mode === 'now' ? 'Published' : 'Scheduled';
-      pendingFile = null;
-      loadNewsletters();
-      setTimeout(function() {
-        document.getElementById('preview').classList.remove('visible');
-        btn.classList.remove('visible');
-        btn.disabled = false;
-        btn.textContent = 'Publish Newsletter';
-        document.getElementById('preview-email-btn').classList.remove('visible');
-        document.getElementById('email-preview-section').classList.remove('visible');
-        fileInput.value = '';
-      }, 5000);
+      document.getElementById('email-modal').classList.add('visible');
     } catch (err) {
       showStatus('Error: ' + err.message, 'error');
-      btn.disabled = false;
-      btn.textContent = 'Publish Newsletter';
     }
   }
 
-  function commitFile(path, content, sha) {
-    var body = { message: 'Publish ' + pendingFile.name, content: content };
-    if (sha) body.sha = sha;
-
-    return fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
-      method: 'PUT',
-      headers: {
-        'Authorization': 'Bearer ' + getPat(),
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    }).then(function(res) {
-      if (!res.ok) {
-        return res.json().then(function(data) {
-          throw new Error(data.message || 'Upload failed');
-        });
-      }
-    });
+  function closeEmailModal() {
+    document.getElementById('email-modal').classList.remove('visible');
   }
+
+  function cancelEmailModal() {
+    closeEmailModal();
+    emailPendingContent = null;
+    emailPendingFilename = null;
+  }
+
+  function selectEmailMode(mode) {
+    var confirmBtn = document.getElementById('email-modal-confirm');
+    document.getElementById('email-opt-now').classList.toggle('selected', mode === 'now');
+    document.getElementById('email-opt-schedule').classList.toggle('selected', mode === 'schedule');
+    document.getElementById('email-schedule-fields').classList.toggle('visible', mode === 'schedule');
+    document.getElementById('email-schedule-error').classList.remove('visible');
+
+    if (mode === 'now') {
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = 'Send Now';
+      confirmBtn.onclick = function() { showEmailSendConfirm('now'); };
+    } else {
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = 'Schedule';
+      confirmBtn.onclick = function() { showEmailSendConfirm('schedule'); };
+    }
+  }
+
+  function validateEmailSchedule() {
+    var dateVal = document.getElementById('email-schedule-date').value;
+    var timeVal = document.getElementById('email-schedule-time').value;
+    var errorEl = document.getElementById('email-schedule-error');
+    var dateInput = document.getElementById('email-schedule-date');
+    var timeInput = document.getElementById('email-schedule-time');
+
+    dateInput.classList.remove('input-error');
+    timeInput.classList.remove('input-error');
+    errorEl.classList.remove('visible');
+
+    if (!dateVal) {
+      dateInput.classList.add('input-error');
+      errorEl.textContent = 'Date is required';
+      errorEl.classList.add('visible');
+      return null;
+    }
+    if (!timeVal) {
+      timeInput.classList.add('input-error');
+      errorEl.textContent = 'Time is required';
+      errorEl.classList.add('visible');
+      return null;
+    }
+
+    var scheduledDate = new Date(dateVal + 'T' + timeVal + ':00Z');
+    if (isNaN(scheduledDate.getTime())) {
+      errorEl.textContent = 'Invalid date or time';
+      errorEl.classList.add('visible');
+      return null;
+    }
+
+    if (scheduledDate <= new Date()) {
+      dateInput.classList.add('input-error');
+      timeInput.classList.add('input-error');
+      errorEl.textContent = 'Scheduled time must be in the future';
+      errorEl.classList.add('visible');
+      return null;
+    }
+
+    return scheduledDate.toISOString();
+  }
+
+  function showEmailSendConfirm(mode) {
+    if (mode === 'schedule') {
+      var publishDate = validateEmailSchedule();
+      if (!publishDate) return;
+    }
+
+    var detail = document.getElementById('email-send-confirm-detail');
+    var yesBtn = document.getElementById('email-send-confirm-yes');
+
+    if (mode === 'now') {
+      detail.textContent = 'The email will be sent immediately.';
+      yesBtn.textContent = 'Send Now';
+    } else {
+      var d = new Date(publishDate);
+      detail.textContent = 'The email will be sent on ' + d.toUTCString() + '.';
+      yesBtn.textContent = 'Schedule Send';
+    }
+
+    closeEmailModal();
+    document.getElementById('email-send-confirm-modal').classList.add('visible');
+
+    yesBtn.onclick = function() {
+      document.getElementById('email-send-confirm-modal').classList.remove('visible');
+      executeSendEmail(mode, publishDate);
+    };
+  }
+
+  function closeEmailSendConfirm() {
+    document.getElementById('email-send-confirm-modal').classList.remove('visible');
+    emailPendingContent = null;
+    emailPendingFilename = null;
+  }
+
+  async function executeSendEmail(mode, publishDate) {
+    if (!emailPendingContent || !emailPendingFilename) return;
+
+    var bdKey = getButtondownKey();
+    if (!bdKey) {
+      showStatus('Buttondown API key not found.', 'error');
+      return;
+    }
+
+    showStatus('Preparing email...', 'uploading');
+
+    try {
+      var emailHtml = await buildEmailHtml(emailPendingContent);
+      var subject = getSubjectFromContent(emailPendingContent);
+
+      showStatus(mode === 'now' ? 'Sending email...' : 'Scheduling email...', 'uploading');
+
+      var payload = {
+        subject: subject,
+        body: emailHtml,
+        status: mode === 'now' ? 'about_to_send' : 'scheduled',
+        template: ''
+      };
+      if (mode === 'schedule') {
+        payload.publish_date = publishDate;
+      }
+
+      var bdRes = await fetch('https://api.buttondown.com/v1/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Token ' + bdKey,
+          'Content-Type': 'application/json',
+          'X-Buttondown-Live-Dangerously': 'true'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!bdRes.ok) {
+        var bdErr = await bdRes.json();
+        throw new Error('Buttondown: ' + (bdErr.detail || bdErr.message || JSON.stringify(bdErr)));
+      }
+
+      // Update local state directly instead of calling loadNewsletters(),
+      // which would fetch the stale newsletters.json and overwrite any
+      // optimistic entries added by uploadToSite().
+      if (mode === 'schedule') {
+        var bdData = await bdRes.json();
+        scheduledEmails[emailPendingFilename] = {
+          id: bdData.id,
+          publish_date: bdData.publish_date
+        };
+      }
+
+      if (mode === 'now') {
+        showStatus('Email sent to all subscribers.', 'success');
+      } else {
+        var schedDate = new Date(publishDate);
+        showStatus('Email scheduled for ' + schedDate.toUTCString() + '.', 'success');
+      }
+
+      emailPendingContent = null;
+      emailPendingFilename = null;
+      renderPage();
+    } catch (err) {
+      showStatus('Error: ' + err.message, 'error');
+    }
+  }
+
+  // Populate email schedule time dropdown
+  (function() {
+    var select = document.getElementById('email-schedule-time');
+    for (var h = 0; h < 24; h++) {
+      for (var m = 0; m < 60; m += 15) {
+        var hh = String(h).padStart(2, '0');
+        var mm = String(m).padStart(2, '0');
+        var opt = document.createElement('option');
+        opt.value = hh + ':' + mm;
+        opt.textContent = hh + ':' + mm + ' UTC';
+        select.appendChild(opt);
+      }
+    }
+  })();
 
   // ── Manage newsletters ──
   var deleteTarget = null;
@@ -1579,11 +1670,13 @@
 
       var sched = scheduledEmails[entry.file];
       var badgeHtml = '';
-      var unschedHtml = '';
+      var actionHtml = '';
       if (sched) {
         var schedDate = new Date(sched.publish_date);
         badgeHtml = '<div class="manage-scheduled-badge">Scheduled: ' + schedDate.toUTCString() + '</div>';
-        unschedHtml = '<button class="manage-unschedule" data-email-id="' + sched.id + '" data-file="' + entry.file + '">Unschedule</button>';
+        actionHtml = '<button class="manage-unschedule" data-email-id="' + sched.id + '" data-file="' + entry.file + '">Unschedule</button>';
+      } else {
+        actionHtml = '<button class="manage-email" data-file="' + entry.file + '">Email</button>';
       }
 
       li.innerHTML =
@@ -1593,7 +1686,7 @@
           badgeHtml +
         '</div>' +
         '<div class="manage-item-actions">' +
-          unschedHtml +
+          actionHtml +
           '<button class="manage-delete" data-file="' + entry.file + '">Delete</button>' +
         '</div>';
       list.appendChild(li);
@@ -1608,6 +1701,12 @@
     list.querySelectorAll('.manage-unschedule').forEach(function(btn) {
       btn.addEventListener('click', function() {
         unscheduleEmail(btn.getAttribute('data-email-id'), btn.getAttribute('data-file'));
+      });
+    });
+
+    list.querySelectorAll('.manage-email').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        openEmailModal(btn.getAttribute('data-file'));
       });
     });
 
@@ -1664,7 +1763,13 @@
   function promptDelete(filename) {
     deleteTarget = filename;
     var text = document.getElementById('delete-confirm-text');
-    text.textContent = 'Are you sure you want to delete ' + filename + '?';
+    var sched = scheduledEmails[filename];
+    if (sched) {
+      var schedDate = new Date(sched.publish_date);
+      text.innerHTML = 'Are you sure you want to delete <strong>' + filename + '</strong>? This newsletter has an email scheduled for <strong>' + schedDate.toUTCString() + '</strong>. The scheduled email will be cancelled.';
+    } else {
+      text.textContent = 'Are you sure you want to delete ' + filename + '?';
+    }
     document.getElementById('delete-confirm-modal').classList.add('visible');
 
     document.getElementById('delete-confirm-yes').onclick = function() {
@@ -1680,14 +1785,46 @@
   async function executeDelete(filename) {
     document.getElementById('delete-confirm-modal').classList.remove('visible');
 
-    // Optimistically remove from UI immediately
+    // Cancel scheduled email if one exists
+    var sched = scheduledEmails[filename];
+    var emailCancelled = false;
+    if (sched) {
+      var bdKey = getButtondownKey();
+      if (bdKey) {
+        try {
+          var cancelRes = await fetch('https://api.buttondown.com/v1/emails/' + sched.id, {
+            method: 'PATCH',
+            headers: {
+              'Authorization': 'Token ' + bdKey,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status: 'draft' })
+          });
+          if (cancelRes.ok) {
+            delete scheduledEmails[filename];
+            emailCancelled = true;
+          }
+        } catch (e) {
+          // Network error — don't block delete
+        }
+      }
+    }
+
+    // Optimistically remove from UI
     addPendingDelete(filename);
     allNewsletters = allNewsletters.filter(function(n) { return n.file !== filename; });
     deleteTarget = null;
     renderPage();
-    showStatus('Deleted ' + filename + '. Site will update in about 2 minutes.', 'success');
 
-    // Delete from GitHub in the background
+    if (sched && !emailCancelled) {
+      showStatus('Deleted ' + filename + '. Warning: could not cancel the scheduled email. Check Buttondown dashboard.', 'error');
+    } else if (emailCancelled) {
+      showStatus('Deleted ' + filename + '. Scheduled email was cancelled.', 'success');
+    } else {
+      showStatus('Deleted ' + filename + '. Site will update in about 2 minutes.', 'success');
+    }
+
+    // Delete from GitHub
     try {
       var path = 'newsletters/' + filename;
       var res = await fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
@@ -1707,17 +1844,14 @@
           message: 'Delete ' + filename,
           sha: data.sha
         })
-      })
+      });
 
       if (!delRes.ok) {
         var errData = await delRes.json();
         throw new Error(errData.message || 'Delete failed');
       }
     } catch (err) {
-      text.textContent = 'Error: ' + err.message;
-      setTimeout(function() {
-        confirm.classList.remove('visible');
-      }, 3000);
+      showStatus('Error deleting: ' + err.message, 'error');
     }
   }
 
