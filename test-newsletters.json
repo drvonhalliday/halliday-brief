@@ -10,5 +10,11 @@
     "title": "Vol. 1, No. 3",
     "date": "April 6, 2026",
     "headline": ""
+  },
+  {
+    "file": "2099-01-01.html",
+    "title": "TEST-CANARY",
+    "date": "January 1, 2099",
+    "headline": "Fix 3 Canary Test — do not publish to subscribers"
   }
 ]
