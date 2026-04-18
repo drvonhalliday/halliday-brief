@@ -457,6 +457,30 @@
     color: var(--cream);
   }
 
+  /* Fix 4: disabled state during in-flight send. Deliberately no :hover rule. */
+  .manage-email-busy {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    background: none;
+    border: 1px solid #bfad90;
+    padding: 4px 12px;
+    cursor: default;
+    opacity: 0.55;
+    margin-left: 12px;
+    flex-shrink: 0;
+  }
+
+  .manage-sent-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-top: 2px;
+  }
+
   .manage-scheduled-badge {
     font-family: 'Space Mono', monospace;
     font-size: 9px;
@@ -867,6 +891,39 @@
 
 <script>
   // ════════════════════════════════════════
+  // CHECK SCHEDULED HELPER (console utility)
+  // ════════════════════════════════════════
+  window.checkTimeSlots = function () {
+    var sel = document.getElementById('email-schedule-time');
+    var opts = Array.from(sel.options);
+    var visible = opts.filter(function (o) { return !o.hidden && o.value; }).map(function (o) { return o.value; });
+    var hidden = opts.filter(function (o) { return o.hidden && o.value; }).map(function (o) { return o.value; });
+    console.log('first 5 visible:', visible.slice(0, 5));
+    console.log('hidden count:', hidden.length);
+    console.log('first 5 hidden:', hidden.slice(0, 5));
+    return { visible: visible, hidden: hidden };
+  };
+
+  window.checkScheduled = function () {
+    var key = localStorage.getItem('hb_bd_key');
+    if (!key) { console.error('No BD key'); return; }
+    return fetch('https://api.buttondown.com/v1/emails?status=scheduled', {
+      headers: { 'Authorization': 'Token ' + key }
+    }).then(function (r) { return r.json(); }).then(function (d) {
+      var rows = (d.results || []).map(function (e) {
+        return {
+          id: e.id,
+          subject: e.subject,
+          publish_date: e.publish_date,
+          has_metadata: !!(e.metadata && e.metadata.hb_filename)
+        };
+      });
+      console.table(rows);
+      return rows;
+    });
+  };
+
+  // ════════════════════════════════════════
   // CONFIGURATION
   // ════════════════════════════════════════
   var REPO_OWNER = 'drvonhalliday';
@@ -1100,7 +1157,10 @@
 
     try {
       var path = 'newsletters/' + pendingFile.name;
-      var content = btoa(unescape(encodeURIComponent(pendingFile.content)));
+      // Fix 3: sanitize the stored HTML so direct views at /newsletters/<file>.html
+      // cannot execute <script>. onclick preserved for Sources & Citations toggle.
+      var sanitized = sanitizeNewsletterHtml(pendingFile.content, { keepOnAttrs: ['onclick'] });
+      var content = btoa(unescape(encodeURIComponent(sanitized)));
 
       var existingRes = await fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
         headers: { 'Authorization': 'Bearer ' + getPat() }
@@ -1167,14 +1227,65 @@
     }
   }
 
+  // ════════════════════════════════════════
+  // Fix 3: HTML sanitization (DOMParser strip + CSP meta)
+  // ════════════════════════════════════════
+  function sanitizeNewsletterHtml(html, opts) {
+    opts = opts || {};
+    // keepOnAttrs: array of attribute names to preserve. Everything else matching /^on/i is stripped.
+    // Default [] strips everything. ['onclick'] preserves only the Sources-toggle pattern.
+    var keepOnAttrs = (opts.keepOnAttrs || []).map(function(s) { return s.toLowerCase(); });
+    var doc = new DOMParser().parseFromString(html, 'text/html');
+
+    // Remove dangerous elements
+    var dangerous = doc.querySelectorAll(
+      'script, iframe, object, embed, frame, frameset, ' +
+      'meta[http-equiv="refresh" i], base, link[rel="import" i]'
+    );
+    for (var i = 0; i < dangerous.length; i++) { dangerous[i].remove(); }
+
+    // Remove on* event handlers (except allowlisted) and javascript: URLs
+    var all = doc.querySelectorAll('*');
+    var urlAttrs = /^(href|src|action|formaction|xlink:href)$/i;
+    var onAttr = /^on/i;
+    var jsUrl = /^\s*javascript:/i;
+    for (var j = 0; j < all.length; j++) {
+      var el = all[j];
+      var attrs = el.attributes;
+      for (var k = attrs.length - 1; k >= 0; k--) {
+        var name = attrs[k].name;
+        var value = attrs[k].value;
+        if (onAttr.test(name) && keepOnAttrs.indexOf(name.toLowerCase()) === -1) {
+          el.removeAttribute(name);
+        } else if (urlAttrs.test(name) && jsUrl.test(value)) {
+          el.removeAttribute(name);
+        }
+      }
+    }
+
+    // Inject CSP meta as first child of <head>
+    var head = doc.head || doc.documentElement;
+    var existingCsp = head.querySelector('meta[http-equiv="Content-Security-Policy" i]');
+    if (!existingCsp) {
+      var cspMeta = doc.createElement('meta');
+      cspMeta.setAttribute('http-equiv', 'Content-Security-Policy');
+      cspMeta.setAttribute('content', "script-src-elem 'none'; object-src 'none'; base-uri 'none';");
+      if (head.firstChild) { head.insertBefore(cspMeta, head.firstChild); }
+      else { head.appendChild(cspMeta); }
+    }
+
+    return '<!DOCTYPE html>' + doc.documentElement.outerHTML;
+  }
+
   function buildEmailHtml(rawContent) {
-    var html = rawContent;
+    var html = sanitizeNewsletterHtml(rawContent);  // email path: strip all on*
     for (var v in CSS_VARS) {
       html = html.split(v).join(CSS_VARS[v]);
     }
 
     return new Promise(function(resolve, reject) {
       var hiddenFrame = document.createElement('iframe');
+      hiddenFrame.sandbox = 'allow-same-origin';
       hiddenFrame.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:820px;height:1px;';
       document.body.appendChild(hiddenFrame);
 
@@ -1358,6 +1469,30 @@
       return;
     }
 
+    // Fix 4: don't open the modal for a file whose send is already in flight
+    if (sendsInFlight[filename]) {
+      showStatus('Already sending ' + filename + '. Wait for it to finish.', 'error');
+      return;
+    }
+
+    // Fix 5: refresh scheduled state from Buttondown so the modal decision
+    // uses current truth (another tab may have scheduled or cancelled since
+    // this tab last refreshed). Fail-closed — annoying the user with "try
+    // again" is much cheaper than a duplicate send from fallback-to-stale.
+    showStatus('Checking scheduled state…', 'uploading');
+    try {
+      await refreshScheduledEmails();
+    } catch (err) {
+      showStatus('Could not verify scheduled state: ' + err.message + '. Refresh the page and try again.', 'error');
+      return;
+    }
+    if (scheduledEmails[filename]) {
+      var when = new Date(scheduledEmails[filename].publish_date).toUTCString();
+      showStatus('Already scheduled for ' + when + '. Use Unschedule to change.', 'error');
+      renderPage();  // flip the row to Unschedule if it wasn't already
+      return;
+    }
+
     showStatus('Loading newsletter...', 'uploading');
 
     try {
@@ -1389,6 +1524,7 @@
       document.getElementById('email-schedule-date').min = today;
       document.getElementById('email-schedule-date').classList.remove('input-error');
       document.getElementById('email-schedule-time').value = '';
+      filterTimeDropdown();  // Fix 2: hide past/near slots based on current time
       document.getElementById('email-schedule-time').classList.remove('input-error');
       var confirmBtn = document.getElementById('email-modal-confirm');
       confirmBtn.disabled = true;
@@ -1460,10 +1596,15 @@
       return null;
     }
 
-    if (scheduledDate <= new Date()) {
+    // Fix 2: require at least 5 minutes in the future (buildEmailHtml can take up
+    // to 30s + POST + read time on the confirm modal; a 5-min buffer closes the
+    // race where the scheduled time drifts into the past before Buttondown receives it).
+    var MIN_SCHEDULE_BUFFER_MS = 5 * 60 * 1000;
+    var earliest = new Date(Date.now() + MIN_SCHEDULE_BUFFER_MS);
+    if (scheduledDate <= earliest) {
       dateInput.classList.add('input-error');
       timeInput.classList.add('input-error');
-      errorEl.textContent = 'Scheduled time must be in the future';
+      errorEl.textContent = 'Scheduled time must be at least 5 minutes in the future';
       errorEl.classList.add('visible');
       return null;
     }
@@ -1513,11 +1654,40 @@
       return;
     }
 
+    // Fix 4: capture filename before async work (emailPendingFilename is nulled later)
+    var filename = emailPendingFilename;
+
+    // Fix 4: defense-in-depth lock check (openEmailModal is the primary gate)
+    if (sendsInFlight[filename]) {
+      showStatus('Already sending ' + filename + '.', 'error');
+      return;
+    }
+
+    sendsInFlight[filename] = true;
+    renderPage();  // flip Email → "Sending…" and disable Delete
+
     showStatus('Preparing email...', 'uploading');
 
     try {
+      // Fix 4 test instrument only: set window.__fix4SendDelay = <ms> in the
+      // browser console to simulate a slow POST for verifying the in-flight lock.
+      // No-op when unset. Not a timing-bandaid on real code paths.
+      if (typeof window.__fix4SendDelay === 'number') {
+        await new Promise(function (r) { setTimeout(r, window.__fix4SendDelay); });
+      }
+
       var emailHtml = await buildEmailHtml(emailPendingContent);
       var subject = getSubjectFromContent(emailPendingContent);
+
+      // Fix 2: re-validate publish_date right before POST. Catches the case where
+      // the user sat on the confirm modal or buildEmailHtml took longer than
+      // expected, drifting the scheduled time into the past.
+      if (mode === 'schedule') {
+        var POST_BUFFER_MS = 60 * 1000;
+        if (new Date(publishDate) <= new Date(Date.now() + POST_BUFFER_MS)) {
+          throw new Error('Scheduled time is too close to now (less than 1 minute away). Please cancel and pick a later time.');
+        }
+      }
 
       showStatus(mode === 'now' ? 'Sending email...' : 'Scheduling email...', 'uploading');
 
@@ -1525,7 +1695,8 @@
         subject: subject,
         body: emailHtml,
         status: mode === 'now' ? 'about_to_send' : 'scheduled',
-        template: ''
+        template: '',
+        metadata: { hb_filename: filename }  // Fix 1: namespaced key for exact matching
       };
       if (mode === 'schedule') {
         payload.publish_date = publishDate;
@@ -1551,7 +1722,7 @@
       // optimistic entries added by uploadToSite().
       if (mode === 'schedule') {
         var bdData = await bdRes.json();
-        scheduledEmails[emailPendingFilename] = {
+        scheduledEmails[filename] = {
           id: bdData.id,
           publish_date: bdData.publish_date
         };
@@ -1559,6 +1730,8 @@
 
       if (mode === 'now') {
         showStatus('Email sent to all subscribers.', 'success');
+        // Fix 4: mark as sent for in-session double-send prevention
+        recentlySent[filename] = new Date().toISOString();
       } else {
         var schedDate = new Date(publishDate);
         showStatus('Email scheduled for ' + schedDate.toUTCString() + '.', 'success');
@@ -1566,9 +1739,11 @@
 
       emailPendingContent = null;
       emailPendingFilename = null;
-      renderPage();
     } catch (err) {
       showStatus('Error: ' + err.message, 'error');
+    } finally {
+      delete sendsInFlight[filename];
+      renderPage();  // redraw to clear "Sending…" and show final state
     }
   }
 
@@ -1586,6 +1761,30 @@
       }
     }
   })();
+
+  // Fix 2: filter time dropdown to hide slots less than 5 minutes from now
+  // on the selected date. Runs on date change and when modal opens.
+  function filterTimeDropdown() {
+    var dateVal = document.getElementById('email-schedule-date').value;
+    var select = document.getElementById('email-schedule-time');
+    var earliestMs = Date.now() + 5 * 60 * 1000;
+    var opts = select.options;
+    for (var i = 0; i < opts.length; i++) {
+      var opt = opts[i];
+      if (!opt.value) continue;  // skip placeholder
+      var tooSoon = false;
+      if (dateVal) {
+        var slotMs = new Date(dateVal + 'T' + opt.value + ':00Z').getTime();
+        tooSoon = slotMs < earliestMs;
+      }
+      opt.disabled = tooSoon;
+      opt.hidden = tooSoon;
+    }
+    if (select.selectedOptions[0] && select.selectedOptions[0].hidden) {
+      select.value = '';
+    }
+  }
+  document.getElementById('email-schedule-date').addEventListener('change', filterTimeDropdown);
 
   // ── Manage newsletters ──
   var deleteTarget = null;
@@ -1606,41 +1805,71 @@
 
   var scheduledEmails = {};
 
-  function loadNewsletters() {
-    var newslettersPromise = fetch('newsletters.json?t=' + Date.now()).then(function(res) { return res.json(); });
+  // Fix 4: in-flight lock + recently-sent marker (per-tab, in-memory)
+  var sendsInFlight = {};   // filename → true while a send/schedule POST is pending
+  var recentlySent = {};    // filename → ISO timestamp of last successful Send Now
 
+  // Fix 5: reusable matcher helper. Called from loadNewsletters (tolerant of
+  // failure on page load) and from openEmailModal (fail-closed to avoid
+  // duplicate-send from stale cache).
+  async function refreshScheduledEmails() {
     var bdKey = getButtondownKey();
-    var scheduledPromise = bdKey
-      ? fetch('https://api.buttondown.com/v1/emails?status=scheduled', {
-          headers: { 'Authorization': 'Token ' + bdKey }
-        }).then(function(res) { return res.ok ? res.json() : { results: [] }; })
-        .catch(function() { return { results: [] }; })
-      : Promise.resolve({ results: [] });
+    if (!bdKey) {
+      scheduledEmails = {};
+      return;
+    }
+    var res = await fetch('https://api.buttondown.com/v1/emails?status=scheduled', {
+      headers: { 'Authorization': 'Token ' + bdKey }
+    });
+    if (!res.ok) throw new Error('Could not fetch scheduled emails (HTTP ' + res.status + ')');
+    var data = await res.json();
+    var scheduled = data.results || [];
 
-    Promise.all([newslettersPromise, scheduledPromise])
-      .then(function(results) {
-        var newsletters = results[0];
-        var scheduled = results[1].results || [];
+    // Fix 1: two-pass matcher. Pass 1 = exact metadata match; Pass 2 = date
+    // substring fallback for pre-fix emails only. 1:1 mapping enforced.
+    var newMap = {};
+    var claimed = {};
 
-        scheduledEmails = {};
-        scheduled.forEach(function(email) {
-          var subj = email.subject || '';
-          newsletters.forEach(function(n) {
-            if (subj.indexOf(n.date) !== -1 || subj.indexOf(n.title) !== -1) {
-              scheduledEmails[n.file] = {
-                id: email.id,
-                publish_date: email.publish_date
-              };
-            }
-          });
-        });
+    // Pass 1: exact metadata match
+    scheduled.forEach(function(email) {
+      var file = email.metadata && email.metadata.hb_filename;
+      if (file && !claimed[file]) {
+        newMap[file] = { id: email.id, publish_date: email.publish_date };
+        claimed[file] = true;
+      }
+    });
 
+    // Pass 2: date-substring fallback
+    scheduled.forEach(function(email) {
+      if (email.metadata && email.metadata.hb_filename) return;
+      var subj = email.subject || '';
+      var matched = false;
+      allNewsletters.forEach(function(n) {
+        if (matched) return;
+        if (!claimed[n.file] && subj.indexOf(n.date) !== -1) {
+          newMap[n.file] = { id: email.id, publish_date: email.publish_date };
+          claimed[n.file] = true;
+          matched = true;
+        }
+      });
+    });
+
+    scheduledEmails = newMap;
+  }
+
+  function loadNewsletters() {
+    fetch('newsletters.json?t=' + Date.now())
+      .then(function(res) { return res.json(); })
+      .then(function(newsletters) {
         var deleted = getPendingDeletes();
         var filtered = newsletters.filter(function(n) { return deleted.indexOf(n.file) === -1; });
         allNewsletters = filtered.slice().reverse();
         managePage = 0;
-        renderPage();
+        // Refresh scheduled state AFTER allNewsletters is populated (Pass 2 depends on it).
+        // Tolerate failure on page load — show the list without scheduled info rather than hiding.
+        return refreshScheduledEmails().catch(function() { scheduledEmails = {}; });
       })
+      .then(function() { renderPage(); })
       .catch(function() {
         document.getElementById('manage-section').classList.remove('visible');
       });
@@ -1668,16 +1897,28 @@
       var li = document.createElement('li');
       li.className = 'manage-item';
 
+      // Fix 4: priority order — in-flight > scheduled > recently-sent > normal
+      var busy = !!sendsInFlight[entry.file];
       var sched = scheduledEmails[entry.file];
+      var sent = recentlySent[entry.file];
       var badgeHtml = '';
       var actionHtml = '';
-      if (sched) {
+
+      if (busy) {
+        actionHtml = '<button class="manage-email-busy" disabled aria-disabled="true">Sending…</button>';
+      } else if (sched) {
         var schedDate = new Date(sched.publish_date);
         badgeHtml = '<div class="manage-scheduled-badge">Scheduled: ' + schedDate.toUTCString() + '</div>';
         actionHtml = '<button class="manage-unschedule" data-email-id="' + sched.id + '" data-file="' + entry.file + '">Unschedule</button>';
+      } else if (sent) {
+        var sentDate = new Date(sent);
+        badgeHtml = '<div class="manage-sent-badge">Sent ' + sentDate.toUTCString() + '</div>';
+        actionHtml = '';
       } else {
         actionHtml = '<button class="manage-email" data-file="' + entry.file + '">Email</button>';
       }
+
+      var deleteAttrs = busy ? ' disabled aria-disabled="true"' : '';
 
       li.innerHTML =
         '<div class="manage-item-info">' +
@@ -1687,7 +1928,7 @@
         '</div>' +
         '<div class="manage-item-actions">' +
           actionHtml +
-          '<button class="manage-delete" data-file="' + entry.file + '">Delete</button>' +
+          '<button class="manage-delete" data-file="' + entry.file + '"' + deleteAttrs + '>Delete</button>' +
         '</div>';
       list.appendChild(li);
     });
@@ -1785,53 +2026,64 @@
   async function executeDelete(filename) {
     document.getElementById('delete-confirm-modal').classList.remove('visible');
 
-    // Cancel scheduled email if one exists
+    // Fix 6 Step 1: refresh scheduled state so cancel decision uses current truth
+    // (another tab / Buttondown dashboard may have changed state since last sync).
+    // Fail-closed on network error.
+    showStatus('Verifying scheduled-email state…', 'uploading');
+    try {
+      await refreshScheduledEmails();
+    } catch (e) {
+      showStatus('Could not verify scheduled-email state: ' + e.message + '. Delete aborted. Refresh the page and try again.', 'error');
+      return;
+    }
+
+    // Fix 6 Step 2: hard gate — if (freshly verified) scheduled, cancel first or abort
     var sched = scheduledEmails[filename];
-    var emailCancelled = false;
     if (sched) {
       var bdKey = getButtondownKey();
-      if (bdKey) {
-        try {
-          var cancelRes = await fetch('https://api.buttondown.com/v1/emails/' + sched.id, {
-            method: 'PATCH',
-            headers: {
-              'Authorization': 'Token ' + bdKey,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ status: 'draft' })
-          });
-          if (cancelRes.ok) {
-            delete scheduledEmails[filename];
-            emailCancelled = true;
-          }
-        } catch (e) {
-          // Network error — don't block delete
+      if (!bdKey) {
+        showStatus('Buttondown API key not found. Cannot cancel scheduled email; delete aborted to avoid sending a 404 link to subscribers.', 'error');
+        return;
+      }
+      showStatus('Cancelling scheduled email…', 'uploading');
+      try {
+        var cancelRes = await fetch('https://api.buttondown.com/v1/emails/' + sched.id, {
+          method: 'PATCH',
+          headers: {
+            'Authorization': 'Token ' + bdKey,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ status: 'draft' })
+        });
+        if (!cancelRes.ok) {
+          var errBody = await cancelRes.json().catch(function() { return {}; });
+          var detail = errBody.detail || errBody.message || 'HTTP ' + cancelRes.status;
+          showStatus('Could not cancel scheduled email (' + detail + '). Delete aborted. Fix in Buttondown dashboard, then retry.', 'error');
+          return;
         }
+        delete scheduledEmails[filename];
+      } catch (e) {
+        showStatus('Network error cancelling scheduled email: ' + e.message + '. Delete aborted.', 'error');
+        return;
       }
     }
 
-    // Optimistically remove from UI
+    // Fix 6 Step 3: optimistic UI remove + GitHub delete
+    // (reached only after cancel success or no sched at all)
     addPendingDelete(filename);
     allNewsletters = allNewsletters.filter(function(n) { return n.file !== filename; });
     deleteTarget = null;
     renderPage();
 
-    if (sched && !emailCancelled) {
-      showStatus('Deleted ' + filename + '. Warning: could not cancel the scheduled email. Check Buttondown dashboard.', 'error');
-    } else if (emailCancelled) {
-      showStatus('Deleted ' + filename + '. Scheduled email was cancelled.', 'success');
-    } else {
-      showStatus('Deleted ' + filename + '. Site will update in about 2 minutes.', 'success');
-    }
+    showStatus(sched ? 'Scheduled email cancelled. Deleting file…' : 'Deleting file…', 'uploading');
 
-    // Delete from GitHub
     try {
       var path = 'newsletters/' + filename;
       var res = await fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
         headers: { 'Authorization': 'Bearer ' + getPat() }
       });
 
-      if (!res.ok) throw new Error('Could not find file');
+      if (!res.ok) throw new Error('Could not find file on GitHub');
       var data = await res.json();
 
       var delRes = await fetch('https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + path, {
@@ -1850,8 +2102,12 @@
         var errData = await delRes.json();
         throw new Error(errData.message || 'Delete failed');
       }
+
+      showStatus(sched
+        ? 'Deleted ' + filename + '. Scheduled email was cancelled.'
+        : 'Deleted ' + filename + '. Site will update in about 2 minutes.', 'success');
     } catch (err) {
-      showStatus('Error deleting: ' + err.message, 'error');
+      showStatus('Error deleting from GitHub: ' + err.message + (sched ? '. Scheduled email was already cancelled; you may want to re-upload or clean up manually.' : ''), 'error');
     }
   }
 
@@ -1875,14 +2131,17 @@
   function previewEmail() {
     if (!pendingFile) return;
 
-    webPreviewHtml = pendingFile.content;
+    // Fix 3: sanitize both the web preview (preserves onclick like the live URL will)
+    // and the email-path html (strips onclick, matches existing email behavior)
+    webPreviewHtml = sanitizeNewsletterHtml(pendingFile.content, { keepOnAttrs: ['onclick'] });
 
-    var html = pendingFile.content;
+    var html = sanitizeNewsletterHtml(pendingFile.content);  // email path: strip all on*
     for (var v in CSS_VARS) {
       html = html.split(v).join(CSS_VARS[v]);
     }
 
     var hiddenFrame = document.createElement('iframe');
+    hiddenFrame.sandbox = 'allow-same-origin';
     hiddenFrame.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:820px;height:1px;';
     document.body.appendChild(hiddenFrame);
 
