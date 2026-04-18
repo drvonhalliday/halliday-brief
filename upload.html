@@ -769,7 +769,10 @@
   <!-- Top bar (shown after PIN + PAT verified) -->
   <div class="top-bar" id="top-bar">
     <div class="top-bar-info">Ready to publish</div>
-    <button class="btn btn-small" onclick="resetSession()">Lock</button>
+    <div>
+      <button class="btn btn-small" onclick="rotateToken()">Rotate Token</button>
+      <button class="btn btn-small" onclick="resetSession()">Lock</button>
+    </div>
   </div>
 
   <!-- PAT setup (shown after PIN, if no saved PAT) -->
@@ -1054,6 +1057,13 @@
     document.getElementById('email-preview-section').classList.remove('visible');
     document.getElementById('preview-email-btn').classList.remove('visible');
     hideStatus();
+  }
+
+  function rotateToken() {
+    if (!confirm('Clear the saved GitHub token? You will need to paste a new one.')) return;
+    localStorage.removeItem('hb_pat');
+    hideStatus();
+    showAuthenticatedUI();  // empty PAT → UI shows the PAT paste section
   }
 
   // ── File handling ──
