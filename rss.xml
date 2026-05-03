@@ -5,8 +5,902 @@
     <link>https://brief.vonhalliday.com</link>
     <description>Strategic insights from Von Halliday Consulting</description>
     <language>en-us</language>
-    <lastBuildDate>Sun, 26 Apr 2026 18:32:43 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 03 May 2026 21:07:42 +0000</lastBuildDate>
     <atom:link href="https://brief.vonhalliday.com/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>The Halliday Brief — Vol. 1, No. 7 — May 4, 2026</title>
+      <link>https://brief.vonhalliday.com/newsletters/2026-05-04.html</link>
+      <guid isPermaLink="true">https://brief.vonhalliday.com/newsletters/2026-05-04.html</guid>
+      <pubDate>Mon, 04 May 2026 12:00:00 +0000</pubDate>
+      <description>The Halliday Brief — Vol. 1, No. 7 — May 4, 2026</description>
+      <content:encoded><![CDATA[<!DOCTYPE html><html lang="en"><head><meta http-equiv="Content-Security-Policy" content="script-src-elem 'none'; object-src 'none'; base-uri 'none';">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Halliday Brief | Vol. 1, No. 7 | May 4, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #2a1505;
+    --soil: #1a3a1f;
+    --wheat: #c9a227;
+    --wheat-light: #f0d878;
+    --cream: #faf8f2;
+    --off-white: #f0ede3;
+    --muted: #7a4e28;
+    --red: #8b2020;
+    --blue: #c9a227;
+    --green: #e8c840;
+  }
+
+  body {
+    background: #2a1f10;
+    font-family: 'Source Serif 4', Georgia, serif;
+    color: #2a1505;
+    min-height: 100vh;
+    padding: 40px 16px;
+  }
+
+  .page-wrapper {
+    max-width: 820px;
+    margin: 0 auto;
+    background: var(--cream);
+    border: 1px solid #a08050;
+    box-shadow: 0 12px 60px rgba(20,10,0,0.55), 0 0 0 6px #faf8f2, 0 0 0 7px #8a6040;
+  }
+
+  /* MASTHEAD */
+  .masthead {
+    background: #1a3a1f;
+    padding: 52px 56px 36px;
+    text-align: center;
+    border-bottom: 5px solid #c9a227;
+    position: relative;
+    overflow: hidden;
+  }
+  .masthead::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg, transparent, transparent 22px,
+      rgba(201,162,39,0.07) 22px, rgba(201,162,39,0.07) 44px
+    );
+  }
+  .masthead-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #c9a227;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .masthead-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 76px;
+    font-weight: 900;
+    color: var(--cream);
+    letter-spacing: -0.01em;
+    line-height: 1.0;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .masthead-title em { font-style: italic; color: #e8c840; }
+  .masthead-subtitle {
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: #c4a882;
+    margin-bottom: 24px;
+    letter-spacing: 0.03em;
+    position: relative;
+  }
+  .masthead-rule {
+    width: 72px; height: 2px;
+    background: #c9a227;
+    margin: 0 auto 22px;
+    position: relative;
+  }
+  .masthead-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: #a08060;
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .masthead-meta span { text-transform: uppercase; }
+
+  /* THIS WEEK BAND */
+  .this-week {
+    background: #1a3a1f;
+    border-top: 1px solid rgba(201,162,39,0.3);
+    border-bottom: 4px solid #c9a227;
+    padding: 28px 56px 30px;
+  }
+  .this-week-header {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #c9a227;
+    margin-bottom: 18px;
+  }
+  .this-week-items {
+    list-style: none;
+    margin: 0; padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+  .this-week-items li {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+  .this-week-bullet {
+    color: #e8c840;
+    font-size: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .this-week-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.3;
+  }
+  .this-week-text em {
+    font-style: italic;
+    color: #f0d878;
+    font-weight: 400;
+  }
+
+  /* CONTENT AREA */
+  .content { padding: 48px 56px; }
+
+  /* FROM THE DESK */
+  .from-desk {
+    border-left: 4px solid #c9a227;
+    padding: 6px 0 6px 26px;
+    margin-bottom: 52px;
+  }
+  .from-desk-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #7a4e28;
+    margin-bottom: 12px;
+  }
+  .from-desk p {
+    font-size: 17px;
+    line-height: 1.82;
+    color: var(--soil);
+    font-style: italic;
+    font-weight: 300;
+  }
+  .from-desk p + p { margin-top: 14px; }
+  .from-desk .sig {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    color: #2a1505;
+    margin-top: 18px;
+    display: block;
+  }
+  .from-desk .sig small {
+    display: block;
+    font-weight: 300;
+    font-size: 13px;
+    color: #7a4e28;
+    font-style: italic;
+    margin-top: 3px;
+  }
+
+  /* SECTION HEADERS */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 30px;
+    margin-top: 52px;
+  }
+  .section-header:first-child { margin-top: 0; }
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 15px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    background: #1a3a1f;
+    color: #e8c840;
+    padding: 8px 18px;
+    white-space: nowrap;
+  }
+  .section-rule {
+    flex: 1; height: 1px;
+    background: linear-gradient(to right, #c9a227, transparent);
+  }
+
+  /* STORY CARDS */
+  .story {
+    margin-bottom: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px dashed #c4a882;
+  }
+  .story:last-of-type { border-bottom: none; }
+  .story-kicker {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 8px;
+  }
+  .story h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.22;
+    color: var(--soil);
+    margin-bottom: 14px;
+  }
+  .story .deck {
+    font-size: 17px;
+    font-style: italic;
+    color: #7a4e28;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    font-weight: 300;
+  }
+  .story p {
+    font-size: 16px;
+    line-height: 1.88;
+    color: #2a1505;
+    margin-bottom: 16px;
+  }
+  .story p:last-child { margin-bottom: 0; }
+
+  /* CHART CONTAINERS */
+  .chart-container {
+    background: var(--off-white);
+    border: 1px solid #c4a882;
+    padding: 28px 28px 22px;
+    margin: 28px 0;
+  }
+  .chart-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--soil);
+    margin-bottom: 6px;
+    line-height: 1.35;
+  }
+  .chart-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #7a4e28;
+    margin-bottom: 22px;
+    line-height: 1.6;
+  }
+
+  /* NUMBERS ROW */
+  .numbers-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: #7a4e28;
+    border: 1px solid #a08050;
+    margin: 28px 0;
+  }
+  .number-cell {
+    background: var(--off-white);
+    padding: 24px 18px;
+    text-align: center;
+  }
+  .number-cell .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 900;
+    color: var(--soil);
+    line-height: 1;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .number-cell .num-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #7a4e28;
+    line-height: 1.6;
+  }
+
+  /* DEADLINE BOX */
+  .deadline-box {
+    background: #1a3a1f;
+    color: var(--cream);
+    padding: 26px 32px;
+    margin: 24px 0;
+    position: relative;
+  }
+  .deadline-box::before {
+    content: '⚑';
+    position: absolute;
+    top: 20px; right: 24px;
+    color: #c9a227;
+    font-size: 28px;
+  }
+  .deadline-box-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c9a227;
+    margin-bottom: 10px;
+  }
+  .deadline-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .deadline-box p {
+    font-size: 15px !important;
+    line-height: 1.75 !important;
+    color: #f0d878 !important;
+    margin-bottom: 0 !important;
+  }
+  .deadline-date {
+    display: inline-block;
+    margin-top: 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    background: #c9a227;
+    color: #1a3a1f;
+    padding: 6px 16px;
+    font-weight: 700;
+  }
+
+  /* PULLQUOTE */
+  .pullquote {
+    border-top: 3px solid #c9a227;
+    border-bottom: 3px solid #c9a227;
+    padding: 26px 0;
+    margin: 32px 0;
+    text-align: center;
+  }
+  .pullquote p {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px !important;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--soil) !important;
+    margin-bottom: 12px !important;
+  }
+  .pullquote cite {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #7a4e28;
+  }
+
+  /* INTEL BOX */
+  .intel-box {
+    background: #eaf2e8;
+    border-left: 5px solid #2d5a34;
+    padding: 22px 28px;
+    margin: 24px 0;
+  }
+  .intel-box-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #2d5a34;
+    margin-bottom: 10px;
+  }
+  .intel-box p {
+    font-size: 15px !important;
+    line-height: 1.78 !important;
+    color: #2a1505 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* DIRECTIVES TABLE */
+  .directives-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    border: 1px solid #a08050;
+  }
+  .directives-table thead tr {
+    background: #1a3a1f;
+  }
+  .directives-table thead td {
+    padding: 14px 18px 10px;
+  }
+  .directives-table thead .dt-header {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c9a227;
+    margin-bottom: 4px;
+  }
+  .directives-table thead .dt-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.3;
+  }
+  .directives-table thead .dt-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: #a08060;
+    margin-top: 4px;
+    font-style: italic;
+  }
+  .directives-table tbody tr {
+    border-bottom: 1px solid #d8d0bc;
+  }
+  .directives-table tbody tr:last-child {
+    border-bottom: none;
+  }
+  .directives-table tbody tr:nth-child(even) {
+    background: #f5f1e8;
+  }
+  .directives-table tbody tr:nth-child(odd) {
+    background: var(--cream);
+  }
+  .directives-table tbody td {
+    padding: 12px 18px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #2a1505;
+  }
+  .directives-table tbody td:first-child {
+    width: 28px;
+    text-align: center;
+    color: #c9a227;
+    font-size: 16px;
+    padding-right: 4px;
+  }
+  .directives-table tfoot tr {
+    background: #f5f1e8;
+    border-top: 2px solid #c9a227;
+  }
+  .directives-table tfoot td {
+    padding: 10px 18px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: #7a4e28;
+    text-transform: uppercase;
+  }
+
+  /* WHAT TO WATCH LIST */
+  .watch-list { list-style: none; margin: 0; }
+  .watch-list li {
+    display: flex;
+    gap: 18px;
+    padding: 18px 0;
+    border-bottom: 1px dashed #c4a882;
+    align-items: flex-start;
+  }
+  .watch-list li:last-child { border-bottom: none; }
+  .watch-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 38px;
+    font-weight: 900;
+    color: #2d5a34;
+    line-height: 1;
+    min-width: 36px;
+    padding-top: 2px;
+  }
+  .watch-text {
+    font-size: 16px;
+    line-height: 1.75;
+    color: #2a1505;
+    padding-top: 4px;
+  }
+  .watch-text strong {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    display: block;
+    color: var(--soil);
+    margin-bottom: 4px;
+  }
+  .watch-text a {
+    color: #2d5a34;
+    text-decoration: underline;
+  }
+  .watch-badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: #8b2020;
+    color: #fff;
+    padding: 2px 8px;
+    margin-left: 8px;
+    vertical-align: middle;
+    position: relative;
+    top: -2px;
+  }
+  .watch-badge.today {
+    background: #e8c840;
+    color: #1a3a1f;
+  }
+  .watch-badge.upcoming {
+    background: #2d5a34;
+    color: #e8c840;
+  }
+
+  /* ORNAMENT DIVIDERS */
+  .ornament {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 44px 0;
+  }
+  .ornament-line { flex: 1; height: 1px; background: #c4a882; }
+  .ornament-symbol { font-family: 'Playfair Display', serif; font-size: 22px; color: #2d5a34; }
+
+  /* FOOTER */
+  .footer {
+    background: #1a3a1f;
+    padding: 40px 56px;
+    border-top: 5px solid #c9a227;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 28px;
+  }
+  .footer-col-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #c9a227;
+    margin-bottom: 14px;
+  }
+  .footer-col p, .footer-col a {
+    font-size: 14px;
+    color: #c4a882;
+    line-height: 1.82;
+    text-decoration: none;
+  }
+  .footer-col a:hover { color: #f0d878; }
+  .footer-bottom {
+    border-top: 1px solid #2d5a34;
+    padding-top: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--cream);
+  }
+  .footer-brand em { color: #c9a227; font-style: italic; }
+  .footer-fine {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: #7a4e28;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 640px) {
+    .masthead { padding: 36px 28px 28px; }
+    .masthead-title { font-size: 52px; }
+    .content { padding: 36px 24px; }
+    .this-week { padding: 22px 24px 24px; }
+    .numbers-row { grid-template-columns: 1fr; }
+    .footer { padding: 28px 24px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    .story h2 { font-size: 25px; }
+    .chart-container { padding: 20px 16px 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <!-- MASTHEAD -->
+  <header class="masthead">
+    <div class="masthead-eyebrow">Von Halliday Consulting &nbsp;·&nbsp; North Dakota Rural Health Intelligence</div>
+    <div class="masthead-title">The <em>Halliday</em> Brief</div>
+    <div class="masthead-subtitle">Rural Health Policy · North Dakota &amp; Federal</div>
+    <div class="masthead-rule"></div>
+    <div class="masthead-meta">
+      <span>Vol. 1 · No. 7</span>
+      <span>May 4, 2026</span>
+      <span>340B Special Issue</span>
+    </div>
+  </header>
+
+  <!-- THIS WEEK -->
+  <div class="this-week">
+    <div class="this-week-header">This Week</div>
+    <ul class="this-week-items">
+      <li>
+        <span class="this-week-bullet">◆</span>
+        <span class="this-week-text">A federal judge in Bismarck strikes down ND HB 1473 — <em>340B contract pharmacy law preempted on Spending Clause and Commerce Clause grounds</em></span>
+      </li>
+      <li>
+        <span class="this-week-bullet">◆</span>
+        <span class="this-week-text">A real circuit split now forming — <em>Fourth Circuit (split panel) sides with manufacturers; Fifth Circuit sides with the states; Eighth Circuit's Hanaway decision pending</em></span>
+      </li>
+      <li>
+        <span class="this-week-bullet">◆</span>
+        <span class="this-week-text">Maine Rebate Pilot vacated, FY2027 budget moves the Office of Pharmacy Affairs (OPA) to CMS — <em>the federal compact is being rewritten in real time</em></span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- FROM THE DESK -->
+    <div class="from-desk">
+      <div class="from-desk-label">From the Desk</div>
+      <p>Last week's ruling out of Bismarck — striking down North Dakota's 2025 law protecting 340B contract pharmacy access — would be significant on its own. In context, it is something more. North Dakota now joins a pattern of federal-court decisions that, taken together, are reshaping the legal foundation of a program our Critical Access Hospitals depend on.</p>
+      <p>This issue is given over to a single feature on what Judge Traynor's order says, what it does not say, and what it means for North Dakota's 37 CAHs. The questions a CAH board ought to be asking in the wake of this decision are not abstract — and they are unlikely to wait for the Eighth Circuit's eventual ruling to become urgent.</p>
+      <span class="sig">Doson<small>Founder, Von Halliday Consulting · Bismarck</small></span>
+    </div>
+
+    <!-- ════════════════════════
+         FEATURE · 340B
+    ═════════════════════════ -->
+    <div class="section-header">
+      <div class="section-tag">Federal Policy</div>
+      <div class="section-rule"></div>
+    </div>
+
+    <article class="story">
+      <div class="story-kicker">340B Drug Pricing · Federal Preemption · North Dakota &amp; Federal</div>
+      <h2>What Bismarck Means for 340B</h2>
+      <p class="deck">Three stories, one underlying argument. The federal compact that has propped up rural hospital balance sheets for a generation — discounted drugs, generous interpretations, light enforcement — is being rewritten in real time. Critical Access Hospital (CAH) administrators in North Dakota cannot afford to read the Traynor ruling as a one-state news item. It is a window into how the program will be litigated, audited, and ultimately reshaped over the next twenty-four months.</p>
+
+      <p>Imagine a rural patient walks into a pharmacy and pays $300 for a prescription. The hospital that wrote the prescription bought the same drug from the manufacturer for less than a dollar. That difference is real money, and it is the foundation of a federal program called 340B. Thirty-three years ago, Congress made drug companies a deal: if you want Medicare and Medicaid to pay for your drugs, you have to offer those same drugs at deep discounts to safety-net hospitals and clinics that serve low-income patients. What started as a modest subsidy now moves an estimated $80 billion in drugs a year, on rules written largely by federal agency guidance rather than by Congress — and on a statute that nowhere requires the discount to reach the patient. That legal foundation has begun to crack. Last week, a federal judge in Bismarck added North Dakota to a growing list of states whose 340B laws have run into constitutional trouble, striking down House Bill 1473 in its entirety. For rural hospitals, the stakes are not abstract. They operate on margins of one or two percent at the median, and many run negative. The spread between what a hospital pays for a 340B drug and what it bills for it is, for most rural facilities, one of the reliable revenue streams it has — and for hospitals with low volume and high fixed costs, it is what subsidizes the services that don’t pay for themselves: emergency department staffing, obstetrics, charity care, chronic disease management. North Dakota’s 37 Critical Access Hospitals are not the conglomerates the court was describing. But they are part of the same legal architecture, and when that architecture starts to break, every covered entity in the country is affected.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">1</sup></p>
+
+      <p>Two other 340B stories are running in parallel this spring. In December, a federal court in Maine blocked the federal Health Resources and Services Administration (HRSA) from launching a pilot program that would have required hospitals to pay full price up front for ten high-cost drugs and seek rebates afterward, instead of the discounts they get today. In February the same court sent the program back to HRSA to be redesigned. HRSA opened a Request for Information on a revised version on February 17; comments closed April 20. A new version of the pilot could be announced this quarter.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">2</sup> And the administration's FY2027 budget, released April 3, proposes moving 340B's federal oversight office out of HRSA and into the Centers for Medicare &amp; Medicaid Services (CMS), with a 68 percent increase in its operating budget.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">3</sup></p>
+
+      <!-- STAT TRIO -->
+      <div class="numbers-row">
+        <div class="number-cell"><span class="num">$80B</span><span class="num-label">Annual 340B<br>drug volume (2024)</span></div>
+        <div class="number-cell"><span class="num">~32K</span><span class="num-label">Contract pharmacy<br>locations (2024)</span></div>
+        <div class="number-cell"><span class="num">~60K</span><span class="num-label">340B covered entity<br>sites (2024)</span></div>
+      </div>
+
+      <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:#1a3a1f; margin:28px 0 14px;">What 340B Is</h3>
+
+      <p>The 340B program was created by Congress in 1992 as Section 340B of the Public Health Service Act, named for the section number in the statute that added it.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">4</sup> The mechanic is straightforward. Drug manufacturers who want to sell their products through Medicaid — a market they cannot afford to lose — must agree, as a condition of participation, to sell their outpatient drugs at deeply discounted prices to a defined list of safety-net providers. Those providers are called "covered entities."</p>
+
+      <p>The discounts are real. The court took notice of one concrete example from the record: AstraZeneca's Farxiga, a diabetes drug that sells commercially for hundreds of dollars per prescription, dispenses under the 340B program at less than a dollar.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">5</sup> Some products move at a penny per unit. The covered entity then dispenses the drug to its patients. Critically — and this is the structural feature the order returned to repeatedly — the statute does not require the discount to be passed through to the patient. The hospital may bill the patient's insurance at standard rates and retain the spread between the 340B acquisition cost and the reimbursement. The resulting margin is the "340B revenue" that hospital administrators describe as essential to keeping doors open.</p>
+
+      <p>Covered entities include disproportionate-share hospitals, Critical Access Hospitals, federally qualified health centers, and a handful of federal grantees serving specific populations. North Dakota's 37 CAHs are all eligible, as are the state's FQHCs and tribal health programs operating under Indian Health Service compacts.</p>
+
+      <p>The program has grown — and the growth has been disproportionate. Between 2012 and 2024, the count of registered 340B covered entity sites — parents and their child outpatient locations — tripled, from under 20,000 to more than 60,000. Over a roughly comparable period, contract pharmacy participation went from 1,300 in 2010 to approximately 32,000 in 2024.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">6</sup> That is an approximately twenty-five-fold increase in contract pharmacies against a roughly threefold increase in covered entity sites. Total 340B purchases moved with the contract pharmacy curve, not the covered entity curve: roughly $6.9 billion in 2012, $24.3 billion in 2018, and an estimated $80 billion in 2024.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">7</sup></p>
+
+      <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:#1a3a1f; margin:28px 0 14px;">Where It Broke: The Contract Pharmacy</h3>
+
+      <p>The contract pharmacy is the fault line in this entire dispute. A covered entity — say, a CAH in central North Dakota — does not necessarily operate its own outpatient pharmacy. To dispense 340B drugs to its patients, it needs a pharmacy that does. In 1996 HRSA issued guidance permitting covered entities to contract with one outside pharmacy for this purpose. In 2010 HRSA expanded the guidance to permit contracts with an unlimited number of pharmacies.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">8</sup> That 2010 change is the proximate cause of every legal dispute now in front of the federal courts.</p>
+
+      <p>In practice, almost no covered entity dispenses 340B drugs prospectively. The dominant model is what the order calls "replenishment." The pharmacy fills prescriptions at full price, with no discount visible at the counter. A third-party administrator (TPA) then combs through filled scripts retroactively to identify which were 340B-eligible. Once enough are identified, the pharmacy places a replenishment order at the 340B price, which goes back into general inventory and is dispensed at full price the next time. The wholesaler reconciles the price difference through a chargeback to the manufacturer. HRSA approved the replenishment model in 2015. The TPAs and pharmacies take a percentage or per-script fee. None of this is illegal. None of it pays the patient.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">9</sup></p>
+
+      <p>Beginning in 2020, a series of major manufacturers — Eli Lilly, AstraZeneca, Sanofi, Novartis, Novo Nordisk, Merck, AbbVie, and others — adopted policies limiting contract pharmacy access. Most permitted the covered entity one contract pharmacy per service area; some required claims data submission as a condition of shipping. The federal courts, on the whole, sided with the manufacturers. The Third Circuit and the D.C. Circuit both held that the statute does not require manufacturers to deliver to multiple contract pharmacies.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">10</sup> "Legal duties do not spring from silence," the Third Circuit wrote, in a phrase Judge Traynor cited approvingly. Once HRSA's enforcement options narrowed, state legislatures stepped in. Arkansas was first, in 2021. More than twenty states have now passed contract pharmacy access laws, with bills pending in another ten state legislatures. North Dakota's HB 1473 is one of the more recent.</p>
+
+      <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:#1a3a1f; margin:28px 0 14px;">The Players</h3>
+
+      <p>On the covered-entity side: the American Hospital Association, 340B Health, the National Rural Health Association, and state hospital associations. The North Dakota Hospital Association, AHA, 340B Health, and the American Society of Health System Pharmacists filed amicus briefs in the Bismarck case. They lost. Their position is that contract pharmacy access is essential where covered entities do not operate their own pharmacies, and that 340B revenue is one of the few sources of cross-subsidy keeping safety-net services available.</p>
+
+      <p>On the manufacturer side: PhRMA — the Pharmaceutical Research and Manufacturers of America — and the major brand-name companies individually. AbbVie and AstraZeneca were the lead plaintiffs in North Dakota; the same companies, sometimes joined by Eli Lilly, Bristol-Myers Squibb, Sanofi, Merck, and Novartis, are the lead plaintiffs in essentially every state contract pharmacy lawsuit. Their position is that 340B has expanded far beyond what Congress intended, that the contract pharmacy model funnels discounts to commercial chain pharmacies and PBMs rather than patients, and that nothing in the statute requires them to fulfill orders at any location a covered entity designates.</p>
+
+      <p>On the federal regulatory side: HRSA's Office of Pharmacy Affairs (OPA) currently administers 340B. The agency does not have rulemaking authority — it issues guidance documents and enforces them through audits.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">11</sup> HRSA audits roughly 200 covered entities per year out of more than 60,000 covered entity sites — about one-third of one percent.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">12</sup> The administration's FY2027 budget would move OPA to CMS and raise its funding from $12.2 million to $20.5 million. Audit cadence under CMS will not look like one-third of one percent.</p>
+
+      <p>And then there is the court itself. Judge Traynor's order is unusual not for what it holds — federal preemption rulings against state contract pharmacy laws have come from other district courts before — but for the framing. The opinion is not written in the dry register of a typical preemption case. It is written, in places, as an argument:</p>
+
+      <div class="pullquote">
+        <p>“A program meant to help American poor is being abused to provide a windfall to hospital conglomerates and participating pharmacies. North Dakota's law attempts to facilitate and sanction the graft by interfering with an area of federal law.”<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">13</sup></p>
+        <cite>— Judge Daniel L. Traynor, AbbVie v. Wrigley (D.N.D. Apr. 27, 2026), Order ¶ 3</cite>
+      </div>
+
+      <p>Whether or not the Eighth Circuit eventually sustains this language on appeal, that sentence will be quoted in 340B reform debates for years. CAH administrators should be ready for it.</p>
+
+      <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:#1a3a1f; margin:28px 0 14px;">What Just Happened in Bismarck</h3>
+
+      <p>The April 27 order resolves cross-motions for summary judgment in the consolidated AbbVie and PhRMA lawsuits — case numbers 1:25-cv-00081 and 1:25-cv-00204 — together with North Dakota's motion for judgment on the pleadings in the AstraZeneca case, 1:25-cv-00182. The ruling has two independent legal grounds, either of which would be sufficient on its own.</p>
+
+      <p>First, the Supremacy Clause. The court held that HB 1473 is field-preempted because the 340B program is structured as a federal spending-power arrangement: manufacturers participate to retain Medicaid and Medicare access, and Congress has set the terms of that participation. By adding state-level criminal penalties, North Dakota was changing the terms of the federal deal. The court accepted as evidence two facts that practitioners should note carefully. Bausch Health withdrew from the 340B program entirely in October 2025 in response to state laws like North Dakota's, with the result that Bausch products are no longer available through Medicare or Medicaid.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">14</sup> AbbVie estimated that HB 1473 cost it $10 million in 2025 and would cost $35 million in 2026 in discounted sales it would not otherwise have made.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">15</sup> These are not abstractions. They are the kind of program-level evidence that grounds a federal preemption holding.</p>
+
+      <p>Second, the dormant Commerce Clause. The court held that even if HB 1473 were not preempted, it would still be unconstitutional because it regulates transactions occurring largely outside North Dakota. The 340B distribution chain runs through a chargeback system: an out-of-state wholesaler ships to a pharmacy, then bills the manufacturer for the difference between the wholesale acquisition cost and the 340B ceiling price. Most of those transactions never touch North Dakota soil. The Eighth Circuit itself struck down a Minnesota generic drug pricing law on the same extraterritoriality reasoning in 2025.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">16</sup> Judge Traynor relied on that decision directly.</p>
+
+      <p>The state asked the court, in the alternative, to sever the unconstitutional provisions and let the rest of HB 1473 stand. The court refused: the law's entire focus is restricting manufacturer conduct in the federal program, and once that is enjoined, nothing operative remains.</p>
+
+      <p>As a practical matter: HB 1473 is unenforceable against AbbVie, its named co-plaintiffs (Allergan, Durata Therapeutics, AbbVie Products LLC, Pharmacyclics, and Allergan Sales), and any PhRMA member meeting the order's enumerated criteria. PhRMA's membership includes essentially every major brand-name manufacturer. The North Dakota Attorney General's office had not announced as of last week whether it will appeal to the Eighth Circuit. Rep. Nelson, who carried the bill, will have the option of returning in the 2027 legislative session with revised language calibrated to the order's reasoning.</p>
+
+      <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:#1a3a1f; margin:28px 0 14px;">The McClain Question</h3>
+
+      <p>The Eighth Circuit, which would hear any state appeal, ruled in 2024 that Arkansas's 340B contract pharmacy law was not preempted by federal law.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">17</sup> That decision, PhRMA v. McClain, is the single most important precedent for North Dakota — and the one that any reading of Judge Traynor's order has to engage with directly.</p>
+
+      <p>Judge Traynor does not reject McClain. He distinguishes it on two grounds. The first is that Arkansas formally defined its law as a delivery law — through an Insurance Department regulation that explicitly limited the statute to "the acquisition and delivery of 340B-priced drugs" — and the State briefed McClain accordingly, asserting that "Act 1103 is indubitably an acquisition and delivery statute." North Dakota promulgated no parallel regulation and at points in its briefing argued that HB 1473 in fact regulates pre-sale offer conditions imposed by manufacturers. By the State's own characterization, Traynor held, HB 1473 is not a delivery law. The second ground is that McClain did not address Spending Clause preemption — the theory on which Traynor's preemption holding actually rests.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">18</sup></p>
+
+      <p>The combination matters. It means the Eighth Circuit on appeal could affirm Traynor without overruling McClain. The state's path back is narrow: argue either that HB 1473 is properly read as a delivery law despite its own briefing, or that Spending Clause preemption is foreclosed by McClain's reasoning even though McClain didn't reach it.</p>
+
+      <p>The wider circuit picture is now genuinely split. The Third Circuit (Sanofi v. HHS, 2023) and the D.C. Circuit (Novartis v. Johnson, 2024) both held the federal 340B statute does not require manufacturers to ship to multiple contract pharmacies — federal-law cases that constrain HRSA but do not directly resolve the state-law question. On the state-law question, the lines are drawn. The Fifth Circuit has now ruled twice for the state side: AbbVie v. Fitch in September 2025 (unpublished) and Novartis and PhRMA v. Fitch on April 9, 2026, all affirming denials of preliminary injunctions against Mississippi's law. The Fourth Circuit ruled in the opposite direction on March 31, 2026, in a divided 2-1 panel decision in PhRMA v. McCuskey, finding that West Virginia's 340B law unconstitutionally injects the State into a relationship that is “inherently federal in character.”<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">19</sup> The American Hospital Association, the West Virginia Hospital Association, 340B Health, and the American Society of Health-System Pharmacists petitioned the full Fourth Circuit for en banc rehearing on April 17. And the Eighth Circuit — the controlling circuit for North Dakota — has another 340B case fully briefed and argued: Novartis v. Hanaway, challenging Missouri's law, argued January 15. A decision is imminent and will set the tone for any North Dakota appeal.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">20</sup></p>
+
+      <p>Read together, the circuits have produced a real and growing split on the state-law question. Two circuits favor manufacturers on related federal claims; the Fourth Circuit (split panel, en banc petition pending) favors manufacturers on the state-law question; the Fifth and Eighth Circuits have favored states. The Eighth Circuit is about to weigh in again. SCOTUS review on this question, while not imminent, has become more plausible than it was a year ago.</p>
+
+      <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:#1a3a1f; margin:28px 0 14px;">The Other Two 340B Stories</h3>
+
+      <p>In Maine, the U.S. District Court preliminarily enjoined HRSA's 340B Rebate Pilot in December, then vacated and remanded the program to HRSA in February.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">2</sup> The pilot would have permitted manufacturers — initially nine of them, covering ten drugs subject to Medicare's Inflation Reduction Act price negotiations — to provide 340B pricing through after-the-fact rebates rather than upfront discounts. Hospital plaintiffs argued this would create cash-flow disasters for covered entities and would in practice allow manufacturers to slow-walk or deny rebates. The court found HRSA had not adequately considered reliance interests and the substantial administrative burden on safety-net providers. HRSA opened a Request for Information on February 17; the comment deadline was extended once and closed April 20. A revised pilot could be announced this quarter. Covered entities should be modeling cash-flow scenarios for an eventual rebate-based regime, not waiting for a final rule to read.</p>
+
+      <p>On the third front: the FY2027 HHS budget, released April 3, proposes transferring OPA to CMS and raising the office's funding from $12.2 million to $20.5 million.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">3</sup> The proposal still requires congressional action, but it represents the administration's stated direction. For covered entities, the implications are two-sided. Stronger federal posture against manufacturer restrictions is a tailwind. Expanded audit scrutiny — both of manufacturer compliance and of covered-entity compliance — is a headwind. Hospitals that have run their 340B programs lightly under HRSA's traditional one-and-a-half-percent audit cadence may not find the same posture adequate under a CMS that audits Medicare cost reports for a living.</p>
+
+      <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:#1a3a1f; margin:28px 0 14px;">What This Means for North Dakota</h3>
+
+      <p>With HB 1473 enjoined, North Dakota's 37 CAHs return to the pre-statute baseline: one contract pharmacy per covered entity for products from manufacturers that have adopted restrictions, and continued multi-pharmacy access for products from manufacturers that have not. The Bausch withdrawal is the cautionary tail. When a manufacturer pulls out of 340B entirely rather than navigate a state-by-state regulatory patchwork, it removes its products from Medicare and Medicaid as well — meaning low-income patients who were previously covered for those drugs lose coverage outright. The state-law strategy carries that risk, and it does not show up on a balance sheet until a manufacturer makes the announcement.</p>
+
+      <p>The harder question, and the one that deserves attention from CAH boards in the weeks before the Dakota Conference on Rural Health, is what 340B actually does for the hospital. National data suggest concentration: in Minnesota, the state Department of Health’s most recent transparency report — covering 2024 — found that the largest disproportionate-share hospitals, representing about twelve percent of reporting entities, generated more than eighty percent of the state’s $1.34 billion in net 340B revenue, while federally qualified health centers and similar safety-net grantees received less than one percent.<sup style="font-family:'Space Mono',monospace; font-size:10px; color:#8b2020; font-style:normal;">21</sup> That picture does not look like rural North Dakota. But the structural features Judge Traynor highlighted — the absence of a statutory pass-through requirement, the twenty-five-fold expansion of contract pharmacies, the replenishment model’s effective decoupling of discount from patient — apply to ND CAHs the same as to anyone else.</p>
+
+      <p>Judge Traynor's ruling, the Maine Rebate Pilot remand, the FY2027 budget, and the public conversation that has now broken into the federal courts of appeals all point to the same operational conclusion. The 340B program will continue. It will not continue in its current form.</p>
+
+      <div class="intel-box">
+        <div class="intel-box-label">Von Halliday Analysis</div>
+        <p><strong>For CAH boards, the actionable items in the next 90 days are these. </strong>(1) Reconcile your 340B revenue against operating margin under three scenarios — Eighth Circuit affirms Traynor, Eighth Circuit reverses on McClain grounds, and CMS tightens audit posture independent of either litigation outcome. Boards that have not run this analysis are flying blind. The Hanaway decision in the Eighth Circuit is imminent and will tell you which scenario is most likely. (2) Audit the contract pharmacy network. Where are your contracted pharmacies? Of those, how many are in-state, in-region, or genuinely serving the rural patients the program was designed for? The geography of your contract pharmacies will be the first thing a CMS auditor asks about. Get ahead of it. (3) Document patient benefit. The order returned, repeatedly, to the absence of a statutory pass-through requirement. Whether or not the program is amended to add one, hospitals that can document concrete uses of 340B revenue — sliding-scale care, emergency department subsidization, pharmacist-led chronic disease programs, charity care — will be in a better political and audit position than those that cannot. This documentation matters now, not when the rebate pilot's revised version lands.</p>
+        <p>The wider read: 340B has been a politically protected program for thirty-plus years, partly because rural hospitals have been politically protected institutions. Both protections are eroding simultaneously. The work of the next eighteen months is not to defend 340B in its current form but to make the strongest possible case that the program — modified, audited, and tied to documented patient benefit — should remain. That case is most credibly made by the field's own data. Boards that wait for a federal compromise to be handed to them will get the version of the program that the order's framing produces. Boards that bring documented evidence of public benefit to the table will get a different one.</p>
+      </div>
+    </article>
+
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-symbol">◆</div><div class="ornament-line"></div></div>
+
+    <div class="section-header" style="margin-top:0;">
+      <div class="section-tag">What to Watch</div>
+      <div class="section-rule"></div>
+    </div>
+
+    <ul class="watch-list">
+      <li>
+        <div class="watch-num">1</div>
+        <div class="watch-text">
+          <strong>JAMA: RHTP allocations vs. rural need</strong>
+          A March 5 <em>JAMA</em> paper from Chatterjee, Macneal, and Werner (Penn LDI) found RHTP allocations are not aligned with — and in some respects inversely correlated with — state-level rural mortality and projected Medicaid losses. North Dakota received $199M against the $100M baseline, putting ND on the favorable side of the analysis. The Brief covered the timing-mismatch question in Issue 4; the Penn paper is the targeting question. Worth flagging because being a winner in a misaligned formula is its own complicated story — and FY2027 reallocations will turn on exactly this critique.
+        </div>
+      </li>
+      <li>
+        <div class="watch-num">2</div>
+        <div class="watch-text">
+          <strong>CMS Medicaid work requirements IFR</strong>
+          Statutory deadline June 1 for CMS to publish the interim final rule under H.R. 1 §71119. The IFR will set verification, look-back, and outreach mechanics — the variables that drive implementation cost and disenrollment risk. ~23,000 ND expansion enrollees in scope before exemptions; ND HHS estimates 3–5% net coverage impact. State implementation rulemaking follows the IFR.
+        </div>
+      </li>
+      <li>
+        <div class="watch-num">3</div>
+        <div class="watch-text">
+          <strong>RHTP: three open ND grant lines close May 22</strong>
+          Zero Hour PE ($700K), Community-Based Walking ($2.6M), Community Gardens ($300K) — closing 5:00 p.m. CT, May 22. None CAH-direct, but future RHTP rounds will favor applications with documented community-partner relationships. Behavioral health, student housing, and medical equipment lines are still pending release "in the coming weeks." The equipment line is the directly hospital-relevant one.
+        </div>
+      </li>
+      <li>
+        <div class="watch-num">4</div>
+        <div class="watch-text">
+          <strong>Measles — 36 ND cases, 7 counties</strong>
+          36 confirmed cases across Pembina, Williams, Traill, Walsh, Grand Forks, Ransom, and Dunn through May 1; five hospitalizations; 21 of 27 in unvaccinated/unknown-status individuals. Pembina outbreak ended April 15; latest Dunn case is travel-acquired. Nationally, 1,814 cases — second-worst U.S. year since 2000. CAH ED and outpatient clinics: isolation-room readiness, four-day contagion window awareness, ND HHS exposure protocols at hhs.nd.gov/measles.
+        </div>
+      </li>
+      <li>
+        <div class="watch-num">5</div>
+        <div class="watch-text">
+          <strong>Dakota Conference on Rural Health — June 3–4, Grand Forks</strong>
+          The region's longest-running gathering of rural health practitioners, hospital leaders, public health officials, tribal health representatives, and state policymakers. Hosted by the UND Center for Rural Health at the Alerus Center. Two days of plenaries, breakouts, and unstructured time that — for many ND CAH boards — is the year's best opportunity to compare notes with peer organizations, hear directly from state agency leadership, and surface emerging concerns before they become policy. Worth attending whether or not you have a specific issue to raise.
+        </div>
+      </li>
+    </ul>
+
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-symbol">◆</div><div class="ornament-line"></div></div>
+
+    <!-- COLLAPSIBLE SOURCES -->
+    <div style="margin: 0 0 40px; border-top: 1px solid #d8d0bc; padding-top: 20px;">
+      <button onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.querySelector('.src-arrow').textContent = this.nextElementSibling.style.display === 'none' ? '▸' : '▾';" style="background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:10px; padding:0; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#a08060;">
+        <span class="src-arrow" style="font-size:9px; color:#c4a882;">▸</span>
+        Sources &amp; Citations — This Issue
+      </button>
+      <div style="display:none; margin-top:16px;">
+        <p style="font-family:'Space Mono',monospace; font-size:10px; line-height:2.2; color:#a08060;">
+          <strong style="color:#7a4e28;">Feature: 340B</strong><br>
+          <sup style="color:#8b2020;">1</sup> Order on Motions, AbbVie Inc. et al. v. Wrigley et al., Case Nos. 1:25-cv-00081, 1:25-cv-00182, 1:25-cv-00204 (D.N.D. Apr. 27, 2026) (Traynor, J.) [hereinafter "Order"]. Coverage: Mary Steurer, North Dakota Monitor, Apr. 28, 2026; InForum, Apr. 29, 2026.<br>
+          <sup style="color:#8b2020;">2</sup> Am. Hosp. Ass’n v. Kennedy, No. 2:25-cv-00600-LEW (D. Me.): preliminary injunction granted Dec. 29, 2025; 1st Cir. denied stay Jan. 7, 2026; parties’ joint motion to vacate filed Feb. 5, 2026; D. Me. order vacating and remanding Feb. 10, 2026, 2026 WL 372131. HRSA Request for Information, 91 Fed. Reg. 7287 (Feb. 17, 2026); RFI deadline extended to Apr. 20, 2026 (HRSA notice, Feb. 25, 2026). See Order ¶ 27.<br>
+          <sup style="color:#8b2020;">3</sup> U.S. Department of Health and Human Services, Fiscal Year 2027 Budget in Brief, released Apr. 3, 2026. The OPA-to-CMS transfer and the $20.5 million FY 2027 request are detailed in CMS, Justification of Estimates for Appropriations Committees, FY 2027 (proposing OPA reside in CMS Program Management; “$20.5 million, which will” — increase of $8.3 million above FY 2026 enacted).<br>
+          <sup style="color:#8b2020;">4</sup> Veterans Health Care Act of 1992, Pub. L. 102-585; codified at 42 U.S.C. § 256b. Origins discussed at Order ¶¶ 9–10, citing Nicholas C. Fisher, The 340B Program: A Federal Program in Desperate Need of Revision After Two-and-a-Half Decades of Uncertainty, 22 J. Health Care L. &amp; Pol’y 25 (2019).<br>
+          <sup style="color:#8b2020;">5</sup> Order ¶ 10 (citing Case 182, Doc. No. 11, ¶ 51 (AstraZeneca complaint)). The penny-per-unit example at Order ¶ 10 quotes Novartis Pharms. Corp. v. Johnson, 102 F.4th 452, 456 (D.C. Cir. 2024).<br>
+          <sup style="color:#8b2020;">6</sup> Drug Channels Institute, "Hospitals Are Relying More on PBMs to Manage Manufacturers' 340B Contract Pharmacy Restrictions: DCI's 2024 Market Analysis," June 2024 (sourcing HRSA Contract Pharmacy Daily Report as of June 1, 2024): 32,883 unique pharmacy locations as 340B contract pharmacies in mid-2024, growing from fewer than 1,300 in 2010 (DCI baseline) and 12,000+ in 2013. DCI notes 2024 marks the first year since 2010 that the count of unique contract pharmacy locations decreased; contractual covered-entity/contract-pharmacy relationships continued to grow (+13% to ~220,000). Covered entity site count: ADVI Analysis, "HRSA 340B Covered Entity Audits," March 2025 (citing HRSA OPAIS), reporting growth from under 20,000 covered entity sites in 2012 to more than 60,000 in 2024. Apexus 340B Prime Vendor Program reports more than 13,300 parent covered entities currently enrolled. Order ¶ 17 retains the 2010–2019 historical comparison drawn from Novartis Pharms. Corp. v. Johnson, 102 F.4th 452, 457 (D.C. Cir. 2024).<br>
+          <sup style="color:#8b2020;">7</sup> Order ¶ 17, citing Adam J. Fein analyses in Drug Channels (May 14, 2019; June 24, 2025).<br>
+          <sup style="color:#8b2020;">8</sup> HRSA, “Notice Regarding 340B Drug Pricing Program — Contract Pharmacy Services,” 75 Fed. Reg. 10,272 (Mar. 5, 2010); Order ¶¶ 14–16.<br>
+          <sup style="color:#8b2020;">9</sup> Order ¶¶ 18–20; HRSA replenishment guidance at 80 Fed. Reg. 52,300 (2015).<br>
+          <sup style="color:#8b2020;">10</sup> Sanofi Aventis U.S. LLC v. HHS, 58 F.4th 696 (3d Cir. 2023); Novartis Pharms. Corp. v. Johnson, 102 F.4th 452 (D.C. Cir. 2024). Both discussed at Order ¶ 23. State count and pending bills per 340B Report industry tracker (Apr. 2026).<br>
+          <sup style="color:#8b2020;">11</sup> Order ¶ 13.<br>
+          <sup style="color:#8b2020;">12</sup> ADVI Analysis, "HRSA 340B Covered Entity Audits," March 2025, reporting that HRSA audited approximately 200 covered entities per year (limit set in FY 2015), representing approximately 0.33% of more than 60,000 registered covered entity sites in 2024. Order ¶ 21 (Doc. No. 31-7, ¶ 6) discusses the 200-per-year audit cadence in the underlying litigation record.<br>
+          <sup style="color:#8b2020;">13</sup> Order ¶ 3.<br>
+          <sup style="color:#8b2020;">14</sup> Order ¶¶ 7, 53 (citing Doc. Nos. 28-18 ¶ 32; 70-1 ¶ 2). Bausch Health, U.S. Patient Assistance Program notice, posted Sept.–Oct. 2025 (“Bausch Health US, LLC … recently communicated its intention to cease participation in two optional Federal drug pricing programs — the Medicaid Drug Rebate Program (‘MDRP’) and the 340B Drug Pricing Program (‘340B’), effective October 1, 2025”).<br>
+          <sup style="color:#8b2020;">15</sup> Order ¶ 53 (citing Doc. No. 75, ¶ 9).<br>
+          <sup style="color:#8b2020;">16</sup> Ass’n for Accessible Meds. v. Ellison, 140 F.4th 957 (8th Cir. 2025) (en banc rehearing denied Aug. 1, 2025); Order ¶¶ 62–63.<br>
+          <sup style="color:#8b2020;">17</sup> Pharmaceutical Research and Manufacturers of America v. McClain, 95 F.4th 1136 (8th Cir. 2024), cert. denied, 605 U.S. ___ (Dec. 9, 2024); Order ¶¶ 42–48.<br>
+          <sup style="color:#8b2020;">18</sup> Order ¶¶ 44–48.<br>
+          <sup style="color:#8b2020;">19</sup> Pharmaceutical Research &amp; Manufacturers of America v. McCuskey, No. 25-1054, 171 F.4th 675 (4th Cir. Mar. 31, 2026) (Richardson, J., joined by Rushing, J.; Benjamin, J., dissenting), affirming preliminary injunction; petition for rehearing en banc filed Apr. 17, 2026 by AHA, West Virginia Hospital Association, 340B Health, and ASHP. Discussed at Order ¶¶ 55–57. Compare AbbVie v. Fitch, No. 24-60375 (5th Cir. Sept. 12, 2025) (unpublished), and Novartis Pharms. Corp. v. Fitch / PhRMA v. Fitch (5th Cir. Apr. 9, 2026) (both affirming denial of preliminary injunction in challenges to Mississippi’s 340B law).<br>
+          <sup style="color:#8b2020;">20</sup> Novartis Pharms. Corp. v. Hanaway, No. 25-1619 (8th Cir. argued Jan. 15, 2026, before Smith, Benton, and Erickson, JJ.). See Order ¶ 24.<br>
+          <sup style="color:#8b2020;">21</sup> Minnesota Department of Health, 340B Covered Entity Report, Feb. 27, 2026 (covering 2024 data); see also Minn. Dep’t of Health, 340B Covered Entity Report, Nov. 25, 2024 (covering 2023 data).<br>
+        </p>
+      </div>
+    </div>
+
+    <!-- CLOSING NOTE -->
+    <div class="from-desk" style="margin-bottom:0;">
+      <div class="from-desk-label">A Note on This Brief</div>
+      <p><em>The Halliday Brief</em> is published weekly by Von Halliday Consulting. It synthesizes federal and North Dakota state rural health policy developments for administrators, clinicians, tribal health leaders, foundation officers, and state-level decision-makers who need accurate, actionable intelligence — without wading through agency websites and legislative reports themselves.</p>
+      <p>If a colleague should be reading this, forward it. If you have a policy question, a funding opportunity your organization is navigating, or a challenge that deserves a closer look — reach out.</p>
+      <span class="sig" style="font-style:normal;">Von Halliday Consulting<small>North Dakota Rural Health Policy &amp; Strategy</small></span>
+      <a href="https://vonhalliday.com/contact/" style="display:inline-block;margin-top:24px;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;background:#1a3a1f;color:#e8c840;padding:14px 28px;text-decoration:none;border:2px solid #c9a227;">Book a Consultation →</a>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-col-label">Key Dates</div>
+        <p>
+          May 17 — Bismarck Order Appeal Window Closes (60 days)<br>
+          May 22 — RHTP Healthy Lifestyles Grants Deadline (ND HHS)<br>
+          June 1 — CMS Interim Final Rule, Medicaid Work Requirements<br>
+          June 3–4 — Dakota Conference on Rural Health, Grand Forks<br>
+          Q2 2026 — HRSA Revised 340B Rebate Pilot Anticipated<br>
+          Oct. 31 — Federal RHTP Year-One Commit Deadline</p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-label">Key Resources</div>
+        <p>
+          <a href="https://cases.justia.com/federal/district-courts/north-dakota/nddce/1:2025cv00182/69446/60/0.pdf">AbbVie v. Wrigley — Order (Apr. 27, 2026) →</a><br>
+          <a href="https://jamanetwork.com/journals/jama/fullarticle/10.1001/jama.2026.1735">Chatterjee/Werner — JAMA RHTP Analysis →</a><br>
+          <a href="https://www.medicaid.gov/federal-policy-guidance/downloads/cib12082025.pdf">CMS — Medicaid Community Engagement CIB →</a><br>
+          <a href="https://www.hhs.nd.gov/measles">ND HHS — Measles Resources →</a><br>
+          <a href="https://ruralhealth.und.edu/dakota-conference">Dakota Conference on Rural Health →</a><br>
+          <a href="https://vonhalliday.com/contact/">Subscribe to The Halliday Brief →</a></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-brand">The <em>Halliday</em> Brief</div>
+      <div class="footer-fine">© 2026 Von Halliday Consulting · North Dakota</div>
+    </div>
+  </footer>
+
+</div>
+
+
+</body></html>]]></content:encoded>
+    </item>
     <item>
       <title>The Halliday Brief — Vol. 1, No. 6 — April 27, 2026</title>
       <link>https://brief.vonhalliday.com/newsletters/2026-04-27.html</link>
