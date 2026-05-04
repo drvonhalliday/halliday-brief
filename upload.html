@@ -289,6 +289,15 @@
   }
   .publish-btn.visible { display: block; }
 
+  .email-only-btn {
+    display: none;
+    width: 100%;
+    margin-top: 8px;
+    padding: 12px 24px;
+    font-size: 12px;
+  }
+  .email-only-btn.visible { display: block; }
+
   /* Email preview */
   .email-preview-section {
     display: none;
@@ -815,6 +824,7 @@
     </div>
 
     <button class="btn btn-primary publish-btn" id="publish-btn" onclick="uploadToSite()">Upload to Site</button>
+    <button class="btn btn-small email-only-btn" id="email-only-btn" onclick="openEmailModalFromPending()">Email Only</button>
 
     <div class="manage-section" id="manage-section">
       <div class="manage-header">Published Newsletters</div>
@@ -939,6 +949,8 @@
   var PIN_HASH = '475368189e17ec9d12cf43f873f4ba27b0ae9ccbd0686fa21f5caad89ed57243';
 
   var pendingFile = null;
+  var emailOnlyPend = false;
+  var emailOnlyCleanupTimer = null;
   var pinVerified = false;
 
   // ── PIN ──
@@ -1056,6 +1068,7 @@
     document.getElementById('manage-section').classList.remove('visible');
     document.getElementById('email-preview-section').classList.remove('visible');
     document.getElementById('preview-email-btn').classList.remove('visible');
+    document.getElementById('email-only-btn').classList.remove('visible');
     hideStatus();
   }
 
@@ -1129,6 +1142,9 @@
       document.getElementById('preview-headline').innerHTML = '<span>Lead:</span> ' + meta.headline;
       document.getElementById('preview').classList.add('visible');
       document.getElementById('publish-btn').classList.add('visible');
+      clearTimeout(emailOnlyCleanupTimer);
+      document.getElementById('email-only-btn').classList.add('visible');
+      document.getElementById('email-only-btn').disabled = false;
       document.getElementById('preview-email-btn').classList.add('visible');
       document.getElementById('email-preview-section').classList.remove('visible');
       hideStatus();
@@ -1228,6 +1244,7 @@
         btn.textContent = 'Upload to Site';
         document.getElementById('preview-email-btn').classList.remove('visible');
         document.getElementById('email-preview-section').classList.remove('visible');
+        document.getElementById('email-only-btn').classList.remove('visible');
         fileInput.value = '';
       }, 3000);
     } catch (err) {
@@ -1551,10 +1568,75 @@
     document.getElementById('email-modal').classList.remove('visible');
   }
 
+  async function openEmailModalFromPending() {
+    if (!pendingFile) return;
+
+    var btn = document.getElementById('email-only-btn');
+    if (btn.disabled) return;
+    btn.disabled = true;
+
+    var bdKey = getButtondownKey();
+    if (!bdKey) {
+      showStatus('Buttondown API key not found. Enter it in the settings section.', 'error');
+      btn.disabled = false;
+      return;
+    }
+
+    if (sendsInFlight[pendingFile.name]) {
+      showStatus('Already sending ' + pendingFile.name + '.', 'error');
+      btn.disabled = false;
+      return;
+    }
+
+    showStatus('Checking scheduled state…', 'uploading');
+    try {
+      await refreshScheduledEmails();
+    } catch (err) {
+      showStatus('Could not verify scheduled state: ' + err.message + '. Try again.', 'error');
+      btn.disabled = false;
+      return;
+    }
+    if (scheduledEmails[pendingFile.name]) {
+      showStatus('An email for ' + pendingFile.name + ' is already scheduled.', 'error');
+      btn.disabled = false;
+      return;
+    }
+
+    emailPendingContent  = pendingFile.content;
+    emailPendingFilename = pendingFile.name;
+    emailOnlyPend        = true;
+
+    var subject = getSubjectFromContent(pendingFile.content);
+    document.getElementById('email-modal-info').textContent = subject
+      ? 'Subject: ' + subject
+      : pendingFile.name;
+
+    document.getElementById('email-opt-now').classList.remove('selected');
+    document.getElementById('email-opt-schedule').classList.remove('selected');
+    document.getElementById('email-schedule-fields').classList.remove('visible');
+    document.getElementById('email-schedule-error').classList.remove('visible');
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementById('email-schedule-date').value = '';
+    document.getElementById('email-schedule-date').min = today;
+    document.getElementById('email-schedule-date').classList.remove('input-error');
+    document.getElementById('email-schedule-time').value = '';
+    filterTimeDropdown();
+    document.getElementById('email-schedule-time').classList.remove('input-error');
+    var confirmBtn = document.getElementById('email-modal-confirm');
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = 'Select an option';
+    confirmBtn.onclick = null;
+
+    hideStatus();
+    document.getElementById('email-modal').classList.add('visible');
+  }
+
   function cancelEmailModal() {
     closeEmailModal();
     emailPendingContent = null;
     emailPendingFilename = null;
+    emailOnlyPend = false;
+    document.getElementById('email-only-btn').disabled = false;
   }
 
   function selectEmailMode(mode) {
@@ -1653,6 +1735,7 @@
     document.getElementById('email-send-confirm-modal').classList.remove('visible');
     emailPendingContent = null;
     emailPendingFilename = null;
+    emailOnlyPend = false;
   }
 
   async function executeSendEmail(mode, publishDate) {
@@ -1749,8 +1832,24 @@
 
       emailPendingContent = null;
       emailPendingFilename = null;
+
+      if (emailOnlyPend) {
+        emailOnlyPend = false;
+        pendingFile = null;
+        document.getElementById('publish-btn').classList.remove('visible');
+        document.getElementById('email-only-btn').classList.remove('visible');
+        document.getElementById('preview-email-btn').classList.remove('visible');
+        clearTimeout(emailOnlyCleanupTimer);
+        emailOnlyCleanupTimer = setTimeout(function() {
+          if (pendingFile !== null) return;
+          document.getElementById('preview').classList.remove('visible');
+          document.getElementById('email-preview-section').classList.remove('visible');
+          fileInput.value = '';
+        }, 3000);
+      }
     } catch (err) {
       showStatus('Error: ' + err.message, 'error');
+      emailOnlyPend = false;
     } finally {
       delete sendsInFlight[filename];
       renderPage();  // redraw to clear "Sending…" and show final state
