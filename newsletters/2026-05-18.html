@@ -511,6 +511,13 @@
     .rcorp-compare .rcorp-value.medium { font-size: 18px; }
     .rcorp-compare .rcorp-value.deadline { font-size: 20px; }
   }
+
+  /* Collapsible Sources & Citations */
+  .sources-toggle summary::-webkit-details-marker { display: none; }
+  .sources-toggle summary::marker { content: ""; }
+  .sources-toggle[open] .sources-chevron { transform: rotate(90deg); }
+  .sources-toggle summary:hover { color: #8b2020 !important; }
+  .sources-toggle summary:focus-visible { outline: 2px solid #c9a227; outline-offset: 4px; }
 </style>
 </head>
 <body>
@@ -778,11 +785,13 @@
          SOURCES & CITATIONS
     ═════════════════════════ -->
     <div style="border-top:1px solid #d8d0bc; padding-top:24px; margin-top:8px;">
-      <button style="background:none; border:none; padding:0; cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:#7a4e28;">
-        Sources &amp; Citations — This Issue
-      </button>
-      <div style="margin-top:16px;">
-        <p style="font-family:'Space Mono',monospace; font-size:10px; line-height:2.2; color:#a08060;">
+      <details class="sources-toggle">
+        <summary style="list-style:none; cursor:pointer; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:#7a4e28; display:flex; align-items:center; gap:10px; user-select:none;">
+          <span class="sources-chevron" style="display:inline-block; transition:transform 0.2s ease; font-size:9px; color:#8b2020;">▶</span>
+          <span>Sources &amp; Citations — This Issue</span>
+        </summary>
+        <div style="margin-top:16px;">
+          <p style="font-family:'Space Mono',monospace; font-size:10px; line-height:2.2; color:#a08060;">
           <strong style="color:#7a4e28;">Lead: ND EMS Fiscal Crisis</strong><br>
           <sup style="color:#8b2020;">1</sup> Michael Achterling, "North Dakota ambulance providers losing money on every run, according to survey," North Dakota Monitor, February 25, 2026, https://northdakotamonitor.com/2026/02/25/north-dakota-ambulance-providers-losing-money-on-every-run-according-to-survey/ (PWW Advisory Group survey of 36 ND ambulance providers, presented to the ND Legislature's interim Emergency Response Services Committee on February 25, 2026; survey authorized by HB 1322 (2025 legislative session); average revenue per transport approximately $1,100; average expense approximately $1,600; loss of approximately $500 per transport; estimated $5.8 million in unpaid claims across 100+ ND providers in 2025; Matt Zavadsky, PWW consultant, direct quotation; Rep. Todd Porter (R-Mandan), Metro-Area Ambulance Service, direct quotation regarding Medicare reimbursement and 60% Medicare share of Bismarck-Mandan call volume).<br>
           <sup style="color:#8b2020;">2</sup> Medicare ground ambulance add-on payment extension through December 31, 2027 (2 percent urban, 3 percent rural, 22.6 percent super-rural); ND ambulance district formation context and HB 1168/HB 1176 3 percent mill levy cap per Von Halliday Consulting reference compilation on ND EMS legislative and policy developments (Q1 2026).<br>
@@ -803,8 +812,9 @@
           <sup style="color:#8b2020;">11</sup> Federal Register, "Rural Hospital Provider Assistance Program," 91 Fed. Reg. 23103 (April 29, 2026), Document No. 2026-08300, https://www.federalregister.gov/documents/2026/04/29/2026-08300/rural-hospital-provider-assistance-program ($25 million in funding authorized by the Consolidated Appropriations Act, 2026; HRSA preliminary eligibility analysis identifying 167 hospitals across 13 states; bed size and wage index threshold of less than 0.90; July 1, 2026 application deadline; ND hospitals not in eligibility list).<br>
           <sup style="color:#8b2020;">12</sup> CMS, "FY 2027 Hospital Inpatient Prospective Payment System (IPPS) and Long-Term Care Hospital Prospective Payment System (LTCH PPS) Proposed Rule — CMS-1849-P," April 10, 2026, https://www.cms.gov/newsroom/fact-sheets/fy-2027-hospital-inpatient-prospective-payment-system-ipps-long-term-care-hospital-prospective (2.4 percent operating payment rate increase; expiration of Medicare-Dependent Hospital and low-volume hospital adjustments on December 31, 2026 absent legislative action; comment period closes June 9, 2026).<br>
           <sup style="color:#8b2020;">13</sup> UND Center for Rural Health, Dakota Conference on Rural Health, June 3–4, 2026, Alerus Center, Grand Forks, ND, https://ruralhealth.und.edu/dakota-conference.<br>
-        </p>
-      </div>
+          </p>
+        </div>
+      </details>
     </div>
 
     <!-- CLOSING NOTE -->
